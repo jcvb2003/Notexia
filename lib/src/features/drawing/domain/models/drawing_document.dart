@@ -10,7 +10,9 @@ class DrawingDocument extends Equatable {
   final String? description;
   final bool isFavorite;
 
-  const DrawingDocument({
+  final List<CanvasElement> activeSortedElements;
+
+  DrawingDocument({
     required this.id,
     required this.title,
     required this.elements,
@@ -18,21 +20,21 @@ class DrawingDocument extends Equatable {
     required this.updatedAt,
     this.description,
     this.isFavorite = false,
-  });
+  }) : activeSortedElements = _sortElements(elements);
 
   @override
   List<Object?> get props => [
-    id,
-    title,
-    elements,
-    createdAt,
-    updatedAt,
-    description,
-    isFavorite,
-  ];
+        id,
+        title,
+        elements,
+        createdAt,
+        updatedAt,
+        description,
+        isFavorite,
+      ];
 
-  List<CanvasElement> get sortedElements {
-    final sorted = List<CanvasElement>.from(elements);
+  static List<CanvasElement> _sortElements(List<CanvasElement> elements) {
+    final sorted = elements.where((e) => !e.isDeleted).toList();
     sorted.sort((a, b) => a.zIndex.compareTo(b.zIndex));
     return sorted;
   }
@@ -55,4 +57,3 @@ class DrawingDocument extends Equatable {
     );
   }
 }
-

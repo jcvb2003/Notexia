@@ -12,6 +12,9 @@ import 'package:notexia/src/features/settings/domain/repositories/app_settings_r
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
@@ -23,6 +26,13 @@ class MockAppSettingsRepository extends Mock implements AppSettingsRepository {}
 class DrawingDocumentFake extends Fake implements DrawingDocument {}
 
 class CanvasElementFake extends Fake implements CanvasElement {}
+
+class MsgDrawingService extends Mock implements DrawingService {}
+
+class MockPersistenceService extends Mock implements PersistenceService {}
+
+class MockElementManipulationDelegate extends Mock
+    implements ElementManipulationDelegate {}
 
 final sl = GetIt.instance;
 
@@ -51,9 +61,33 @@ void main() {
       );
     }
 
+    // Register missing services required by MainLayout
+    if (!sl.isRegistered<DrawingService>()) {
+      sl.registerLazySingleton<DrawingService>(() => MsgDrawingService());
+    }
+    if (!sl.isRegistered<PersistenceService>()) {
+      sl.registerLazySingleton<PersistenceService>(
+          () => MockPersistenceService());
+    }
+    if (!sl.isRegistered<ElementManipulationDelegate>()) {
+      sl.registerLazySingleton<ElementManipulationDelegate>(
+        () => MockElementManipulationDelegate(),
+      );
+    }
+
     mockDocRepo = MockDocumentRepository();
     mockFileRepo = MockFileRepository();
     mockSettingsRepo = MockAppSettingsRepository();
+
+    if (!sl.isRegistered<DocumentRepository>()) {
+      sl.registerLazySingleton<DocumentRepository>(() => mockDocRepo);
+    }
+    if (!sl.isRegistered<FileRepository>()) {
+      sl.registerLazySingleton<FileRepository>(() => mockFileRepo);
+    }
+    if (!sl.isRegistered<AppSettingsRepository>()) {
+      sl.registerLazySingleton<AppSettingsRepository>(() => mockSettingsRepo);
+    }
 
     when(
       () => mockSettingsRepo.getSetting(any()),

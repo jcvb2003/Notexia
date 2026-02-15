@@ -19,12 +19,12 @@ class ElementsPainter {
     // Margem de segurança para evitar cortes abruptos em elementos rotacionados ou com strokes grossos
     final cullingRect = visibleRect.inflate(100);
 
-    final sortedElements = ctx.elements.toList()
-      ..sort((a, b) => a.zIndex.compareTo(b.zIndex));
+    // Elements are already sorted and filtered by DrawingDocument
+    final elementsToRender = ctx.elements;
 
-    for (final element in sortedElements) {
+    for (final element in elementsToRender) {
       if (ctx.editingElementId == element.id) continue;
-      if (element.isDeleted) continue;
+      // if (element.isDeleted) continue; // Already filtered
 
       // Culling: verifica se o bounding box do elemento intercepta a viewport
       // Nota: element.bounds não considera rotação, mas a margem de segurança ajuda.

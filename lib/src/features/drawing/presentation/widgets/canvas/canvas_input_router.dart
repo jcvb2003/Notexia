@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_gesture_math.dart';
@@ -94,19 +94,7 @@ class CanvasInputRouter {
 
     // Lógica específica para ferramenta de Texto
     if (uiState.selectedTool == CanvasElementType.text) {
-      // Verifica se clicou em um texto existente para editar
-      final clickedElement = _findElementAt(worldPosition, uiState);
-
-      if (clickedElement is TextElement) {
-        canvasCubit.setEditingText(clickedElement.id);
-        canvasCubit.selectTool(CanvasElementType.selection);
-        return;
-      }
-
-      // Cria novo texto vazio e inicia edição
-      final newId = canvasCubit.createTextElement(worldPosition);
-      canvasCubit.setEditingText(newId);
-      canvasCubit.selectTool(CanvasElementType.selection);
+      canvasCubit.handleTextToolTap(worldPosition);
       return;
     }
 
@@ -117,16 +105,6 @@ class CanvasInputRouter {
       worldPosition: worldPosition,
     );
     _pipeline.process(event);
-  }
-
-  CanvasElement? _findElementAt(Offset worldPoint, CanvasState uiState) {
-    // Itera de trás para frente (topo para baixo visualmente)
-    for (final element in uiState.elements.reversed) {
-      if (element.containsPoint(worldPoint)) {
-        return element;
-      }
-    }
-    return null;
   }
 
   void handleHover(PointerHoverEvent event, CanvasState uiState) {

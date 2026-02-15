@@ -5,7 +5,7 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
-import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
+
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
@@ -29,7 +29,7 @@ class ElementManipulationDelegate {
   }) {
     if (state.selectedElementIds.isEmpty) return;
 
-    final updatedElements = CanvasHelpers.moveElements(
+    final updatedElements = _canvasManipulationService.moveElements(
       state.document.elements,
       state.selectedElementIds,
       delta,

@@ -78,6 +78,15 @@ class _CanvasWidgetState extends State<CanvasWidget> {
         // Se saiu do modo de ediÃ§Ã£o, o foco jÃ¡ deve ter sido perdido ou tratado
       },
       child: BlocBuilder<CanvasCubit, CanvasState>(
+        buildWhen: (previous, current) {
+          return previous.document != current.document ||
+              previous.interaction != current.interaction ||
+              previous.transform != current.transform ||
+              previous.snapGuides != current.snapGuides ||
+              previous.isSkeletonMode != current.isSkeletonMode ||
+              previous.interaction.selectedTool !=
+                  current.interaction.selectedTool;
+        },
         builder: (context, uiState) {
           final selectedTool = uiState.selectedTool;
           final editingTextId = uiState.editingTextId;
@@ -93,11 +102,11 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                 actions: {
                   DeleteSelectedElementsIntent:
                       CallbackAction<DeleteSelectedElementsIntent>(
-                        onInvoke: (_) {
-                          context.read<CanvasCubit>().deleteSelectedElements();
-                          return null;
-                        },
-                      ),
+                    onInvoke: (_) {
+                      context.read<CanvasCubit>().deleteSelectedElements();
+                      return null;
+                    },
+                  ),
                   UndoIntent: CallbackAction<UndoIntent>(
                     onInvoke: (_) {
                       context.read<UndoRedoCubit>().undo();
@@ -144,7 +153,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                           onTapDown: uiState.isZoomMode
                               ? null
                               : (details) =>
-                                    _router.handleTapDown(details, uiState),
+                                  _router.handleTapDown(details, uiState),
                           onScaleStart: (details) => _router.handleScaleStart(
                             details,
                             uiState,
@@ -165,7 +174,8 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                               RepaintBoundary(
                                 child: CustomPaint(
                                   painter: StaticCanvasPainter(
-                                    elements: uiState.elements,
+                                    elements:
+                                        uiState.document.activeSortedElements,
                                     zoomLevel: uiState.zoomLevel,
                                     panOffset: uiState.panOffset,
                                     editingElementId: editingTextId,
@@ -176,7 +186,8 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                               RepaintBoundary(
                                 child: CustomPaint(
                                   painter: DynamicCanvasPainter(
-                                    elements: uiState.elements,
+                                    elements:
+                                        uiState.document.activeSortedElements,
                                     selectedElementIds:
                                         uiState.selectedElementIds,
                                     zoomLevel: uiState.zoomLevel,
@@ -218,9 +229,8 @@ class _CanvasWidgetState extends State<CanvasWidget> {
     CanvasState uiState,
     String editingId,
   ) {
-    final editingElement = uiState.elements
-        .where((e) => e.id == editingId)
-        .firstOrNull;
+    final editingElement =
+        uiState.elements.where((e) => e.id == editingId).firstOrNull;
 
     if (editingElement is! TextElement) return const SizedBox.shrink();
 
@@ -245,12 +255,10 @@ class _CanvasWidgetState extends State<CanvasWidget> {
           style: TextStyle(
             fontSize: editingElement.fontSize * uiState.zoomLevel,
             fontFamily: editingElement.fontFamily,
-            fontWeight: editingElement.isBold
-                ? FontWeight.bold
-                : FontWeight.normal,
-            fontStyle: editingElement.isItalic
-                ? FontStyle.italic
-                : FontStyle.normal,
+            fontWeight:
+                editingElement.isBold ? FontWeight.bold : FontWeight.normal,
+            fontStyle:
+                editingElement.isItalic ? FontStyle.italic : FontStyle.normal,
             decoration: TextDecoration.combine([
               if (editingElement.isUnderlined) TextDecoration.underline,
               if (editingElement.isStrikethrough) TextDecoration.lineThrough,
@@ -262,9 +270,9 @@ class _CanvasWidgetState extends State<CanvasWidget> {
           ),
           onChanged: (value) {
             context.read<CanvasCubit>().updateTextElement(
-              editingElement.id,
-              value,
-            );
+                  editingElement.id,
+                  value,
+                );
           },
           onSubmitted: (_) {
             final cubit = context.read<CanvasCubit>();

@@ -14,25 +14,6 @@ typedef ApplyElementsCallback = void Function(List<CanvasElement>);
 class CanvasHelpers {
   CanvasHelpers._();
 
-  /// Move elementos selecionados por um delta.
-  /// Retorna a lista atualizada de elementos.
-  static List<CanvasElement> moveElements(
-    List<CanvasElement> elements,
-    List<String> selectedIds,
-    Offset delta,
-  ) {
-    if (selectedIds.isEmpty) return elements;
-
-    return elements.map((e) {
-      if (!selectedIds.contains(e.id)) return e;
-      return e.copyWith(
-        x: e.x + delta.dx,
-        y: e.y + delta.dy,
-        updatedAt: DateTime.now(),
-      );
-    }).toList();
-  }
-
   /// Mede o tamanho necessário para um elemento de texto.
   static Size measureText(TextElement element, String text) {
     if (text.trim().isEmpty) return Size(element.width, element.height);

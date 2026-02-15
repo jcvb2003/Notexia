@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
@@ -298,6 +299,26 @@ class CanvasCubit extends Cubit<CanvasState> {
       snapAngleStep: snapAngleStep,
       createFromCenter: createFromCenter,
     );
+  }
+
+  void handleTextToolTap(Offset worldPosition) {
+    CanvasElement? clickedElement;
+    for (final element in state.document.elements.reversed) {
+      if (element.containsPoint(worldPosition)) {
+        clickedElement = element;
+        break;
+      }
+    }
+
+    if (clickedElement is TextElement) {
+      setEditingText(clickedElement.id);
+      selectTool(CanvasElementType.selection);
+      return;
+    }
+
+    final newId = createTextElement(worldPosition);
+    setEditingText(newId);
+    selectTool(CanvasElementType.selection);
   }
 
   void updateTextElement(String elementId, String text) =>
