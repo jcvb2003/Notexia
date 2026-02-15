@@ -1,0 +1,33 @@
+import 'package:notexia/src/core/storage/local_database/database_service.dart';
+import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:sqflite/sqflite.dart';
+
+class AppSettingsRepositoryImpl implements AppSettingsRepository {
+  final DatabaseService _databaseService;
+
+  AppSettingsRepositoryImpl(this._databaseService);
+
+  @override
+  Future<void> saveSetting(String key, String value) async {
+    final db = await _databaseService.database;
+    await db.insert('app_settings', {
+      'setting_key': key,
+      'setting_value': value,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<String?> getSetting(String key) async {
+    final db = await _databaseService.database;
+    final maps = await db.query(
+      'app_settings',
+      where: 'setting_key = ?',
+      whereArgs: [key],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first['setting_value'] as String;
+    }
+    return null;
+  }
+}
