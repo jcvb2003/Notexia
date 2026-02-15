@@ -70,31 +70,12 @@ class ObjectSnapService {
     for (final element in references) {
       if (excludedIds.contains(element.id) || element.isDeleted) continue;
 
-      // Usa bounds que considera rotaÃ§Ã£o (AABB) se disponÃ­vel, ou fallback para xywh
-      // Como CanvasElement tem bounds getter, usamos ele.
-      // PorÃ©m, note que bounds pode ser computado, o que pode ser lento em loop.
-      // Se referenceElements for grande, talvez precise otimizar.
-      // Por enquanto, assumimos que Ã© rÃ¡pido o suficiente.
-      // IMPORTANTE: CanvasElement nÃ£o tem 'bounds' direto no snippet que vi anteriormente?
-      // Espere, vi element.bounds em scale_gesture_handlers.dart.
-      // Se nÃ£o tiver, usaremos Rect.fromLTWH(element.x, element.y, element.width, element.height)
-
-      Rect rect;
-      try {
-        // Tentativa de usar bounds se for mixin ou extension visÃ­vel
-        // Como nÃ£o tenho certeza se o compilador vai aceitar 'bounds' dinamicamente aqui sem ver a definiÃ§Ã£o completa
-        // Vou assumir que 'bounds' Ã© uma propriedade vÃ¡lida baseada no snippet.
-        // Se der erro de compilaÃ§Ã£o, corrijo.
-        // Mas para garantir, vou usar a definiÃ§Ã£o bÃ¡sica se nÃ£o for complexo.
-        rect = Rect.fromLTWH(
-          element.x,
-          element.y,
-          element.width,
-          element.height,
-        );
-      } catch (e) {
-        continue;
-      }
+      final rect = Rect.fromLTWH(
+        element.x,
+        element.y,
+        element.width,
+        element.height,
+      );
 
       final refMin = isVertical ? rect.left : rect.top;
       final refCenter = isVertical ? rect.center.dx : rect.center.dy;

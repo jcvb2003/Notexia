@@ -44,7 +44,7 @@ class ShapeToolControls extends StatelessWidget {
           children: [
             AppIconButton(
               icon: LucideIcons.square,
-              tooltip: 'RetÃ¢ngulo',
+              tooltip: 'Retângulo',
               isActive: tool == CanvasElementType.rectangle,
               onTap: () => cubit.selectTool(CanvasElementType.rectangle),
               size: 36,
@@ -65,16 +65,14 @@ class ShapeToolControls extends StatelessWidget {
             ),
             AppIconButton(
               icon: LucideIcons.triangle,
-              tooltip: 'TriÃ¢ngulo',
+              tooltip: 'Triângulo',
               isActive: tool == CanvasElementType.triangle,
               onTap: () => cubit.selectTool(CanvasElementType.triangle),
               size: 36,
             ),
           ],
         ),
-
         const ToolbarDivider(horizontalPadding: 10),
-
         Tooltip(
           message: 'Cor e Estilo',
           child: GestureDetector(
@@ -84,9 +82,7 @@ class ShapeToolControls extends StatelessWidget {
             ),
           ),
         ),
-
         const ToolbarDivider(horizontalPadding: 10),
-
         AppIconButton(
           size: 36,
           icon: LucideIcons.layers,
@@ -94,7 +90,6 @@ class ShapeToolControls extends StatelessWidget {
               'Opacidade: ${((selectedElement?.opacity ?? currentStyle.opacity) * 100).toInt()}%',
           onTap: () => _showOpacityPopover(context, cubit),
         ),
-
         if (selectedElement != null) ...[
           const SizedBox(width: 4),
           AppIconButton(
@@ -117,7 +112,7 @@ class ShapeToolControls extends StatelessWidget {
         value: cubit,
         child: TabbedStyleEditor(
           tabs: {
-            'TraÃ§o': BlocBuilder<CanvasCubit, CanvasState>(
+            'Traço': BlocBuilder<CanvasCubit, CanvasState>(
               builder: (context, state) {
                 final selectedIds = state.selectedElementIds;
                 CanvasElement? element;
@@ -149,7 +144,7 @@ class ShapeToolControls extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     PropertySlider(
-                      label: 'PrecisÃ£o',
+                      label: 'Precisão',
                       value: element?.roughness ?? currentStyle.roughness,
                       min: 0,
                       max: 5,
@@ -188,8 +183,7 @@ class ShapeToolControls extends StatelessWidget {
                 return Column(
                   children: [
                     ColorPickerPanel(
-                      selectedColor:
-                          element?.fillColor ??
+                      selectedColor: element?.fillColor ??
                           currentStyle.fillColor ??
                           OpenColorPalette.transparent,
                       allowTransparent: true,
@@ -205,8 +199,8 @@ class ShapeToolControls extends StatelessWidget {
                             element?.fillType ?? currentStyle.fillType;
                         final nextFillType =
                             currentFillType == FillType.transparent
-                            ? FillType.solid
-                            : currentFillType;
+                                ? FillType.solid
+                                : currentFillType;
                         cubit.updateSelectedElementsProperties(
                           fillColor: c,
                           fillType: nextFillType,
@@ -256,14 +250,13 @@ class ShapeToolControls extends StatelessWidget {
             CanvasElement? element;
             if (selectedIds.isNotEmpty) {
               final selectedId = selectedIds.first;
-              element = state.elements
-                  .where((e) => e.id == selectedId)
-                  .firstOrNull;
+              element =
+                  state.elements.where((e) => e.id == selectedId).firstOrNull;
             }
             final currentStyle = state.currentStyle;
 
             return PropertySlider(
-              label: 'NÃ­vel de TransparÃªncia',
+              label: 'Nível de Transparência',
               value: element?.opacity ?? currentStyle.opacity,
               min: 0,
               max: 1,
@@ -276,4 +269,3 @@ class ShapeToolControls extends StatelessWidget {
     );
   }
 }
-

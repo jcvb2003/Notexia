@@ -14,7 +14,13 @@ import 'package:notexia/src/features/drawing/domain/commands/update_style_comman
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 
 class ElementManipulationDelegate {
-  const ElementManipulationDelegate();
+  final CanvasManipulationService _canvasManipulationService;
+  final TransformationService _transformationService;
+
+  ElementManipulationDelegate(
+    this._canvasManipulationService,
+    this._transformationService,
+  );
 
   void moveSelectedElements({
     required CanvasState state,
@@ -36,14 +42,13 @@ class ElementManipulationDelegate {
   void resizeSelectedElement({
     required CanvasState state,
     required Rect rect,
-    required TransformationService transformationService,
     required void Function(CanvasState) emit,
   }) {
     if (state.selectedElementIds.length != 1) return;
     final id = state.selectedElementIds.first;
     final updatedElements = state.document.elements.map((element) {
       if (element.id != id) return element;
-      return transformationService.resizeAndPlace(element, rect);
+      return _transformationService.resizeAndPlace(element, rect);
     }).toList();
     final updatedDoc = state.document.copyWith(elements: updatedElements);
     emit(state.copyWith(document: updatedDoc));
@@ -52,14 +57,13 @@ class ElementManipulationDelegate {
   void rotateSelectedElement({
     required CanvasState state,
     required double angle,
-    required TransformationService transformationService,
     required void Function(CanvasState) emit,
   }) {
     if (state.selectedElementIds.length != 1) return;
     final id = state.selectedElementIds.first;
     final updatedElements = state.document.elements.map((element) {
       if (element.id != id) return element;
-      return transformationService.rotateElement(element, angle);
+      return _transformationService.rotateElement(element, angle);
     }).toList();
     final updatedDoc = state.document.copyWith(elements: updatedElements);
     emit(state.copyWith(document: updatedDoc));
@@ -69,7 +73,6 @@ class ElementManipulationDelegate {
     required CanvasState state,
     required bool isStart,
     required Offset worldPoint,
-    required TransformationService transformationService,
     required void Function(CanvasState) emit,
     bool snapAngle = false,
     double? angleStep,
@@ -78,7 +81,7 @@ class ElementManipulationDelegate {
     final id = state.selectedElementIds.first;
     final updatedElements = state.document.elements.map((element) {
       if (element.id != id) return element;
-      return transformationService.updateLineOrArrowEndpoint(
+      return _transformationService.updateLineOrArrowEndpoint(
         element: element,
         isStart: isStart,
         worldPoint: worldPoint,
@@ -113,7 +116,7 @@ class ElementManipulationDelegate {
     if (state.selectedElementIds.isEmpty) return;
 
     final before = List<CanvasElement>.from(state.document.elements);
-    final updatedElements = CanvasManipulationService.deleteElements(
+    final updatedElements = _canvasManipulationService.deleteElements(
       state.document.elements,
       state.selectedElementIds,
     );
@@ -200,7 +203,7 @@ class ElementManipulationDelegate {
     if (state.selectedElementIds.isEmpty) return;
 
     final before = List<CanvasElement>.from(state.document.elements);
-    final updatedElements = CanvasManipulationService.updateElementsProperties(
+    final updatedElements = _canvasManipulationService.updateElementsProperties(
       state.document.elements,
       state.selectedElementIds,
       patch,

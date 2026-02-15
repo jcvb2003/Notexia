@@ -12,7 +12,9 @@ import 'package:notexia/src/features/settings/domain/repositories/app_settings_r
 
 import 'package:notexia/src/app/di/service_locator/service_locator.dart';
 
-import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -45,11 +47,13 @@ class _MainLayoutState extends State<MainLayout> {
               updatedAt: DateTime.now(),
             );
             final cubit = CanvasCubit(
-              context.read<DocumentRepository>(),
+              sl<DocumentRepository>(),
               sl<CommandStackService>(),
-              sl<TransformationService>(),
+              sl<DrawingService>(),
+              sl<PersistenceService>(),
+              sl<ElementManipulationDelegate>(),
               initialDoc,
-              appSettingsRepository: context.read<AppSettingsRepository>(),
+              appSettingsRepository: sl<AppSettingsRepository>(),
             );
             cubit.loadAngleSnapSettings();
             return cubit;

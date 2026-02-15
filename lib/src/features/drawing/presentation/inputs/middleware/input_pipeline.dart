@@ -7,10 +7,9 @@ abstract class InputMiddleware {
   void handle(InputEvent event, void Function(InputEvent) next);
 }
 
-/// Gerencia a execução de uma cadeia de middlewares.
 class InputPipeline {
   final List<InputMiddleware> _middlewares = [];
-  
+
   // Handler final que será executado após todos os middlewares
   void Function(InputEvent)? onProcessed;
 

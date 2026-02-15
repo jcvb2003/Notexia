@@ -13,6 +13,10 @@ import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dar
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_input_router.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 
 class _DocumentRepositoryFake implements DocumentRepository {
   @override
@@ -48,8 +52,25 @@ void main() {
         updatedAt: DateTime.now(),
       );
       final repo = _DocumentRepositoryFake();
+      final transformationService = TransformationService();
+      final canvasManipulationService =
+          CanvasManipulationService(transformationService);
+      final drawingService =
+          DrawingService(canvasManipulationService: canvasManipulationService);
+      final persistenceService = PersistenceService(repo);
+      final elementManipulationDelegate = ElementManipulationDelegate(
+        canvasManipulationService,
+        transformationService,
+      );
+
       final drawingCubit = CanvasCubit(
-          repo, CommandStackService(), TransformationService(), doc);
+        repo,
+        CommandStackService(),
+        drawingService,
+        persistenceService,
+        elementManipulationDelegate,
+        doc,
+      );
 
       final el = RectangleElement(
         id: 'r1',
@@ -120,8 +141,25 @@ void main() {
         updatedAt: DateTime.now(),
       );
       final repo = _DocumentRepositoryFake();
+      final transformationService = TransformationService();
+      final canvasManipulationService =
+          CanvasManipulationService(transformationService);
+      final drawingService =
+          DrawingService(canvasManipulationService: canvasManipulationService);
+      final persistenceService = PersistenceService(repo);
+      final elementManipulationDelegate = ElementManipulationDelegate(
+        canvasManipulationService,
+        transformationService,
+      );
+
       final drawingCubit = CanvasCubit(
-          repo, CommandStackService(), TransformationService(), doc);
+        repo,
+        CommandStackService(),
+        drawingService,
+        persistenceService,
+        elementManipulationDelegate,
+        doc,
+      );
 
       final el = RectangleElement(
         id: 'r2',
@@ -196,8 +234,25 @@ void main() {
         updatedAt: DateTime.now(),
       );
       final repo = _DocumentRepositoryFake();
+      final transformationService = TransformationService();
+      final canvasManipulationService =
+          CanvasManipulationService(transformationService);
+      final drawingService =
+          DrawingService(canvasManipulationService: canvasManipulationService);
+      final persistenceService = PersistenceService(repo);
+      final elementManipulationDelegate = ElementManipulationDelegate(
+        canvasManipulationService,
+        transformationService,
+      );
+
       final drawingCubit = CanvasCubit(
-          repo, CommandStackService(), TransformationService(), doc);
+        repo,
+        CommandStackService(),
+        drawingService,
+        persistenceService,
+        elementManipulationDelegate,
+        doc,
+      );
 
       final el = RectangleElement(
         id: 'r3',
@@ -270,8 +325,25 @@ void main() {
           updatedAt: DateTime.now(),
         );
         final repo = _DocumentRepositoryFake();
+        final transformationService = TransformationService();
+        final canvasManipulationService =
+            CanvasManipulationService(transformationService);
+        final drawingService = DrawingService(
+            canvasManipulationService: canvasManipulationService);
+        final persistenceService = PersistenceService(repo);
+        final elementManipulationDelegate = ElementManipulationDelegate(
+          canvasManipulationService,
+          transformationService,
+        );
+
         final drawingCubit = CanvasCubit(
-            repo, CommandStackService(), TransformationService(), doc);
+          repo,
+          CommandStackService(),
+          drawingService,
+          persistenceService,
+          elementManipulationDelegate,
+          doc,
+        );
 
         final el = RectangleElement(
           id: 'r4',
@@ -354,8 +426,25 @@ void main() {
         updatedAt: DateTime.now(),
       );
       final repo = _DocumentRepositoryFake();
+      final transformationService = TransformationService();
+      final canvasManipulationService =
+          CanvasManipulationService(transformationService);
+      final drawingService =
+          DrawingService(canvasManipulationService: canvasManipulationService);
+      final persistenceService = PersistenceService(repo);
+      final elementManipulationDelegate = ElementManipulationDelegate(
+        canvasManipulationService,
+        transformationService,
+      );
+
       final drawingCubit = CanvasCubit(
-          repo, CommandStackService(), TransformationService(), doc);
+        repo,
+        CommandStackService(),
+        drawingService,
+        persistenceService,
+        elementManipulationDelegate,
+        doc,
+      );
 
       final startAngle = math.pi / 5;
       final el = RectangleElement(
@@ -436,8 +525,25 @@ void main() {
           updatedAt: DateTime.now(),
         );
         final repo = _DocumentRepositoryFake();
+        final transformationService = TransformationService();
+        final canvasManipulationService =
+            CanvasManipulationService(transformationService);
+        final drawingService = DrawingService(
+            canvasManipulationService: canvasManipulationService);
+        final persistenceService = PersistenceService(repo);
+        final elementManipulationDelegate = ElementManipulationDelegate(
+          canvasManipulationService,
+          transformationService,
+        );
+
         final drawingCubit = CanvasCubit(
-            repo, CommandStackService(), TransformationService(), doc);
+          repo,
+          CommandStackService(),
+          drawingService,
+          persistenceService,
+          elementManipulationDelegate,
+          doc,
+        );
         await drawingCubit.setAngleSnapEnabled(true);
         await drawingCubit.setAngleSnapStep(math.pi / 6);
 

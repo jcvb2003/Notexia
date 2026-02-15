@@ -5,6 +5,7 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document_mapp
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+import 'package:notexia/src/features/drawing/data/queries.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 
 class DocumentRepositoryImpl implements DocumentRepository {
@@ -15,7 +16,8 @@ class DocumentRepositoryImpl implements DocumentRepository {
   @override
   Future<List<DrawingDocument>> getDocuments() async {
     final db = await _dbService.database;
-    final List<Map<String, dynamic>> maps = await db.query('documents');
+    final List<Map<String, dynamic>> maps =
+        await db.query(Queries.tableDocuments);
 
     return maps.map((map) {
       final fullMap = Map<String, dynamic>.from(map);
@@ -29,7 +31,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
     final db = await _dbService.database;
 
     final docMaps = await db.query(
-      'documents',
+      Queries.tableDocuments,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -37,7 +39,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
     if (docMaps.isEmpty) return null;
 
     final elementMaps = await db.query(
-      'canvas_elements',
+      Queries.tableCanvasElements,
       where: 'documentId = ?',
       whereArgs: [id],
     );
@@ -71,7 +73,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
 
     await db.transaction((txn) async {
       await txn.insert(
-        'documents',
+        Queries.tableDocuments,
         docMap,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -86,7 +88,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
         cleanedMap['customData'] = customDataJson;
 
         await txn.insert(
-          'canvas_elements',
+          Queries.tableCanvasElements,
           cleanedMap,
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
@@ -97,7 +99,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
   @override
   Future<void> deleteDocument(String id) async {
     final db = await _dbService.database;
-    await db.delete('documents', where: 'id = ?', whereArgs: [id]);
+    await db.delete(Queries.tableDocuments, where: 'id = ?', whereArgs: [id]);
   }
 
   @override
@@ -115,7 +117,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
     cleanedMap['customData'] = customDataJson;
 
     await db.insert(
-      'canvas_elements',
+      Queries.tableCanvasElements,
       cleanedMap,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -151,7 +153,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
   Future<void> deleteElement(String drawingId, String elementId) async {
     final db = await _dbService.database;
     await db.delete(
-      'canvas_elements',
+      Queries.tableCanvasElements,
       where: 'id = ? AND documentId = ?',
       whereArgs: [elementId, drawingId],
     );

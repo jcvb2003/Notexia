@@ -51,7 +51,7 @@ class StrokeToolControls extends StatelessWidget {
           AppIconButton(
             size: 36,
             icon: LucideIcons.pencil,
-            tooltip: 'LÃ¡pis (Normal)',
+            tooltip: 'Lápis (Normal)',
             isActive:
                 (selectedElement?.roughness ?? currentStyle.roughness) <= 0.5,
             onTap: () => cubit.updateSelectedElementsProperties(roughness: 0.0),
@@ -103,7 +103,7 @@ class StrokeToolControls extends StatelessWidget {
   void _showStrokePopover(BuildContext context, CanvasCubit cubit) {
     showModularSheet(
       context,
-      title: 'ConfiguraÃ§Ãµes de TraÃ§o',
+      title: 'Configurações de Traço',
       child: BlocProvider.value(
         value: cubit,
         child: BlocBuilder<CanvasCubit, CanvasState>(
@@ -112,9 +112,8 @@ class StrokeToolControls extends StatelessWidget {
             CanvasElement? element;
             if (selectedIds.isNotEmpty) {
               final selectedId = selectedIds.first;
-              element = state.elements
-                  .where((e) => e.id == selectedId)
-                  .firstOrNull;
+              element =
+                  state.elements.where((e) => e.id == selectedId).firstOrNull;
             }
             final currentStyle = state.currentStyle;
 
@@ -137,7 +136,7 @@ class StrokeToolControls extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 PropertySlider(
-                  label: 'PrecisÃ£o',
+                  label: 'Precisão',
                   value: element?.roughness ?? currentStyle.roughness,
                   min: 0,
                   max: 5,
@@ -164,14 +163,13 @@ class StrokeToolControls extends StatelessWidget {
             CanvasElement? element;
             if (selectedIds.isNotEmpty) {
               final selectedId = selectedIds.first;
-              element = state.elements
-                  .where((e) => e.id == selectedId)
-                  .firstOrNull;
+              element =
+                  state.elements.where((e) => e.id == selectedId).firstOrNull;
             }
             final currentStyle = state.currentStyle;
 
             return PropertySlider(
-              label: 'NÃ­vel de TransparÃªncia',
+              label: 'Nível de Transparência',
               value: element?.opacity ?? currentStyle.opacity,
               min: 0,
               max: 1,
@@ -184,4 +182,3 @@ class StrokeToolControls extends StatelessWidget {
     );
   }
 }
-

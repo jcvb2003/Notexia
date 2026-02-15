@@ -10,6 +10,10 @@ import 'package:notexia/src/features/drawing/domain/services/transformation_serv
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
 
@@ -68,10 +72,23 @@ void main() {
     when(() => mockDocRepo.saveDocument(any())).thenAnswer((_) async {});
     when(() => mockDocRepo.saveElement(any(), any())).thenAnswer((_) async {});
 
+    final transformationService = TransformationService();
+    final canvasManipulationService =
+        CanvasManipulationService(transformationService);
+    final drawingService =
+        DrawingService(canvasManipulationService: canvasManipulationService);
+    final persistenceService = PersistenceService(mockDocRepo);
+    final elementManipulationDelegate = ElementManipulationDelegate(
+      canvasManipulationService,
+      transformationService,
+    );
+
     cubit = CanvasCubit(
       mockDocRepo,
       commandStack,
-      TransformationService(),
+      drawingService,
+      persistenceService,
+      elementManipulationDelegate,
       initialDoc,
     );
   });

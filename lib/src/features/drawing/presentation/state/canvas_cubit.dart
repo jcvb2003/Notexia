@@ -16,7 +16,6 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
-import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
@@ -36,11 +35,13 @@ import 'package:notexia/src/features/drawing/domain/services/persistence_service
 class CanvasCubit extends Cubit<CanvasState> {
   final DocumentRepository _documentRepository;
   final CommandStackService _commandStack;
-  final TransformationService _transformationService;
+
   final AppSettingsRepository? _settingsRepository;
+  final DrawingService _drawingService;
+  final PersistenceService _persistenceService;
+  final ElementManipulationDelegate _elementManipulationDelegate;
   final _uuid = const Uuid();
-  late final DrawingService _drawingService;
-  late final PersistenceService _persistenceService;
+
   Timer? _drawThrottleTimer;
   DateTime _lastDrawUpdate = DateTime.fromMillisecondsSinceEpoch(0);
   List<CanvasElement>? _gestureStartElements;
@@ -49,13 +50,13 @@ class CanvasCubit extends Cubit<CanvasState> {
   CanvasCubit(
     this._documentRepository,
     this._commandStack,
-    this._transformationService,
+    this._drawingService,
+    this._persistenceService,
+    this._elementManipulationDelegate,
     DrawingDocument initialDocument, {
     AppSettingsRepository? appSettingsRepository,
   })  : _settingsRepository = appSettingsRepository,
         super(CanvasState(document: initialDocument)) {
-    _drawingService = DrawingService(uuid: _uuid);
-    _persistenceService = PersistenceService(_documentRepository);
     _commandStack.clear();
   }
 
@@ -137,7 +138,6 @@ class CanvasCubit extends Cubit<CanvasState> {
   final _selectionDelegate = const SelectionDelegate();
   final _textEditingDelegate = const TextEditingDelegate();
   final _drawingDelegate = const DrawingDelegate();
-  final _elementManipulationDelegate = const ElementManipulationDelegate();
 
   void toggleFullScreen() =>
       emit(_uiPreferencesDelegate.toggleFullScreen(state));
@@ -393,7 +393,6 @@ class CanvasCubit extends Cubit<CanvasState> {
       _elementManipulationDelegate.resizeSelectedElement(
         state: state,
         rect: rect,
-        transformationService: _transformationService,
         emit: emit,
       );
 
@@ -401,7 +400,6 @@ class CanvasCubit extends Cubit<CanvasState> {
       _elementManipulationDelegate.rotateSelectedElement(
         state: state,
         angle: angle,
-        transformationService: _transformationService,
         emit: emit,
       );
 
@@ -415,7 +413,6 @@ class CanvasCubit extends Cubit<CanvasState> {
         state: state,
         isStart: isStart,
         worldPoint: worldPoint,
-        transformationService: _transformationService,
         emit: emit,
         snapAngle: snapAngle,
         angleStep: angleStep,

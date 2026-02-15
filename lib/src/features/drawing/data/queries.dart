@@ -2,6 +2,11 @@
 class Queries {
   Queries._();
 
+  // Table Names
+  static const String tableDocuments = 'documents';
+  static const String tableCanvasElements = 'canvas_elements';
+  static const String tableAppSettings = 'app_settings';
+
   /// Tabela de Documentos
   static const String createDocumentsTable = '''
     CREATE TABLE documents (

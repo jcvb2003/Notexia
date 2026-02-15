@@ -10,25 +10,28 @@ import 'package:notexia/src/features/drawing/domain/services/transformation_serv
 /// ServiÃ§o responsÃ¡vel por realizar transformaÃ§Ãµes e manipulaÃ§Ãµes nos elementos do canvas.
 /// Desacopla a lÃ³gica matemÃ¡tica e de transformaÃ§Ã£o do Cubit.
 class CanvasManipulationService {
+  final TransformationService _transformationService;
+
+  CanvasManipulationService(this._transformationService);
+
   /// Move os elementos selecionados por um determinado delta.
-  static List<CanvasElement> moveElements(
+  List<CanvasElement> moveElements(
     List<CanvasElement> elements,
     List<String> selectedIds,
     Offset delta,
   ) {
     if (selectedIds.isEmpty) return elements;
 
-    final t = TransformationService();
     return elements.map((element) {
       if (selectedIds.contains(element.id)) {
-        return t.moveElement(element, delta.dx, delta.dy);
+        return _transformationService.moveElement(element, delta.dx, delta.dy);
       }
       return element;
     }).toList();
   }
 
   /// Remove os elementos selecionados da lista.
-  static List<CanvasElement> deleteElements(
+  List<CanvasElement> deleteElements(
     List<CanvasElement> elements,
     List<String> selectedIds,
   ) {
@@ -37,7 +40,7 @@ class CanvasManipulationService {
   }
 
   /// Atualiza propriedades visuais dos elementos selecionados.
-  static List<CanvasElement> updateElementsProperties(
+  List<CanvasElement> updateElementsProperties(
     List<CanvasElement> elements,
     List<String> selectedIds,
     ElementStylePatch patch,
@@ -92,7 +95,7 @@ class CanvasManipulationService {
   }
 
   /// Atualiza a geometria de um elemento durante o desenho ativo.
-  static CanvasElement updateDrawingElement(
+  CanvasElement updateDrawingElement(
     CanvasElement element,
     Offset currentPosition, {
     required Offset startPosition,

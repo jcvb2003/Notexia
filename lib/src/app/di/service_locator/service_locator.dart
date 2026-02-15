@@ -1,6 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:notexia/src/core/canvas/primitives/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 import 'package:notexia/src/features/drawing/data/repositories/asset_repository_impl.dart';
 import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
@@ -23,6 +27,19 @@ Future<void> initServiceLocator() async {
   sl.registerLazySingleton<TransformationService>(
     () => TransformationService(),
   );
+  sl.registerLazySingleton<CanvasManipulationService>(
+    () => CanvasManipulationService(sl<TransformationService>()),
+  );
+  sl.registerLazySingleton<DrawingService>(
+    () => DrawingService(
+        canvasManipulationService: sl<CanvasManipulationService>()),
+  );
+  sl.registerLazySingleton<ElementManipulationDelegate>(
+    () => ElementManipulationDelegate(
+      sl<CanvasManipulationService>(),
+      sl<TransformationService>(),
+    ),
+  );
 
   // --- Core / Infrastructure ---
   final dbService = DatabaseService();
@@ -33,6 +50,9 @@ Future<void> initServiceLocator() async {
   // Drawing Feature
   sl.registerLazySingleton<DocumentRepository>(
     () => DocumentRepositoryImpl(sl<DatabaseService>()),
+  );
+  sl.registerLazySingleton<PersistenceService>(
+    () => PersistenceService(sl<DocumentRepository>()),
   );
   sl.registerLazySingleton<AssetRepository>(() => AssetRepositoryImpl());
 

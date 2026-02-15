@@ -17,22 +17,21 @@ class ContextToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final (selectedTool, effectiveType) = context
         .select<CanvasCubit, (CanvasElementType, CanvasElementType?)>((cubit) {
-          final state = cubit.state;
-          CanvasElementType? type;
+      final state = cubit.state;
+      CanvasElementType? type;
 
-          if (state.selectedTool == CanvasElementType.selection &&
-              state.selectedElementIds.isNotEmpty) {
-            final firstId = state.selectedElementIds.first;
-            final element = state.elements
-                .where((e) => e.id == firstId)
-                .firstOrNull;
-            if (element != null) {
-              type = element.type;
-            }
-          }
+      if (state.selectedTool == CanvasElementType.selection &&
+          state.selectedElementIds.isNotEmpty) {
+        final firstId = state.selectedElementIds.first;
+        final element =
+            state.elements.where((e) => e.id == firstId).firstOrNull;
+        if (element != null) {
+          type = element.type;
+        }
+      }
 
-          return (state.selectedTool, type);
-        });
+      return (state.selectedTool, type);
+    });
 
     final displayTool = effectiveType ?? selectedTool;
 
@@ -47,17 +46,18 @@ class ContextToolbar extends StatelessWidget {
   }
 
   bool _hasControls(CanvasElementType tool) => switch (tool) {
-    CanvasElementType.rectangle ||
-    CanvasElementType.ellipse ||
-    CanvasElementType.diamond ||
-    CanvasElementType.triangle ||
-    CanvasElementType.line ||
-    CanvasElementType.arrow ||
-    CanvasElementType.freeDraw ||
-    CanvasElementType.text ||
-    CanvasElementType.eraser => true,
-    _ => false,
-  };
+        CanvasElementType.rectangle ||
+        CanvasElementType.ellipse ||
+        CanvasElementType.diamond ||
+        CanvasElementType.triangle ||
+        CanvasElementType.line ||
+        CanvasElementType.arrow ||
+        CanvasElementType.freeDraw ||
+        CanvasElementType.text ||
+        CanvasElementType.eraser =>
+          true,
+        _ => false,
+      };
 }
 
 class ToolSpecificControls extends StatelessWidget {
@@ -71,10 +71,12 @@ class ToolSpecificControls extends StatelessWidget {
       CanvasElementType.rectangle ||
       CanvasElementType.ellipse ||
       CanvasElementType.diamond ||
-      CanvasElementType.triangle => ShapeToolControls(tool: tool),
+      CanvasElementType.triangle =>
+        ShapeToolControls(tool: tool),
       CanvasElementType.line ||
       CanvasElementType.arrow ||
-      CanvasElementType.freeDraw => StrokeToolControls(tool: tool),
+      CanvasElementType.freeDraw =>
+        StrokeToolControls(tool: tool),
       CanvasElementType.text => const TextToolControls(),
       CanvasElementType.eraser => const EraserToolControls(),
       _ => const SizedBox.shrink(),
@@ -97,7 +99,7 @@ class EraserToolControls extends StatelessWidget {
         SegmentedToggle<EraserMode>(
           value: uiState.eraserMode,
           options: const {
-            EraserMode.stroke: 'TraÃ§o',
+            EraserMode.stroke: 'Traço',
             EraserMode.all: 'Tudo',
             EraserMode.area: 'Ãrea',
           },
@@ -107,4 +109,3 @@ class EraserToolControls extends StatelessWidget {
     );
   }
 }
-

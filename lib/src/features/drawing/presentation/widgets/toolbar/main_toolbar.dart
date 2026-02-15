@@ -24,7 +24,7 @@ class MainToolbar extends StatelessWidget {
           actions: [
             AppIconButton(
               icon: LucideIcons.mousePointer2,
-              tooltip: 'SeleÃ§Ã£o (V, 1)',
+              tooltip: 'Seleção (V, 1)',
               isActive: selectedTool == CanvasElementType.selection,
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.selection,
@@ -33,7 +33,7 @@ class MainToolbar extends StatelessWidget {
             ),
             AppIconButton(
               icon: LucideIcons.compass,
-              tooltip: 'NavegaÃ§Ã£o (H, 2)',
+              tooltip: 'Navegação (H, 2)',
               isActive: selectedTool == CanvasElementType.navigation,
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.navigation,
@@ -128,9 +128,9 @@ class MainToolbar extends StatelessWidget {
 
                 showModularSheet(
                   context,
-                  title: 'Passo do Snap de Ã‚ngulo',
+                  title: 'Passo do Snap de Ângulo',
                   child: SegmentedToggle<double>(
-                    label: 'Ã‚ngulo',
+                    label: 'Ângulo',
                     value: currentValue,
                     options: {
                       0.0: 'Off',

@@ -7,7 +7,7 @@ import 'package:notexia/src/features/file_management/presentation/state/file_exp
 import 'package:notexia/src/features/file_management/presentation/widgets/tree/components/tree_children_container.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/tree/components/tree_item_row.dart';
 
-/// Widget recursivo para itens da Ã¡rvore.
+/// Widget recursivo para itens da árvore.
 class TreeItem extends StatelessWidget {
   final FileItem item;
   final int level;
@@ -23,8 +23,8 @@ class TreeItem extends StatelessWidget {
       (c) => c.state.childrenOf(item.path),
     );
 
-    // OtimizaÃ§Ã£o: A Ã¡rvore sÃ³ reconstrÃ³i se o ID ou TÃ­tulo do documento ativo mudar.
-    // Isso evita lags na sidebar enquanto o usuÃ¡rio desenha no canvas.
+    // Otimização: A árvore só reconstrói se o ID ou Título do documento ativo mudar.
+    // Isso evita lags na sidebar enquanto o usuário desenha no canvas.
     final currentDocId = context.select<CanvasCubit, String>(
       (c) => c.state.document.id,
     );

@@ -8,8 +8,13 @@ import 'package:uuid/uuid.dart';
 
 class DrawingService {
   final Uuid _uuid;
+  final CanvasManipulationService _canvasManipulationService;
 
-  DrawingService({Uuid? uuid}) : _uuid = uuid ?? const Uuid();
+  DrawingService({
+    required CanvasManipulationService canvasManipulationService,
+    Uuid? uuid,
+  })  : _canvasManipulationService = canvasManipulationService,
+        _uuid = uuid ?? const Uuid();
 
   /// Inicia o desenho de um novo elemento.
   CanvasElement? startDrawing({
@@ -42,7 +47,7 @@ class DrawingService {
     bool createFromCenter = false,
     double? snapAngleStep,
   }) {
-    return CanvasManipulationService.updateDrawingElement(
+    return _canvasManipulationService.updateDrawingElement(
       element,
       currentPosition,
       startPosition: startPosition,

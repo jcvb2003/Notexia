@@ -12,6 +12,10 @@ import 'package:notexia/src/features/drawing/domain/services/transformation_serv
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 
 class MockAppSettingsRepository extends Mock implements AppSettingsRepository {}
 
@@ -57,10 +61,23 @@ void main() {
       () => mockDocumentRepository.saveElement(any(), any()),
     ).thenAnswer((_) async {});
 
+    final transformationService = TransformationService();
+    final canvasManipulationService =
+        CanvasManipulationService(transformationService);
+    final drawingService =
+        DrawingService(canvasManipulationService: canvasManipulationService);
+    final persistenceService = PersistenceService(mockDocumentRepository);
+    final elementManipulationDelegate = ElementManipulationDelegate(
+      canvasManipulationService,
+      transformationService,
+    );
+
     cubit = CanvasCubit(
       mockDocumentRepository,
       commandStackService,
-      TransformationService(),
+      drawingService,
+      persistenceService,
+      elementManipulationDelegate,
       initialDoc,
     );
   });
@@ -541,10 +558,23 @@ void main() {
           if (key.contains('step')) return '0.5235987755982989';
           return null;
         });
+        final transformationService = TransformationService();
+        final canvasManipulationService =
+            CanvasManipulationService(transformationService);
+        final drawingService = DrawingService(
+            canvasManipulationService: canvasManipulationService);
+        final persistenceService = PersistenceService(mockDocumentRepository);
+        final elementManipulationDelegate = ElementManipulationDelegate(
+          canvasManipulationService,
+          transformationService,
+        );
+
         return CanvasCubit(
           mockDocumentRepository,
           commandStackService,
-          TransformationService(),
+          drawingService,
+          persistenceService,
+          elementManipulationDelegate,
           initialDoc,
           appSettingsRepository: repo,
         );
@@ -562,10 +592,23 @@ void main() {
       build: () {
         repo = MockAppSettingsRepository();
         when(() => repo.saveSetting(any(), any())).thenAnswer((_) async {});
+        final transformationService = TransformationService();
+        final canvasManipulationService =
+            CanvasManipulationService(transformationService);
+        final drawingService = DrawingService(
+            canvasManipulationService: canvasManipulationService);
+        final persistenceService = PersistenceService(mockDocumentRepository);
+        final elementManipulationDelegate = ElementManipulationDelegate(
+          canvasManipulationService,
+          transformationService,
+        );
+
         return CanvasCubit(
           mockDocumentRepository,
           commandStackService,
-          TransformationService(),
+          drawingService,
+          persistenceService,
+          elementManipulationDelegate,
           initialDoc,
           appSettingsRepository: repo,
         );
@@ -586,10 +629,23 @@ void main() {
       build: () {
         final repo = MockAppSettingsRepository();
         when(() => repo.saveSetting(any(), any())).thenAnswer((_) async {});
+        final transformationService = TransformationService();
+        final canvasManipulationService =
+            CanvasManipulationService(transformationService);
+        final drawingService = DrawingService(
+            canvasManipulationService: canvasManipulationService);
+        final persistenceService = PersistenceService(mockDocumentRepository);
+        final elementManipulationDelegate = ElementManipulationDelegate(
+          canvasManipulationService,
+          transformationService,
+        );
+
         return CanvasCubit(
           mockDocumentRepository,
           commandStackService,
-          TransformationService(),
+          drawingService,
+          persistenceService,
+          elementManipulationDelegate,
           initialDoc,
           appSettingsRepository: repo,
         );

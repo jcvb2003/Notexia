@@ -17,20 +17,19 @@ class TextToolControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (textElement, currentStyle) = context
-        .select<CanvasCubit, (TextElement?, ElementStyle)>((cubit) {
-          final state = cubit.state;
-          final selectedIds = state.selectedElementIds;
-          TextElement? element;
-          if (selectedIds.isNotEmpty) {
-            final selectedId = selectedIds.first;
-            final found = state.elements
-                .where((e) => e.id == selectedId)
-                .firstOrNull;
-            if (found is TextElement) element = found;
-          }
-          return (element, state.currentStyle);
-        });
+    final (textElement, currentStyle) =
+        context.select<CanvasCubit, (TextElement?, ElementStyle)>((cubit) {
+      final state = cubit.state;
+      final selectedIds = state.selectedElementIds;
+      TextElement? element;
+      if (selectedIds.isNotEmpty) {
+        final selectedId = selectedIds.first;
+        final found =
+            state.elements.where((e) => e.id == selectedId).firstOrNull;
+        if (found is TextElement) element = found;
+      }
+      return (element, state.currentStyle);
+    });
     final cubit = context.read<CanvasCubit>();
     final currentAlign = textElement?.textAlign ?? TextAlign.left;
 
@@ -58,7 +57,7 @@ class TextToolControls extends StatelessWidget {
         AppIconButton(
           size: 36,
           icon: LucideIcons.italic,
-          tooltip: 'ItÃ¡lico',
+          tooltip: 'Itálico',
           isActive: textElement?.isItalic ?? false,
           onTap: () => cubit.updateSelectedElementsProperties(
             isItalic: !(textElement?.isItalic ?? false),
@@ -107,8 +106,8 @@ class TextToolControls extends StatelessWidget {
               },
               tooltip: switch (currentAlign) {
                 TextAlign.center => 'Centralizado',
-                TextAlign.right => 'Alinhar Ã  direita',
-                _ => 'Alinhar Ã  esquerda',
+                TextAlign.right => 'Alinhar à direita',
+                _ => 'Alinhar à esquerda',
               },
               onTap: () {
                 final nextAlign = switch (currentAlign) {
@@ -184,8 +183,7 @@ class TextToolControls extends StatelessWidget {
                 return Column(
                   children: [
                     ColorPickerPanel(
-                      selectedColor:
-                          element?.backgroundColor ??
+                      selectedColor: element?.backgroundColor ??
                           OpenColorPalette.transparent,
                       allowTransparent: true,
                       onColorSelected: (c) {
@@ -239,4 +237,3 @@ class _AlignIndicator extends StatelessWidget {
     );
   }
 }
-

@@ -4,10 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
+import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 
 void main() {
   final now = DateTime.parse('2025-01-01T12:00:00Z');
+  late CanvasManipulationService service;
+
+  setUp(() {
+    service = CanvasManipulationService(TransformationService());
+  });
 
   group('moveElements', () {
     test('move only selected elements by delta', () {
@@ -41,7 +47,7 @@ void main() {
       );
 
       final elements = [r1, e1, t1];
-      final moved = CanvasManipulationService.moveElements(
+      final moved = service.moveElements(
           elements,
           [
             'r1',
@@ -98,7 +104,7 @@ void main() {
       );
 
       final elements = [r1, e1, t1];
-      final remaining = CanvasManipulationService.deleteElements(elements, [
+      final remaining = service.deleteElements(elements, [
         'r1',
         't1',
       ]);
@@ -129,7 +135,7 @@ void main() {
         updatedAt: now,
       );
 
-      final updated = CanvasManipulationService.updateElementsProperties(
+      final updated = service.updateElementsProperties(
         [r1, e1],
         ['r1'],
         const ElementStylePatch(
@@ -172,7 +178,7 @@ void main() {
         text: 'old',
       );
 
-      final updated = CanvasManipulationService.updateElementsProperties(
+      final updated = service.updateElementsProperties(
         [t1],
         ['t1'],
         const ElementStylePatch(
@@ -215,7 +221,7 @@ void main() {
       );
       final start = const Offset(10, 10);
       final current = const Offset(110, 60);
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         rect,
         current,
         startPosition: start,
@@ -240,7 +246,7 @@ void main() {
       );
       final start = const Offset(10, 10);
       final current = const Offset(110, 60);
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         rect,
         current,
         startPosition: start,
@@ -265,7 +271,7 @@ void main() {
       );
       final start = const Offset(10, 10);
       final current = const Offset(110, 60);
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         rect,
         current,
         startPosition: start,
@@ -290,7 +296,7 @@ void main() {
       );
       final start = const Offset(10, 10);
       final current = const Offset(110, 60);
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         rect,
         current,
         startPosition: start,
@@ -320,7 +326,7 @@ void main() {
       final start = const Offset(20, 50);
       final delta = const Offset(70, 30);
       final current = start + delta;
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         line,
         current,
         startPosition: start,
@@ -351,7 +357,7 @@ void main() {
       );
       final start = const Offset(0, 0);
       final current = const Offset(30, 40);
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         arr,
         current,
         startPosition: start,
@@ -380,7 +386,7 @@ void main() {
       );
       final start = const Offset(10, 10);
       final current = const Offset(40, 50);
-      final updated = CanvasManipulationService.updateDrawingElement(
+      final updated = service.updateDrawingElement(
         fd,
         current,
         startPosition: start,
