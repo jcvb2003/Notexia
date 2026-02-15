@@ -43,8 +43,7 @@ class ScaleGestureHandlers {
         uiState,
       );
     } else {
-      final isNavOrSelection =
-          selectedTool == CanvasElementType.selection ||
+      final isNavOrSelection = selectedTool == CanvasElementType.selection ||
           selectedTool == CanvasElementType.navigation;
       final zoomEnabled = uiState.isZoomMode || isNavOrSelection;
       if (!zoomEnabled) return;
@@ -57,10 +56,10 @@ class ScaleGestureHandlers {
         );
         final nextPan =
             details.localFocalPoint - (router.scaleStartFocalWorld! * nextZoom);
-        router.canvasCubit.setZoom(nextZoom);
-        router.canvasCubit.setPanOffset(nextPan);
+        router.canvasCubit.viewport.setZoom(nextZoom);
+        router.canvasCubit.viewport.setPanOffset(nextPan);
       } else if (details.focalPointDelta != Offset.zero) {
-        router.canvasCubit.panBy(details.focalPointDelta);
+        router.canvasCubit.viewport.panBy(details.focalPointDelta);
       }
     }
   }
@@ -81,14 +80,14 @@ class ScaleGestureHandlers {
     CanvasState uiState,
   ) {
     if (router.canvasCubit.state.selectedTool == CanvasElementType.navigation) {
-      router.canvasCubit.setSelectionBox(null);
+      router.canvasCubit.selection.setSelectionBox(null);
       router.isDraggingSelection = false;
       return;
     }
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
       final worldPoint = router.toWorld(localPosition, uiState);
       SnapshotHitUtils.beginGestureSnapshot(router.canvasCubit, 'Apagar');
-      router.canvasCubit.startEraser(worldPoint);
+      router.canvasCubit.eraser.startEraser(worldPoint);
       eraseAt(router, uiState, worldPoint);
       return;
     }
@@ -122,7 +121,7 @@ class ScaleGestureHandlers {
           'Redimensionar',
         );
       }
-      router.canvasCubit.setSelectionBox(null);
+      router.canvasCubit.selection.setSelectionBox(null);
       return;
     }
     final hitId = SnapshotHitUtils.hitTest(router.canvasCubit, worldPoint);
@@ -134,19 +133,19 @@ class ScaleGestureHandlers {
         return;
       }
       SnapshotHitUtils.beginGestureSnapshot(router.canvasCubit, 'Desenhar');
-      router.canvasCubit.startDrawing(worldPoint);
+      router.canvasCubit.drawing.startDrawing(worldPoint);
       return;
     }
     if (hitId != null) {
       if (!router.canvasCubit.state.selectedElementIds.contains(hitId)) {
-        router.canvasCubit.selectElementAt(worldPoint);
+        router.canvasCubit.selection.selectElementAt(worldPoint);
       }
       SnapshotHitUtils.beginGestureSnapshot(router.canvasCubit, 'Mover');
       router.isDraggingSelection = true;
     } else {
       router.isDraggingSelection = false;
       router.selectionStart = worldPoint;
-      router.canvasCubit.setSelectionBox(
+      router.canvasCubit.selection.setSelectionBox(
         Rect.fromPoints(worldPoint, worldPoint),
       );
     }
@@ -171,10 +170,10 @@ class ScaleGestureHandlers {
       // However, SnappingMiddleware only touches delta if isDraggingSelection.
       // So for navigation, deltaWorld is just converted screen delta.
       // We need screen delta for panBy if panBy expects screen delta.
-      
+
       // Let's assume panBy expects screen delta.
       // router.canvasCubit.panBy(deltaWorld * uiState.zoomLevel); // Revert?
-      
+
       // Actually, let's look at `CanvasCubit.panBy`.
       // It likely updates `panOffset`.
       // If I use `deltaWorld`, it's `screenDelta / zoom`.
@@ -183,29 +182,29 @@ class ScaleGestureHandlers {
       // This means panning speed depends on zoom. Usually we want 1:1 screen movement.
       // So we should probably use `details.focalPointDelta` for panning, ignoring middleware.
       // But `_handlePanUpdate` is generic.
-      
+
       // I will keep `delta` parameter as `deltaWorld` but maybe I need `screenDelta` too?
       // Or I can just use `router.toWorldDelta` reverse.
-      
+
       // For now, let's check `_handlePanUpdate` usage.
-      
+
       // Original code:
       // router.canvasCubit.panBy(delta); // delta was details.focalPointDelta (screen)
-      
+
       // So I should pass screen delta for navigation.
       // But `handleScaleUpdate` calls `_handlePanUpdate`.
-      
+
       // I will modify `_handlePanUpdate` to accept `screenDelta` as well or just use `deltaWorld` for drawing/moving.
-      
+
       // Let's pass both?
       // Or just revert `deltaWorld` for `panBy`.
-      
-      router.canvasCubit.panBy(deltaWorld * uiState.zoomLevel); 
+
+      router.canvasCubit.viewport.panBy(deltaWorld * uiState.zoomLevel);
       return;
     }
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
       final worldPoint = router.toWorld(localPosition, uiState);
-      router.canvasCubit.updateEraserTrail(worldPoint);
+      router.canvasCubit.eraser.updateEraserTrail(worldPoint);
       eraseAt(router, uiState, worldPoint);
       return;
     }
@@ -218,16 +217,16 @@ class ScaleGestureHandlers {
     }
     if (router.isDraggingSelection) {
       // Snapping logic removed from here, handled by middleware!
-      router.canvasCubit.moveSelectedElements(deltaWorld);
+      router.canvasCubit.manipulation.moveSelectedElements(deltaWorld);
       return;
     }
     if (router.canvasCubit.state.selectedTool != CanvasElementType.selection) {
       final keepAspect = _isShiftPressed() && _isShapeTool(router);
       final snapAngle =
           (_isShiftPressed() || router.canvasCubit.state.isAngleSnapEnabled) &&
-          _isLineTool(router);
+              _isLineTool(router);
       final createFromCenter = _isAltPressed() && _isShapeTool(router);
-      router.canvasCubit.updateDrawing(
+      router.canvasCubit.drawing.updateDrawing(
         router.toWorld(localPosition, uiState),
         keepAspect: keepAspect,
         snapAngle: snapAngle,
@@ -239,7 +238,9 @@ class ScaleGestureHandlers {
     final start = router.selectionStart;
     if (start != null) {
       final current = router.toWorld(localPosition, uiState);
-      router.canvasCubit.setSelectionBox(Rect.fromPoints(start, current));
+      router.canvasCubit.selection.setSelectionBox(
+        Rect.fromPoints(start, current),
+      );
       return;
     }
   }
@@ -252,7 +253,7 @@ class ScaleGestureHandlers {
       return;
     }
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
-      router.canvasCubit.endEraser();
+      router.canvasCubit.eraser.endEraser();
       SnapshotHitUtils.endGestureSnapshot(router.canvasCubit);
       return;
     }
@@ -261,33 +262,32 @@ class ScaleGestureHandlers {
       router.resizeStartRect = null;
       router.rotateStartAngle = null;
       router.rotateStartPointerAngle = null;
-      await router.canvasCubit.finalizeManipulation();
+      await router.canvasCubit.manipulation.finalizeManipulation();
       SnapshotHitUtils.endGestureSnapshot(router.canvasCubit);
       return;
     }
     if (router.isDraggingSelection) {
-      await router.canvasCubit.finalizeManipulation();
+      await router.canvasCubit.manipulation.finalizeManipulation();
       SnapshotHitUtils.endGestureSnapshot(router.canvasCubit);
       router.isDraggingSelection = false;
       return;
     }
     if (router.canvasCubit.state.selectedTool != CanvasElementType.selection) {
-      await router.canvasCubit.stopDrawing();
+      await router.canvasCubit.drawing.stopDrawing();
       SnapshotHitUtils.endGestureSnapshot(router.canvasCubit);
       return;
     }
     final selectionStart = router.selectionStart;
     if (selectionStart != null) {
-      final rect =
-          uiState.selectionBox ??
+      final rect = uiState.selectionBox ??
           Rect.fromPoints(selectionStart, selectionStart);
-      router.canvasCubit.selectElementsInRect(rect);
+      router.canvasCubit.selection.selectElementsInRect(rect);
       router.selectionStart = null;
-      router.canvasCubit.setSelectionBox(null);
+      router.canvasCubit.selection.setSelectionBox(null);
       return;
     } else {
       if (router.isDraggingSelection) {
-        await router.canvasCubit.finalizeManipulation();
+        await router.canvasCubit.manipulation.finalizeManipulation();
         SnapshotHitUtils.endGestureSnapshot(router.canvasCubit);
       }
     }
@@ -308,7 +308,7 @@ class ScaleGestureHandlers {
       return;
     }
     if (mode == EraserMode.stroke) {
-      router.canvasCubit.eraseElementsAtPoint(worldPoint, radius);
+      router.canvasCubit.eraser.eraseElementsAtPoint(worldPoint, radius);
     }
   }
 
@@ -317,7 +317,8 @@ class ScaleGestureHandlers {
         CanvasElementType.rectangle ||
         CanvasElementType.ellipse ||
         CanvasElementType.diamond ||
-        CanvasElementType.triangle => true,
+        CanvasElementType.triangle =>
+          true,
         _ => false,
       };
 
@@ -345,4 +346,3 @@ class ScaleGestureHandlers {
         );
   }
 }
-

@@ -53,7 +53,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
 
   void _commitTextEditing(CanvasCubit cubit, String editingId) {
     final value = _textController.text;
-    cubit.commitTextEditing(editingId, value);
+    cubit.text.commitTextEditing(editingId, value);
   }
 
   @override
@@ -103,7 +103,10 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                   DeleteSelectedElementsIntent:
                       CallbackAction<DeleteSelectedElementsIntent>(
                     onInvoke: (_) {
-                      context.read<CanvasCubit>().deleteSelectedElements();
+                      context
+                          .read<CanvasCubit>()
+                          .manipulation
+                          .deleteSelectedElements();
                       return null;
                     },
                   ),
@@ -269,7 +272,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
             backgroundColor: editingElement.backgroundColor,
           ),
           onChanged: (value) {
-            context.read<CanvasCubit>().updateTextElement(
+            context.read<CanvasCubit>().text.updateTextElement(
                   editingElement.id,
                   value,
                 );

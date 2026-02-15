@@ -87,7 +87,7 @@ void main() {
           selectedTool: CanvasElementType.rectangle,
         ),
       ),
-      act: (c) => c.startDrawing(const Offset(100, 100)),
+      act: (c) => c.drawing.startDrawing(const Offset(100, 100)),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.interaction.isDrawing, 'isDrawing', isTrue)
@@ -118,7 +118,7 @@ void main() {
           selectedTool: CanvasElementType.selection,
         ),
       ),
-      act: (c) => c.startDrawing(const Offset(100, 100)),
+      act: (c) => c.drawing.startDrawing(const Offset(100, 100)),
       expect: () => <CanvasState>[],
     );
   });
@@ -127,7 +127,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'does nothing when not drawing',
       build: () => cubit,
-      act: (c) => c.stopDrawing(),
+      act: (c) => c.drawing.stopDrawing(),
       expect: () => <CanvasState>[],
     );
   });

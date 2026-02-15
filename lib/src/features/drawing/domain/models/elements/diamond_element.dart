@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_utils.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 
@@ -73,7 +73,6 @@ class DiamondElement extends CanvasElement {
 
   @override
   bool containsPoint(Offset point) {
-    return GeometryUtils.isPointInDiamond(point, bounds);
+    return GeometryService.isPointInDiamond(point, bounds);
   }
 }
-

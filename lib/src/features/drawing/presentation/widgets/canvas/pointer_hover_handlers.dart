@@ -15,8 +15,7 @@ class PointerHoverHandlers {
     CanvasState uiState,
     CanvasElementType selectedTool,
   ) {
-    final isNavOrSelection =
-        selectedTool == CanvasElementType.selection ||
+    final isNavOrSelection = selectedTool == CanvasElementType.selection ||
         selectedTool == CanvasElementType.navigation;
     if (!uiState.isZoomMode && !isNavOrSelection) {
       return;
@@ -24,11 +23,11 @@ class PointerHoverHandlers {
     if (signal is PointerScrollEvent) {
       final isCtrlPressed =
           HardwareKeyboard.instance.logicalKeysPressed.contains(
-            LogicalKeyboardKey.controlLeft,
-          ) ||
-          HardwareKeyboard.instance.logicalKeysPressed.contains(
-            LogicalKeyboardKey.controlRight,
-          );
+                LogicalKeyboardKey.controlLeft,
+              ) ||
+              HardwareKeyboard.instance.logicalKeysPressed.contains(
+                LogicalKeyboardKey.controlRight,
+              );
       if (isCtrlPressed) {
         final direction = signal.scrollDelta.dy.sign;
         if (direction == 0) return;
@@ -40,10 +39,10 @@ class PointerHoverHandlers {
         final focal = signal.localPosition;
         final worldPoint = self.toWorld(focal, uiState);
         final nextPan = focal - (worldPoint * nextZoom);
-        self.canvasCubit.setZoom(nextZoom);
-        self.canvasCubit.setPanOffset(nextPan);
+        self.canvasCubit.viewport.setZoom(nextZoom);
+        self.canvasCubit.viewport.setPanOffset(nextPan);
       } else {
-        self.canvasCubit.panBy(-signal.scrollDelta);
+        self.canvasCubit.viewport.panBy(-signal.scrollDelta);
       }
     }
   }
@@ -56,16 +55,16 @@ class PointerHoverHandlers {
     if (self.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
       final worldPoint = self.toWorld(details.localPosition, uiState);
       SnapshotHitUtils.beginGestureSnapshot(self.canvasCubit, 'Apagar');
-      self.canvasCubit.startEraser(worldPoint);
+      self.canvasCubit.eraser.startEraser(worldPoint);
       ScaleGestureHandlers.eraseAt(self, uiState, worldPoint);
       Future.delayed(const Duration(milliseconds: 120), () {
-        self.canvasCubit.endEraser();
+        self.canvasCubit.eraser.endEraser();
         SnapshotHitUtils.endGestureSnapshot(self.canvasCubit);
       });
       return;
     }
     if (self.canvasCubit.state.selectedTool == CanvasElementType.selection) {
-      self.canvasCubit.setSelectionBox(null);
+      self.canvasCubit.selection.setSelectionBox(null);
       final worldPoint = self.toWorld(details.localPosition, uiState);
       final selectedElement = self.selectedElement;
       if (selectedElement != null) {
@@ -78,7 +77,7 @@ class PointerHoverHandlers {
           return;
         }
       }
-      self.canvasCubit.selectElementAt(worldPoint);
+      self.canvasCubit.selection.selectElementAt(worldPoint);
     }
   }
 
@@ -89,15 +88,14 @@ class PointerHoverHandlers {
   ) {
     if (self.canvasCubit.state.selectedTool != CanvasElementType.selection) {
       if (uiState.hoveredElementId != null) {
-        self.canvasCubit.setHoveredElement(null);
+        self.canvasCubit.selection.setHoveredElement(null);
       }
       return;
     }
     final worldPoint = self.toWorld(event.localPosition, uiState);
     final hitId = SnapshotHitUtils.hitTest(self.canvasCubit, worldPoint);
     if (hitId != uiState.hoveredElementId) {
-      self.canvasCubit.setHoveredElement(hitId);
+      self.canvasCubit.selection.setHoveredElement(hitId);
     }
   }
 }
-

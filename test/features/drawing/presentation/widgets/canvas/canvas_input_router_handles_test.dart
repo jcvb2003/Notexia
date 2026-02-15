@@ -91,7 +91,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.setZoom(2.0);
+      drawingCubit.viewport.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
       final uiState = drawingCubit.state;
@@ -180,7 +180,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.setZoom(2.0);
+      drawingCubit.viewport.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -273,7 +273,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.setZoom(2.0);
+      drawingCubit.viewport.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -364,7 +364,7 @@ void main() {
             ),
           ),
         );
-        drawingCubit.setZoom(2.0);
+        drawingCubit.viewport.setZoom(2.0);
 
         final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -466,7 +466,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.setZoom(2.0);
+      drawingCubit.viewport.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -544,8 +544,8 @@ void main() {
           elementManipulationDelegate,
           doc,
         );
-        await drawingCubit.setAngleSnapEnabled(true);
-        await drawingCubit.setAngleSnapStep(math.pi / 6);
+        await drawingCubit.snap.setAngleSnapEnabled(true);
+        await drawingCubit.snap.setAngleSnapStep(math.pi / 6);
 
         final startAngle = math.pi / 7;
         final el = RectangleElement(
@@ -567,7 +567,7 @@ void main() {
             ),
           ),
         );
-        drawingCubit.setZoom(2.0);
+        drawingCubit.viewport.setZoom(2.0);
 
         final router = CanvasInputRouter(canvasCubit: drawingCubit);
 

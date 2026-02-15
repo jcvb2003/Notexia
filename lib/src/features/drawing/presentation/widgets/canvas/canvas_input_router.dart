@@ -86,7 +86,7 @@ class CanvasInputRouter {
   void handleTapDown(TapDownDetails details, CanvasState uiState) {
     // Se estiver editando texto, finaliza ao clicar fora (ou deixa o foco cuidar, mas aqui garantimos)
     if (uiState.editingTextId != null) {
-      canvasCubit.finalizeTextEditing(uiState.editingTextId!);
+      canvasCubit.text.setEditingText(uiState.editingTextId!);
       return;
     }
 
@@ -94,7 +94,7 @@ class CanvasInputRouter {
 
     // Lógica específica para ferramenta de Texto
     if (uiState.selectedTool == CanvasElementType.text) {
-      canvasCubit.handleTextToolTap(worldPosition);
+      canvasCubit.text.handleTextToolTap(worldPosition, canvasCubit.selectTool);
       return;
     }
 
@@ -216,7 +216,7 @@ class CanvasInputRouter {
       final snapEnabled =
           _isShiftPressed || canvasCubit.state.isAngleSnapEnabled;
       final step = canvasCubit.state.angleSnapStep;
-      canvasCubit.rotateSelectedElement(
+      canvasCubit.manipulation.rotateSelectedElement(
         CanvasGestureMath.snapAngle(nextAngle, snapEnabled, step),
       );
       return;
@@ -225,7 +225,7 @@ class CanvasInputRouter {
     if (handle == SelectionHandle.lineStart ||
         handle == SelectionHandle.lineEnd) {
       final isStart = handle == SelectionHandle.lineStart;
-      canvasCubit.updateLineEndpoint(
+      canvasCubit.manipulation.updateLineEndpoint(
         isStart: isStart,
         worldPoint: worldPoint,
         snapAngle: _isShiftPressed || canvasCubit.state.isAngleSnapEnabled,
@@ -243,7 +243,7 @@ class CanvasInputRouter {
       localPoint,
       keepAspect: _isShiftPressed,
     );
-    canvasCubit.resizeSelectedElement(newRect);
+    canvasCubit.manipulation.resizeSelectedElement(newRect);
   }
 
   bool get _isShiftPressed {

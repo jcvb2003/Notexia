@@ -84,7 +84,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'createTextElement adds a TextElement and selects it',
       build: () => cubit,
-      act: (cubit) => cubit.createTextElement(const Offset(100, 200)),
+      act: (cubit) => cubit.text.createTextElement(const Offset(100, 200)),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements.length, 'elements count', 1)
@@ -122,7 +122,7 @@ void main() {
           document: initialDoc.copyWith(elements: [textEl]),
         );
       },
-      act: (cubit) => cubit.updateTextElement('text-1', 'Novo texto'),
+      act: (cubit) => cubit.text.updateTextElement('text-1', 'Novo texto'),
       expect: () => [
         isA<CanvasState>().having(
           (s) => (s.document.elements.first as TextElement).text,
@@ -135,7 +135,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'setEditingText updates editingTextId in state',
       build: () => cubit,
-      act: (cubit) => cubit.setEditingText('some-id'),
+      act: (cubit) => cubit.text.setEditingText('some-id'),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.interaction.textEditing.editingTextId,
@@ -154,7 +154,7 @@ void main() {
           textEditing: TextEditingState(editingTextId: 'old-id'),
         ),
       ),
-      act: (cubit) => cubit.setEditingText(null),
+      act: (cubit) => cubit.text.setEditingText(null),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.interaction.textEditing.editingTextId,
@@ -185,7 +185,7 @@ void main() {
           ),
         );
       },
-      act: (cubit) => cubit.commitTextEditing('text-1', '   '),
+      act: (cubit) => cubit.text.commitTextEditing('text-1', '   '),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements, 'elements vazio', isEmpty)
@@ -218,7 +218,7 @@ void main() {
           ),
         );
       },
-      act: (cubit) => cubit.commitTextEditing('text-1', 'Texto final'),
+      act: (cubit) => cubit.text.commitTextEditing('text-1', 'Texto final'),
       expect: () => [
         // updateTextElement emits first
         isA<CanvasState>().having(

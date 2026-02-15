@@ -2,7 +2,7 @@
 import 'package:notexia/src/app/config/constants/notexia_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 
 /// ServiÃ§o responsÃ¡vel pelas transformaÃ§Ãµes aplicadas aos elementos do canvas.
 class TransformationService {
@@ -73,10 +73,10 @@ class TransformationService {
       final moving = isStart ? newStart : newEnd;
       final nextMoving = snapAngle
           ? fixed +
-                GeometryService.snapVector(
-                  moving - fixed,
-                  angleStep ?? NotexiaConstants.angleSnapStep,
-                )
+              GeometryService.snapVector(
+                moving - fixed,
+                angleStep ?? NotexiaConstants.angleSnapStep,
+              )
           : moving;
       final finalStart = isStart ? nextMoving : fixed;
       final finalEnd = isStart ? fixed : nextMoving;
@@ -103,10 +103,10 @@ class TransformationService {
       final moving = isStart ? newStart : newEnd;
       final nextMoving = snapAngle
           ? fixed +
-                GeometryService.snapVector(
-                  moving - fixed,
-                  angleStep ?? NotexiaConstants.angleSnapStep,
-                )
+              GeometryService.snapVector(
+                moving - fixed,
+                angleStep ?? NotexiaConstants.angleSnapStep,
+              )
           : moving;
       final finalStart = isStart ? nextMoving : fixed;
       final finalEnd = isStart ? fixed : nextMoving;
@@ -127,4 +127,3 @@ class TransformationService {
     return element;
   }
 }
-

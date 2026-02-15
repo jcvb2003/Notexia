@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_utils.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 
@@ -86,7 +86,8 @@ class LineElement extends CanvasElement {
   bool containsPoint(Offset point) {
     if (points.length < 2) return false;
     final localPoint = Offset(point.dx - x, point.dy - y);
-    return GeometryUtils.distanceToSegment(localPoint, points[0], points[1]) <=
+    return GeometryService.distanceToSegment(
+            localPoint, points[0], points[1]) <=
         10.0;
   }
 }

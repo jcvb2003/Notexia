@@ -4,7 +4,7 @@ import 'package:notexia/src/app/config/constants/notexia_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 
 /// ServiÃ§o responsÃ¡vel por realizar transformaÃ§Ãµes e manipulaÃ§Ãµes nos elementos do canvas.

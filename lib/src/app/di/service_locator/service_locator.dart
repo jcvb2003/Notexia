@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';

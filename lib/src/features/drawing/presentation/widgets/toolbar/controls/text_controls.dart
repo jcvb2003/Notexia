@@ -50,7 +50,7 @@ class TextToolControls extends StatelessWidget {
           icon: LucideIcons.bold,
           tooltip: 'Negrito',
           isActive: textElement?.isBold ?? false,
-          onTap: () => cubit.updateSelectedElementsProperties(
+          onTap: () => cubit.manipulation.updateSelectedElementsProperties(
             isBold: !(textElement?.isBold ?? false),
           ),
         ),
@@ -59,7 +59,7 @@ class TextToolControls extends StatelessWidget {
           icon: LucideIcons.italic,
           tooltip: 'Itálico',
           isActive: textElement?.isItalic ?? false,
-          onTap: () => cubit.updateSelectedElementsProperties(
+          onTap: () => cubit.manipulation.updateSelectedElementsProperties(
             isItalic: !(textElement?.isItalic ?? false),
           ),
         ),
@@ -68,7 +68,7 @@ class TextToolControls extends StatelessWidget {
           icon: LucideIcons.underline,
           tooltip: 'Sublinhado',
           isActive: textElement?.isUnderlined ?? false,
-          onTap: () => cubit.updateSelectedElementsProperties(
+          onTap: () => cubit.manipulation.updateSelectedElementsProperties(
             isUnderlined: !(textElement?.isUnderlined ?? false),
           ),
         ),
@@ -77,7 +77,7 @@ class TextToolControls extends StatelessWidget {
           icon: LucideIcons.strikethrough,
           tooltip: 'Tachado',
           isActive: textElement?.isStrikethrough ?? false,
-          onTap: () => cubit.updateSelectedElementsProperties(
+          onTap: () => cubit.manipulation.updateSelectedElementsProperties(
             isStrikethrough: !(textElement?.isStrikethrough ?? false),
           ),
         ),
@@ -115,7 +115,8 @@ class TextToolControls extends StatelessWidget {
                   TextAlign.center => TextAlign.right,
                   _ => TextAlign.left,
                 };
-                cubit.updateSelectedElementsProperties(textAlign: nextAlign);
+                cubit.manipulation
+                    .updateSelectedElementsProperties(textAlign: nextAlign);
               },
             ),
             const SizedBox(height: 1),
@@ -161,7 +162,7 @@ class TextToolControls extends StatelessWidget {
                     ColorPickerPanel(
                       selectedColor:
                           element?.strokeColor ?? currentStyle.strokeColor,
-                      onColorSelected: (c) => cubit
+                      onColorSelected: (c) => cubit.manipulation
                           .updateSelectedElementsProperties(strokeColor: c),
                     ),
                   ],
@@ -188,12 +189,12 @@ class TextToolControls extends StatelessWidget {
                       allowTransparent: true,
                       onColorSelected: (c) {
                         if (c == OpenColorPalette.transparent) {
-                          cubit.updateSelectedElementsProperties(
+                          cubit.manipulation.updateSelectedElementsProperties(
                             backgroundColor: null,
                           );
                           return;
                         }
-                        cubit.updateSelectedElementsProperties(
+                        cubit.manipulation.updateSelectedElementsProperties(
                           backgroundColor: c,
                         );
                       },
@@ -204,7 +205,8 @@ class TextToolControls extends StatelessWidget {
                       value: element?.backgroundRadius ?? 4.0,
                       min: 0,
                       max: 32,
-                      onChanged: (v) => cubit.updateSelectedElementsProperties(
+                      onChanged: (v) =>
+                          cubit.manipulation.updateSelectedElementsProperties(
                         backgroundRadius: v,
                       ),
                     ),

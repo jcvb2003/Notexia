@@ -103,7 +103,7 @@ class EraserToolControls extends StatelessWidget {
             EraserMode.all: 'Tudo',
             EraserMode.area: 'Ãrea',
           },
-          onChanged: uiCubit.setEraserMode,
+          onChanged: uiCubit.eraser.setEraserMode,
         ),
       ],
     );

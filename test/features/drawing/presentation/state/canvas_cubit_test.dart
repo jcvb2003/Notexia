@@ -147,7 +147,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'startDrawing adds a new element and sets activeElementId',
       build: () => cubit,
-      act: (cubit) => cubit.startDrawing(const Offset(10, 10)),
+      act: (cubit) => cubit.drawing.startDrawing(const Offset(10, 10)),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements, 'elements', isEmpty)
@@ -167,8 +167,8 @@ void main() {
         ),
       ),
       act: (cubit) {
-        cubit.startDrawing(const Offset(10, 10));
-        cubit.updateDrawing(const Offset(50, 50));
+        cubit.drawing.startDrawing(const Offset(10, 10));
+        cubit.drawing.updateDrawing(const Offset(50, 50));
       },
       expect: () => [
         isA<CanvasState>(), // startDrawing
@@ -186,8 +186,8 @@ void main() {
         return cubit;
       },
       act: (cubit) async {
-        cubit.startDrawing(const Offset(10, 10));
-        await cubit.stopDrawing();
+        cubit.drawing.startDrawing(const Offset(10, 10));
+        await cubit.drawing.stopDrawing();
       },
       expect: () => [
         isA<CanvasState>(), // startDrawing
@@ -236,7 +236,7 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['el1']),
         );
       },
-      act: (cubit) => cubit.updateSelectedElementsProperties(
+      act: (cubit) => cubit.manipulation.updateSelectedElementsProperties(
         strokeColor: const Color(0xffff0000),
       ),
       expect: () => [
@@ -264,9 +264,9 @@ void main() {
       ),
       act: (cubit) {
         // Start at (100, 100)
-        cubit.startDrawing(const Offset(100, 100));
+        cubit.drawing.startDrawing(const Offset(100, 100));
         // move to (50, 50) -> relative (-50, -50)
-        cubit.updateDrawing(const Offset(50, 50));
+        cubit.drawing.updateDrawing(const Offset(50, 50));
       },
       expect: () => [
         isA<CanvasState>(), // startDrawing
@@ -297,13 +297,13 @@ void main() {
       ),
       act: (cubit) async {
         // Start at (100, 100) -> points [(0,0)]
-        cubit.startDrawing(const Offset(100, 100));
+        cubit.drawing.startDrawing(const Offset(100, 100));
         await Future.delayed(const Duration(milliseconds: 20));
         // move to (90, 90) -> points [(0,0), (-10,-10)]
-        cubit.updateDrawing(const Offset(90, 90));
+        cubit.drawing.updateDrawing(const Offset(90, 90));
         await Future.delayed(const Duration(milliseconds: 20));
         // move to (80, 80) -> points [(0,0), (-10,-10), (-20,-20)]
-        cubit.updateDrawing(const Offset(80, 80));
+        cubit.drawing.updateDrawing(const Offset(80, 80));
       },
       expect: () => [
         isA<CanvasState>(), // startDrawing
@@ -366,7 +366,8 @@ void main() {
           ),
         );
       },
-      act: (cubit) => cubit.moveSelectedElements(const Offset(5, -3)),
+      act: (cubit) =>
+          cubit.manipulation.moveSelectedElements(const Offset(5, -3)),
       expect: () => [
         isA<CanvasState>()
             .having(
@@ -441,7 +442,7 @@ void main() {
           ),
         );
       },
-      act: (cubit) => cubit.deleteSelectedElements(),
+      act: (cubit) => cubit.manipulation.deleteSelectedElements(),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements.length, 'remaining', 1)
@@ -470,8 +471,8 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['el1']),
         );
       },
-      act: (cubit) =>
-          cubit.resizeSelectedElement(const Rect.fromLTWH(0, 0, 100, 50)),
+      act: (cubit) => cubit.manipulation
+          .resizeSelectedElement(const Rect.fromLTWH(0, 0, 100, 50)),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements.first.x, 'x', 0)
@@ -501,7 +502,7 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['l1']),
         );
       },
-      act: (cubit) => cubit.updateLineEndpoint(
+      act: (cubit) => cubit.manipulation.updateLineEndpoint(
         isStart: false,
         worldPoint: const Offset(80, 80), // force a 45-degree inclination
         snapAngle: true,
@@ -528,7 +529,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'toggleSkeletonMode changes state',
       build: () => cubit,
-      act: (cubit) => cubit.toggleSkeletonMode(),
+      act: (cubit) => cubit.preferences.toggleSkeletonMode(),
       expect: () => [
         isA<CanvasState>().having((s) => s.isSkeletonMode, 'skeleton', true),
       ],
@@ -540,7 +541,7 @@ void main() {
         TestWidgetsFlutterBinding.ensureInitialized();
         return cubit;
       },
-      act: (cubit) => cubit.toggleFullScreen(),
+      act: (cubit) => cubit.preferences.toggleFullScreen(),
       expect: () => [
         isA<CanvasState>().having((s) => s.isFullScreen, 'fullScreen', true),
       ],
@@ -579,7 +580,7 @@ void main() {
           appSettingsRepository: repo,
         );
       },
-      act: (cubit) => cubit.loadAngleSnapSettings(),
+      act: (cubit) => cubit.snap.loadAngleSnapSettings(),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.isAngleSnapEnabled, 'enabled', true)
@@ -614,7 +615,7 @@ void main() {
         );
       },
       act: (cubit) async {
-        await cubit.toggleAngleSnapEnabled();
+        await cubit.snap.toggleAngleSnapEnabled();
       },
       expect: () => [
         isA<CanvasState>().having((s) => s.isAngleSnapEnabled, 'enabled', true),
@@ -651,7 +652,7 @@ void main() {
         );
       },
       act: (cubit) async {
-        await cubit.setAngleSnapStep(3.141592653589793 / 8);
+        await cubit.snap.setAngleSnapStep(3.141592653589793 / 8);
       },
       expect: () => [
         isA<CanvasState>().having(

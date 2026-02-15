@@ -105,7 +105,7 @@ void main() {
           document: initialDoc.copyWith(elements: [rect]),
         );
       },
-      act: (c) => c.selectElementAt(const Offset(50, 50)),
+      act: (c) => c.selection.selectElementAt(const Offset(50, 50)),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.selectedElementIds,
@@ -125,7 +125,7 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['r1']),
         );
       },
-      act: (c) => c.selectElementAt(const Offset(500, 500)),
+      act: (c) => c.selection.selectElementAt(const Offset(500, 500)),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.selectedElementIds,
@@ -146,8 +146,8 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['r1']),
         );
       },
-      act: (c) =>
-          c.selectElementAt(const Offset(210, 210), isMultiSelect: true),
+      act: (c) => c.selection
+          .selectElementAt(const Offset(210, 210), isMultiSelect: true),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.selectedElementIds,
@@ -167,7 +167,8 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['r1']),
         );
       },
-      act: (c) => c.selectElementAt(const Offset(20, 20), isMultiSelect: true),
+      act: (c) => c.selection
+          .selectElementAt(const Offset(20, 20), isMultiSelect: true),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.selectedElementIds,
@@ -187,7 +188,7 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['r1']),
         );
       },
-      act: (c) => c.selectElementAt(const Offset(50, 50)),
+      act: (c) => c.selection.selectElementAt(const Offset(50, 50)),
       // State does not change → Bloc does not emit
       expect: () => <CanvasState>[],
     );
@@ -205,7 +206,8 @@ void main() {
           document: initialDoc.copyWith(elements: [r1, r2, r3]),
         );
       },
-      act: (c) => c.selectElementsInRect(const Rect.fromLTRB(0, 0, 120, 120)),
+      act: (c) =>
+          c.selection.selectElementsInRect(const Rect.fromLTRB(0, 0, 120, 120)),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.selectedElementIds,
@@ -225,7 +227,8 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['r1']),
         );
       },
-      act: (c) => c.selectElementsInRect(const Rect.fromLTRB(0, 0, 10, 10)),
+      act: (c) =>
+          c.selection.selectElementsInRect(const Rect.fromLTRB(0, 0, 10, 10)),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.selectedElementIds,
@@ -240,7 +243,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'sets hoveredElementId',
       build: () => cubit,
-      act: (c) => c.setHoveredElement('r1'),
+      act: (c) => c.selection.setHoveredElement('r1'),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.interaction.hoveredElementId,
@@ -257,7 +260,7 @@ void main() {
         document: initialDoc,
         interaction: const InteractionState(hoveredElementId: 'r1'),
       ),
-      act: (c) => c.setHoveredElement(null),
+      act: (c) => c.selection.setHoveredElement(null),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.interaction.hoveredElementId,
@@ -280,7 +283,7 @@ void main() {
           interaction: const InteractionState(selectedElementIds: ['r1']),
         );
       },
-      act: (c) => c.deleteSelectedElements(),
+      act: (c) => c.manipulation.deleteSelectedElements(),
       expect: () => [
         isA<CanvasState>()
             .having(

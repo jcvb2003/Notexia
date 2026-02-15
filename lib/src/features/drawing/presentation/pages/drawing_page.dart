@@ -33,19 +33,16 @@ class DrawingPage extends StatelessWidget {
         final uiCubit = context.read<CanvasCubit>();
 
         final double bottomMargin = 10.0;
-        final double? toolbarTop = uiState.isToolbarAtTop
-            ? (isMobile ? 12 : 80)
-            : null;
-        final double? toolbarBottom = uiState.isToolbarAtTop
-            ? null
-            : bottomMargin;
+        final double? toolbarTop =
+            uiState.isToolbarAtTop ? (isMobile ? 12 : 80) : null;
+        final double? toolbarBottom =
+            uiState.isToolbarAtTop ? null : bottomMargin;
 
         final double? contextualTop = uiState.isToolbarAtTop
             ? (toolbarTop != null ? toolbarTop + 60 : null)
             : null;
-        final double? contextualBottom = uiState.isToolbarAtTop
-            ? null
-            : (bottomMargin + 52);
+        final double? contextualBottom =
+            uiState.isToolbarAtTop ? null : (bottomMargin + 52);
 
         return ExcludeSemantics(
           child: Stack(
@@ -53,12 +50,10 @@ class DrawingPage extends StatelessWidget {
               Positioned.fill(
                 child: isSkeleton ? const SkeletonView() : const CanvasWidget(),
               ),
-
               HeaderWidget(
                 onOpenMenu: onOpenMenu,
                 isSidebarOpen: isSidebarOpen,
               ),
-
               if (!isSkeleton) ...[
                 AnimatedPositioned(
                   duration: const Duration(milliseconds: 400),
@@ -75,16 +70,14 @@ class DrawingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 DraggableToolbar(
                   isToolbarAtTop: uiState.isToolbarAtTop,
                   toolbarTop: toolbarTop,
                   toolbarBottom: toolbarBottom,
                   isMobile: isMobile,
                   onPositionChanged: (atTop) =>
-                      uiCubit.setToolbarPosition(atTop),
+                      uiCubit.preferences.setToolbarPosition(atTop),
                 ),
-
                 Positioned(
                   bottom: isCompactLayout
                       ? (uiState.isToolbarAtTop ? bottomMargin : 140)
@@ -95,16 +88,15 @@ class DrawingPage extends StatelessWidget {
                     child: SlidableUtilityControl(
                       isZoomMode: uiState.isZoomMode,
                       zoomLevel: uiState.zoomLevel,
-                      onToggle: () => uiCubit.toggleZoomUndoRedo(),
-                      onZoomIn: () => uiCubit.zoomIn(),
-                      onZoomOut: () => uiCubit.zoomOut(),
+                      onToggle: () => uiCubit.preferences.toggleZoomUndoRedo(),
+                      onZoomIn: () => uiCubit.viewport.zoomIn(),
+                      onZoomOut: () => uiCubit.viewport.zoomOut(),
                       onUndo: () => context.read<UndoRedoCubit>().undo(),
                       onRedo: () => context.read<UndoRedoCubit>().redo(),
                     ),
                   ),
                 ),
               ],
-
               if (isFullScreen)
                 Positioned(
                   top: isMobile ? -15 : 7,
@@ -116,7 +108,7 @@ class DrawingPage extends StatelessWidget {
                       child: AppIconButton(
                         icon: LucideIcons.minimize2,
                         tooltip: 'Sair da tela cheia',
-                        onTap: () => uiCubit.toggleFullScreen(),
+                        onTap: () => uiCubit.preferences.toggleFullScreen(),
                       ),
                     ),
                   ),

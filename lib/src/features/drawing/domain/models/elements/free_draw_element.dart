@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_utils.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 
@@ -90,7 +90,7 @@ class FreeDrawElement extends CanvasElement {
     if (points.isEmpty) return false;
     final localPoint = Offset(point.dx - x, point.dy - y);
     for (int i = 0; i < points.length - 1; i++) {
-      if (GeometryUtils.distanceToSegment(
+      if (GeometryService.distanceToSegment(
             localPoint,
             points[i],
             points[i + 1],

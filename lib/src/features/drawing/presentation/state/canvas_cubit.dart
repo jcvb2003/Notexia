@@ -1,14 +1,11 @@
 ﻿import 'dart:async';
 import 'package:flutter/foundation.dart';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
-import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 
 import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
 
@@ -18,13 +15,15 @@ import 'package:notexia/src/features/drawing/domain/repositories/document_reposi
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
 
-import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/ui_preferences_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/eraser_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/manipulation_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/preferences_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/selection_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/snap_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/viewport_scope.dart';
+
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:uuid/uuid.dart';
@@ -43,8 +42,6 @@ class CanvasCubit extends Cubit<CanvasState> {
   final ElementManipulationDelegate _elementManipulationDelegate;
   final _uuid = const Uuid();
 
-  Timer? _drawThrottleTimer;
-  DateTime _lastDrawUpdate = DateTime.fromMillisecondsSinceEpoch(0);
   List<CanvasElement>? _gestureStartElements;
   String? _gestureLabel;
 
@@ -64,7 +61,6 @@ class CanvasCubit extends Cubit<CanvasState> {
   @override
   Future<void> close() {
     _persistenceService.dispose();
-    _drawThrottleTimer?.cancel();
     return super.close();
   }
 
@@ -129,98 +125,61 @@ class CanvasCubit extends Cubit<CanvasState> {
     }
   }
 
-  void toggleSkeletonMode() =>
-      emit(_uiPreferencesDelegate.toggleSkeletonMode(state));
+  late final viewport = ViewportScope(
+    () => state,
+    (s) => emit(s),
+  );
 
-  final _viewportDelegate = const ViewportDelegate();
-  final _eraserDelegate = const EraserDelegate();
-  final _snapDelegate = const SnapDelegate();
-  final _uiPreferencesDelegate = const UIPreferencesDelegate();
-  final _selectionDelegate = const SelectionDelegate();
-  final _textEditingDelegate = const TextEditingDelegate();
-  final _drawingDelegate = const DrawingDelegate();
+  late final preferences = PreferencesScope(
+    () => state,
+    (s) => emit(s),
+  );
 
-  void toggleFullScreen() =>
-      emit(_uiPreferencesDelegate.toggleFullScreen(state));
+  late final snap = SnapScope(
+    () => state,
+    (s) => emit(s),
+    _settingsRepository,
+  );
 
-  void toggleToolbarPosition() =>
-      emit(_uiPreferencesDelegate.toggleToolbarPosition(state));
+  late final selection = SelectionScope(
+    () => state,
+    (s) => emit(s),
+  );
 
-  void setToolbarPosition(bool atTop) =>
-      emit(_uiPreferencesDelegate.setToolbarPosition(state, atTop));
+  late final eraser = EraserScope(
+    () => state,
+    (s) => emit(s),
+    _scheduleSaveDocument,
+  );
 
-  void toggleZoomUndoRedo() =>
-      emit(_uiPreferencesDelegate.toggleZoomUndoRedo(state));
+  late final drawing = DrawingScope(
+    () => state,
+    (s) => emit(s),
+    _drawingService,
+    _persistenceService,
+    () => isClosed,
+  );
 
-  void zoomIn() => emit(_viewportDelegate.zoomIn(state));
+  late final text = TextScope(
+    () => state,
+    (s) => emit(s),
+    _scheduleSaveDocument,
+    deleteElementById,
+    _applyElementsFromCommand,
+    _commandStack,
+    _persistenceService,
+    _uuid,
+  );
 
-  void zoomOut() => emit(_viewportDelegate.zoomOut(state));
-
-  void setZoom(double value) => emit(_viewportDelegate.setZoom(state, value));
-
-  void setPanOffset(Offset offset) =>
-      emit(_viewportDelegate.setPanOffset(state, offset));
-
-  void panBy(Offset delta) => emit(_viewportDelegate.panBy(state, delta));
-
-  void setSelectionBox(Rect? rect) =>
-      emit(_selectionDelegate.setSelectionBox(state, rect));
-
-  void setHoveredElement(String? id) =>
-      emit(_selectionDelegate.setHoveredElement(state, id));
-
-  void setEraserMode(EraserMode mode) => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.setEraserMode(state.interaction, mode),
-        ),
-      );
-  void startEraser(Offset point) => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.startEraser(state.interaction, point),
-        ),
-      );
-  void updateEraserTrail(Offset point) => emit(
-        state.copyWith(
-          interaction:
-              _eraserDelegate.updateEraserTrail(state.interaction, point),
-        ),
-      );
-  void endEraser() => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.endEraser(state.interaction),
-        ),
-      );
-
-  Future<void> loadAngleSnapSettings() async {
-    final repo = _settingsRepository;
-    if (repo == null) return;
-    emit(await _snapDelegate.loadAngleSnapSettings(state, repo));
-  }
-
-  Future<void> setSnapMode(SnapMode mode) async {
-    emit(await _snapDelegate.setSnapMode(state, mode, _settingsRepository));
-  }
-
-  Future<void> cycleSnapMode() async {
-    emit(await _snapDelegate.cycleSnapMode(state, _settingsRepository));
-  }
-
-  Future<void> setAngleSnapEnabled(bool value) async {
-    emit(await _snapDelegate.setAngleSnapEnabled(
-        state, value, _settingsRepository));
-  }
-
-  Future<void> toggleAngleSnapEnabled() async {
-    await cycleSnapMode();
-  }
-
-  void setSnapGuides(List<SnapGuide> guides) =>
-      emit(_snapDelegate.setSnapGuides(state, guides));
-
-  Future<void> setAngleSnapStep(double value) async {
-    emit(await _snapDelegate.setAngleSnapStep(
-        state, value, _settingsRepository));
-  }
+  late final manipulation = ManipulationScope(
+    () => state,
+    (s) => emit(s),
+    _scheduleSaveDocument,
+    _applyElementsFromCommand,
+    _elementManipulationDelegate,
+    _commandStack,
+    _documentRepository,
+  );
 
   void selectTool(CanvasElementType tool) {
     if (state.selectedTool == tool) return;
@@ -240,123 +199,6 @@ class CanvasCubit extends Cubit<CanvasState> {
       ),
     );
   }
-
-  void startDrawing(Offset position) => _drawingDelegate.startDrawing(
-        state: state,
-        position: position,
-        drawingService: _drawingService,
-        emit: emit,
-      );
-
-  String? createTextElement(Offset position) =>
-      _textEditingDelegate.createTextElement(
-        state: state,
-        position: position,
-        uuid: _uuid,
-        commandStack: _commandStack,
-        emit: emit,
-        applyCallback: _applyElementsFromCommand,
-      );
-
-  void updateDrawing(
-    Offset currentPosition, {
-    bool keepAspect = false,
-    bool snapAngle = false,
-    bool createFromCenter = false,
-    double? snapAngleStep,
-  }) {
-    if (!state.isDrawing || state.activeElementId == null) return;
-
-    final now = DateTime.now();
-    if (now.difference(_lastDrawUpdate) < const Duration(milliseconds: 16)) {
-      _drawThrottleTimer?.cancel();
-      _drawThrottleTimer = Timer(const Duration(milliseconds: 16), () {
-        if (isClosed) return;
-        updateDrawing(
-          currentPosition,
-          keepAspect: keepAspect,
-          snapAngle: snapAngle,
-          createFromCenter: createFromCenter,
-          snapAngleStep: snapAngleStep,
-        );
-      });
-      return;
-    }
-
-    _drawThrottleTimer?.cancel();
-    _lastDrawUpdate = now;
-
-    final element = state.activeElement;
-    if (element == null) return;
-
-    _drawingDelegate.updateDrawing(
-      state: state,
-      currentPosition: currentPosition,
-      drawingService: _drawingService,
-      emit: emit,
-      keepAspect: keepAspect,
-      snapAngle: snapAngle,
-      snapAngleStep: snapAngleStep,
-      createFromCenter: createFromCenter,
-    );
-  }
-
-  void handleTextToolTap(Offset worldPosition) {
-    CanvasElement? clickedElement;
-    for (final element in state.document.elements.reversed) {
-      if (element.containsPoint(worldPosition)) {
-        clickedElement = element;
-        break;
-      }
-    }
-
-    if (clickedElement is TextElement) {
-      setEditingText(clickedElement.id);
-      selectTool(CanvasElementType.selection);
-      return;
-    }
-
-    final newId = createTextElement(worldPosition);
-    setEditingText(newId);
-    selectTool(CanvasElementType.selection);
-  }
-
-  void updateTextElement(String elementId, String text) =>
-      _textEditingDelegate.updateTextElement(
-        state: state,
-        elementId: elementId,
-        text: text,
-        emit: emit,
-        scheduleSave: _scheduleSaveDocument,
-      );
-
-  void commitTextEditing(String elementId, String text) =>
-      _textEditingDelegate.commitTextEditing(
-        state: state,
-        elementId: elementId,
-        text: text,
-        emit: emit,
-        scheduleSave: _scheduleSaveDocument,
-        persistenceService: _persistenceService,
-        deleteElementByIdCallback: deleteElementById,
-      );
-
-  Future<void> finalizeTextEditing(String elementId) =>
-      _textEditingDelegate.finalizeTextEditing(
-        state: state,
-        elementId: elementId,
-        persistenceService: _persistenceService,
-        emit: emit,
-      );
-
-  void setEditingText(String? id) =>
-      _textEditingDelegate.setEditingText(state: state, id: id, emit: emit);
-
-  Future<void> stopDrawing() => _drawingDelegate.stopDrawing(
-        state: state,
-        persistenceService: _persistenceService,
-        emit: emit,
-      );
 
   void clearCanvas() {
     if (state.document.elements.isEmpty) return;
@@ -391,152 +233,33 @@ class CanvasCubit extends Cubit<CanvasState> {
     );
   }
 
-  void selectElementAt(Offset localPosition, {bool isMultiSelect = false}) {
-    emit(_selectionDelegate.selectElementAt(
-      state,
-      localPosition,
-      isMultiSelect: isMultiSelect,
+  void deleteElementById(String id) {
+    if (isClosed) return;
+    final element =
+        state.document.elements.where((e) => e.id == id).firstOrNull;
+    if (element == null) return;
+
+    final updatedElements = List<CanvasElement>.from(state.document.elements)
+      ..removeWhere((e) => e.id == id);
+
+    // Se o elemento deletado estava selecionado, remove da seleção
+    final updatedSelection =
+        List<String>.from(state.interaction.selectedElementIds)..remove(id);
+
+    emit(state.copyWith(
+      document: state.document.copyWith(elements: updatedElements),
+      interaction: state.interaction.copyWith(
+        selectedElementIds: updatedSelection,
+      ),
     ));
-  }
 
-  void selectElementsInRect(Rect selectionRect) {
-    emit(_selectionDelegate.selectElementsInRect(state, selectionRect));
-  }
-
-  void moveSelectedElements(Offset delta) =>
-      _elementManipulationDelegate.moveSelectedElements(
-        state: state,
-        delta: delta,
-        emit: emit,
-      );
-
-  void resizeSelectedElement(Rect rect) =>
-      _elementManipulationDelegate.resizeSelectedElement(
-        state: state,
-        rect: rect,
-        emit: emit,
-      );
-
-  void rotateSelectedElement(double angle) =>
-      _elementManipulationDelegate.rotateSelectedElement(
-        state: state,
-        angle: angle,
-        emit: emit,
-      );
-
-  void updateLineEndpoint({
-    required bool isStart,
-    required Offset worldPoint,
-    bool snapAngle = false,
-    double? angleStep,
-  }) =>
-      _elementManipulationDelegate.updateLineEndpoint(
-        state: state,
-        isStart: isStart,
-        worldPoint: worldPoint,
-        emit: emit,
-        snapAngle: snapAngle,
-        angleStep: angleStep,
-      );
-
-  Future<void> finalizeManipulation() =>
-      _elementManipulationDelegate.finalizeManipulation(
-        state: state,
-        documentRepository: _documentRepository,
-        emit: emit,
-      );
-
-  void deleteSelectedElements() =>
-      _elementManipulationDelegate.deleteSelectedElements(
-        state: state,
-        commandStack: _commandStack,
-        emit: emit,
-        applyCallback: _applyElementsFromCommand,
-        scheduleSave: _scheduleSaveDocument,
-      );
-
-  void eraseElementsAtPoint(Offset worldPoint, double radius) {
-    final updatedElements = _eraserDelegate.eraseElements(
-      state.document.elements,
-      worldPoint,
-      radius,
-    );
-
-    if (updatedElements.length == state.document.elements.length) return;
-
-    final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(
-      state.copyWith(
-        document: updatedDoc,
-        interaction: state.interaction.copyWith(selectedElementIds: []),
+    _commandStack.add(
+      RemoveElementCommand(
+        before: [element],
+        after: const [],
+        applyElements: _applyElementsFromCommand,
+        label: 'Excluir elemento',
       ),
     );
-    _scheduleSaveDocument(updatedDoc);
   }
-
-  void deleteElementById(String elementId) =>
-      _elementManipulationDelegate.deleteElementById(
-        state: state,
-        elementId: elementId,
-        commandStack: _commandStack,
-        emit: emit,
-        applyCallback: _applyElementsFromCommand,
-        scheduleSave: _scheduleSaveDocument,
-      );
-
-  void updateSelectedElementsProperties({
-    Color? strokeColor,
-    Color? fillColor,
-    double? strokeWidth,
-    StrokeStyle? strokeStyle,
-    FillType? fillType,
-    double? opacity,
-    double? roughness,
-    String? text,
-    String? fontFamily,
-    double? fontSize,
-    TextAlign? textAlign,
-    Color? backgroundColor,
-    double? backgroundRadius,
-    bool? isBold,
-    bool? isItalic,
-    bool? isUnderlined,
-    bool? isStrikethrough,
-  }) {
-    final patch = ElementStylePatch(
-      strokeColor: strokeColor,
-      fillColor: fillColor,
-      strokeWidth: strokeWidth,
-      strokeStyle: strokeStyle,
-      fillType: fillType,
-      opacity: opacity,
-      roughness: roughness,
-      text: text,
-      fontFamily: fontFamily,
-      fontSize: fontSize,
-      textAlign: textAlign,
-      backgroundColor: backgroundColor,
-      backgroundRadius: backgroundRadius,
-      isBold: isBold,
-      isItalic: isItalic,
-      isUnderlined: isUnderlined,
-      isStrikethrough: isStrikethrough,
-    );
-
-    _elementManipulationDelegate.updateSelectedElementsProperties(
-      state: state,
-      commandStack: _commandStack,
-      emit: emit,
-      applyCallback: _applyElementsFromCommand,
-      scheduleSave: _scheduleSaveDocument,
-      patch: patch,
-    );
-  }
-
-  void updateCurrentStyle(ElementStyle style) =>
-      _elementManipulationDelegate.updateCurrentStyle(
-        state: state,
-        style: style,
-        emit: emit,
-      );
 }

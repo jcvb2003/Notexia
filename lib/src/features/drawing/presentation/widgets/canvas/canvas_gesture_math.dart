@@ -1,6 +1,6 @@
 ﻿import 'dart:ui';
 import 'package:notexia/src/app/config/constants/app_constants.dart';
-import 'package:notexia/src/core/canvas/primitives/geometry_service.dart';
+import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/utils/resize_math_utils.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/selection_handles.dart';
@@ -41,4 +41,3 @@ class CanvasGestureMath {
     return GeometryService.snapAngle(angle, step);
   }
 }
-
