@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/rectangle_element.dart';
+
 import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
 import 'package:notexia/src/features/drawing/domain/commands/add_element_command.dart';
 import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
@@ -11,7 +11,7 @@ import 'package:notexia/src/features/drawing/domain/commands/transform_element_c
 void main() {
   group('CanvasHelpers', () {
     // --- Mock Data ---
-    final element1 = RectangleElement(
+    final element1 = CanvasElement.rectangle(
       id: '1',
       x: 10,
       y: 10,
@@ -28,7 +28,7 @@ void main() {
       updatedAt: DateTime.now(),
     );
 
-    final element2 = RectangleElement(
+    final element2 = CanvasElement.rectangle(
       id: '2',
       x: 100,
       y: 100,

@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+// Removed import
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';

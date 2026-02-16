@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 import 'package:notexia/src/features/drawing/domain/factories/element_factory.dart';
 import 'package:notexia/src/core/utils/extensions/color_extensions.dart';

@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 void main() {
   group('TransformationService.resizeAndPlace', () {
     test('atualiza x/y/width/height e incrementa version', () {
       final now = DateTime.now();
-      final rect = RectangleElement(
+      final rect = CanvasElement.rectangle(
         id: 'r1',
         x: 10,
         y: 20,
@@ -34,10 +34,10 @@ void main() {
 
   group('TransformationService.updateLineOrArrowEndpoint', () {
     test(
-      'line com snapAngle true: vetor final Ã© ajustado ao passo (pi/12)',
+      'line com snapAngle true: vetor final é ajustado ao passo (pi/12)',
       () {
         final now = DateTime.now();
-        final line = LineElement(
+        final line = CanvasElement.line(
           id: 'l1',
           x: 10,
           y: 20,
@@ -49,7 +49,7 @@ void main() {
           points: const [Offset(0, 0), Offset(100, 0)],
         );
         final t = TransformationService();
-        final worldPoint = const Offset(80, 80); // forÃ§a ~45Â°
+        const worldPoint = Offset(80, 80); // força ~45°
         final next = t.updateLineOrArrowEndpoint(
           element: line,
           isStart: false,
@@ -61,13 +61,13 @@ void main() {
         expect(next.points.length, 2);
         final p0 = next.points[0];
         final p1 = next.points[1];
-        // vetor normalizado deve estar prÃ³ximo de 45Â° (dx â‰ˆ dy)
+        // vetor normalizado deve estar próximo de 45° (dx ≈ dy)
         expect((p1.dx - p0.dx).abs(), closeTo((p1.dy - p0.dy).abs(), 0.75));
       },
     );
-    test('line com passo customizado (pi/6) ajusta Ã¢ngulo para ~30Â°', () {
+    test('line com passo customizado (pi/6) ajusta ângulo para ~30°', () {
       final now = DateTime.now();
-      final line = LineElement(
+      final line = CanvasElement.line(
         id: 'l2',
         x: 0,
         y: 0,
@@ -96,7 +96,7 @@ void main() {
       'arrow sem snapAngle: atualiza endpoints e normaliza bounding box',
       () {
         final now = DateTime.now();
-        final arr = ArrowElement(
+        final arr = CanvasElement.arrow(
           id: 'a1',
           x: 10,
           y: 20,
@@ -108,10 +108,10 @@ void main() {
           points: const [Offset(0, 0), Offset(100, 0)],
         );
         final t = TransformationService();
-        final worldPoint = const Offset(40, 60);
+        const worldPoint = Offset(40, 60);
         final next = t.updateLineOrArrowEndpoint(
           element: arr,
-          isStart: true, // move o inÃ­cio
+          isStart: true, // move o início
           worldPoint: worldPoint,
           snapAngle: false,
         ) as ArrowElement;
@@ -120,8 +120,8 @@ void main() {
         expect(next.points.length, 2);
         final p0 = next.points[0];
         final p1 = next.points[1];
-        final finalStart = worldPoint;
-        final finalEnd = const Offset(110, 20); // antigo endAbs
+        const finalStart = worldPoint;
+        const finalEnd = Offset(110, 20); // antigo endAbs
         final minX = math.min(finalStart.dx, finalEnd.dx);
         final minY = math.min(finalStart.dy, finalEnd.dy);
         // Pontos normalizados: cada ponto deve ser relativo ao minX/minY

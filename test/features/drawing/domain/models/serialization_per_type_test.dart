@@ -3,14 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element_mapper.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/rectangle_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/ellipse_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/diamond_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/triangle_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/line_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/arrow_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/free_draw_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
 
 /// Testa a serialização/deserialização roundtrip para todos os tipos de elemento.
 ///
@@ -20,7 +12,7 @@ void main() {
 
   group('Serialization Roundtrip', () {
     test('RectangleElement', () {
-      final original = RectangleElement(
+      final original = CanvasElement.rectangle(
         id: 'rect-1',
         x: 10,
         y: 20,
@@ -40,7 +32,7 @@ void main() {
     });
 
     test('EllipseElement', () {
-      final original = EllipseElement(
+      final original = CanvasElement.ellipse(
         id: 'ellipse-1',
         x: 5,
         y: 15,
@@ -53,7 +45,7 @@ void main() {
     });
 
     test('DiamondElement', () {
-      final original = DiamondElement(
+      final original = CanvasElement.diamond(
         id: 'diamond-1',
         x: 30,
         y: 40,
@@ -68,7 +60,7 @@ void main() {
     });
 
     test('TriangleElement', () {
-      final original = TriangleElement(
+      final original = CanvasElement.triangle(
         id: 'tri-1',
         x: 0,
         y: 0,
@@ -81,7 +73,7 @@ void main() {
     });
 
     test('LineElement', () {
-      final original = LineElement(
+      final original = CanvasElement.line(
         id: 'line-1',
         x: 0,
         y: 0,
@@ -96,12 +88,12 @@ void main() {
       expect(restored, isA<LineElement>());
       expect(
         (restored as LineElement).points.length,
-        original.points.length,
+        (original as LineElement).points.length,
       );
     });
 
     test('ArrowElement', () {
-      final original = ArrowElement(
+      final original = CanvasElement.arrow(
         id: 'arrow-1',
         x: 10,
         y: 10,
@@ -116,12 +108,12 @@ void main() {
       expect(restored, isA<ArrowElement>());
       expect(
         (restored as ArrowElement).points.length,
-        original.points.length,
+        (original as ArrowElement).points.length,
       );
     });
 
     test('FreeDrawElement', () {
-      final original = FreeDrawElement(
+      final original = CanvasElement.freeDraw(
         id: 'free-1',
         x: 0,
         y: 0,
@@ -141,12 +133,12 @@ void main() {
       expect(restored, isA<FreeDrawElement>());
       expect(
         (restored as FreeDrawElement).points.length,
-        original.points.length,
+        (original as FreeDrawElement).points.length,
       );
     });
 
     test('TextElement', () {
-      final original = TextElement(
+      final original = CanvasElement.text(
         id: 'text-1',
         x: 50,
         y: 50,
@@ -165,18 +157,19 @@ void main() {
       _assertCommonFields(original, restored);
       expect(restored, isA<TextElement>());
       final restoredText = restored as TextElement;
-      expect(restoredText.text, original.text);
-      expect(restoredText.fontFamily, original.fontFamily);
-      expect(restoredText.fontSize, original.fontSize);
-      expect(restoredText.textAlign, original.textAlign);
-      expect(restoredText.isBold, original.isBold);
-      expect(restoredText.isItalic, original.isItalic);
+      final originalText = original as TextElement;
+      expect(restoredText.text, originalText.text);
+      expect(restoredText.fontFamily, originalText.fontFamily);
+      expect(restoredText.fontSize, originalText.fontSize);
+      expect(restoredText.textAlign, originalText.textAlign);
+      expect(restoredText.isBold, originalText.isBold);
+      expect(restoredText.isItalic, originalText.isItalic);
     });
   });
 
   group('Serialization edge cases', () {
     test('toMap with useIntColors=true converts colors to ARGB32', () {
-      final el = RectangleElement(
+      final el = CanvasElement.rectangle(
         id: 'r1',
         x: 0,
         y: 0,
@@ -190,7 +183,7 @@ void main() {
     });
 
     test('toMap with useIntBools=true converts booleans to 0/1', () {
-      final el = TextElement(
+      final el = CanvasElement.text(
         id: 't1',
         x: 0,
         y: 0,

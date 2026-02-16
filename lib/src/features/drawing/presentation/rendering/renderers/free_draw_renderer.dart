@@ -1,5 +1,5 @@
 ﻿import 'dart:ui';
-import 'package:notexia/src/features/drawing/domain/models/elements/free_draw_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/rendering/element_renderer.dart';
 
 class _CachedPathData {

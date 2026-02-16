@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:notexia/src/app/config/constants/notexia_constants.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
@@ -72,7 +71,7 @@ void main() {
         doc,
       );
 
-      final el = RectangleElement(
+      final el = CanvasElement.rectangle(
         id: 'r1',
         x: 100,
         y: 100,
@@ -161,7 +160,7 @@ void main() {
         doc,
       );
 
-      final el = RectangleElement(
+      final el = CanvasElement.rectangle(
         id: 'r2',
         x: 50,
         y: 50,
@@ -254,7 +253,7 @@ void main() {
         doc,
       );
 
-      final el = RectangleElement(
+      final el = CanvasElement.rectangle(
         id: 'r3',
         x: 20,
         y: 20,
@@ -345,7 +344,7 @@ void main() {
           doc,
         );
 
-        final el = RectangleElement(
+        final el = CanvasElement.rectangle(
           id: 'r4',
           x: 40,
           y: 40,
@@ -447,7 +446,7 @@ void main() {
       );
 
       final startAngle = math.pi / 5;
-      final el = RectangleElement(
+      final el = CanvasElement.rectangle(
         id: 'r5',
         x: 100,
         y: 100,
@@ -548,7 +547,7 @@ void main() {
         await drawingCubit.snap.setAngleSnapStep(math.pi / 6);
 
         final startAngle = math.pi / 7;
-        final el = RectangleElement(
+        final el = CanvasElement.rectangle(
           id: 'r6',
           x: 120,
           y: 120,

@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/utils/resize_math_utils.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 void main() {
   group('ResizeMathUtils.toLocalForElement', () {
-    test('sem rotaÃ§Ã£o retorna o mesmo ponto', () {
-      final el = RectangleElement(
+    test('sem rotação retorna o mesmo ponto', () {
+      final el = CanvasElement.rectangle(
         id: 'r1',
         x: 0,
         y: 0,
@@ -17,13 +17,13 @@ void main() {
         updatedAt: DateTime.now(),
         angle: 0,
       );
-      final p = const Offset(150, 50);
+      const p = Offset(150, 50);
       final local = ResizeMathUtils.toLocalForElement(p, el);
       expect(local, p);
     });
 
-    test('com rotaÃ§Ã£o pi/2 ajusta o ponto para o frame local', () {
-      final el = RectangleElement(
+    test('com rotação pi/2 ajusta o ponto para o frame local', () {
+      final el = CanvasElement.rectangle(
         id: 'r2',
         x: 0,
         y: 0,
@@ -107,7 +107,7 @@ void main() {
       expect(next.height, 150);
     });
 
-    test('bottomRight com keepAspect preserva razÃ£o largura/altura', () {
+    test('bottomRight com keepAspect preserva razão largura/altura', () {
       const start = Rect.fromLTWH(0, 0, 80, 40);
       final next = ResizeMathUtils.resizeFromHandle(
         ResizeHandleType.bottomRight,
@@ -121,4 +121,3 @@ void main() {
     });
   });
 }
-

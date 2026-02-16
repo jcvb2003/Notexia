@@ -712,6 +712,7 @@ abstract class $InteractionStateCopyWith<$Res> {
       SnapState snap,
       TextEditingState textEditing});
 
+  $CanvasElementCopyWith<$Res>? get activeDrawingElement;
   $EraserStateCopyWith<$Res> get eraser;
   $SnapStateCopyWith<$Res> get snap;
   $TextEditingStateCopyWith<$Res> get textEditing;
@@ -796,6 +797,20 @@ class _$InteractionStateCopyWithImpl<$Res, $Val extends InteractionState>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
+  $CanvasElementCopyWith<$Res>? get activeDrawingElement {
+    if (_value.activeDrawingElement == null) {
+      return null;
+    }
+
+    return $CanvasElementCopyWith<$Res>(_value.activeDrawingElement!, (value) {
+      return _then(_value.copyWith(activeDrawingElement: value) as $Val);
+    });
+  }
+
+  /// Create a copy of InteractionState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
   $EraserStateCopyWith<$Res> get eraser {
     return $EraserStateCopyWith<$Res>(_value.eraser, (value) {
       return _then(_value.copyWith(eraser: value) as $Val);
@@ -844,6 +859,8 @@ abstract class _$$InteractionStateImplCopyWith<$Res>
       SnapState snap,
       TextEditingState textEditing});
 
+  @override
+  $CanvasElementCopyWith<$Res>? get activeDrawingElement;
   @override
   $EraserStateCopyWith<$Res> get eraser;
   @override

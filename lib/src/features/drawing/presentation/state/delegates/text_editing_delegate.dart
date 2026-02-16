@@ -3,7 +3,6 @@ import 'package:uuid/uuid.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/factories/canvas_element_factory.dart';
 import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';

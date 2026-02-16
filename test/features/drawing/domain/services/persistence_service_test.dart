@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
@@ -9,16 +10,20 @@ class MockDocumentRepository extends Mock implements DocumentRepository {}
 
 class MockDrawingDocument extends Mock implements DrawingDocument {}
 
-class MockCanvasElement extends Mock implements CanvasElement {}
-
 class DrawingDocumentFake extends Fake implements DrawingDocument {}
-
-class CanvasElementFake extends Fake implements CanvasElement {}
 
 void main() {
   setUpAll(() {
     registerFallbackValue(DrawingDocumentFake());
-    registerFallbackValue(CanvasElementFake());
+    registerFallbackValue(CanvasElement.rectangle(
+      id: 'fallback',
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      strokeColor: Colors.black,
+      updatedAt: DateTime.now(),
+    ));
   });
 
   late PersistenceService persistenceService;
@@ -69,7 +74,15 @@ void main() {
     });
 
     test('saveElement calls repository immediately', () async {
-      final element = MockCanvasElement();
+      final element = CanvasElement.rectangle(
+        id: 'elem-1',
+        x: 10,
+        y: 20,
+        width: 100,
+        height: 50,
+        strokeColor: Colors.black,
+        updatedAt: DateTime.now(),
+      );
       const docId = 'doc-123';
       when(() => mockRepository.saveElement(any(), any()))
           .thenAnswer((_) async {});

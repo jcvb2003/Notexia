@@ -2,7 +2,7 @@
 import 'dart:math' as math;
 import 'package:notexia/src/core/canvas/rendering/painters/dashed_painter.dart';
 import 'package:notexia/src/core/canvas/rendering/painters/rough_painter.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/arrow_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/presentation/rendering/element_renderer.dart';
 

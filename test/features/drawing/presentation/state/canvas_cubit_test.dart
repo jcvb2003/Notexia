@@ -21,8 +21,6 @@ class MockAppSettingsRepository extends Mock implements AppSettingsRepository {}
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
 
-class CanvasElementFake extends Fake implements CanvasElement {}
-
 void main() {
   late CanvasCubit cubit;
   late MockDocumentRepository mockDocumentRepository;
@@ -39,7 +37,15 @@ void main() {
         updatedAt: DateTime.now(),
       ),
     );
-    registerFallbackValue(CanvasElementFake());
+    registerFallbackValue(CanvasElement.rectangle(
+      id: 'fallback',
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      strokeColor: Colors.black,
+      updatedAt: DateTime.now(),
+    ));
   });
 
   setUp(() {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
 import 'package:notexia/src/features/drawing/domain/commands/add_element_command.dart';
 import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
 import 'package:notexia/src/features/drawing/domain/commands/transform_element_command.dart';

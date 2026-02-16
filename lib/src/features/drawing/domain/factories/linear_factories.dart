@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/line_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/arrow_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/free_draw_element.dart';
+
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
+
 import 'package:notexia/src/features/drawing/domain/factories/element_factory.dart';
 
 class LineFactory implements ElementFactory<LineElement> {

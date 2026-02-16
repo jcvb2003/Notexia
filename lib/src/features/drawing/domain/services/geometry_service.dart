@@ -115,6 +115,27 @@ class GeometryService {
     return math.sqrt(dx * dx + dy * dy);
   }
 
+  static bool isPointInTriangle(Offset p, Offset p0, Offset p1, Offset p2) {
+    final area = 0.5 *
+        (-p1.dy * p2.dx +
+            p0.dy * (-p1.dx + p2.dx) +
+            p0.dx * (p1.dy - p2.dy) +
+            p1.dx * p2.dy);
+    final s = 1 /
+        (2 * area) *
+        (p0.dy * p2.dx -
+            p0.dx * p2.dy +
+            (p2.dy - p0.dy) * p.dx +
+            (p0.dx - p2.dx) * p.dy);
+    final t = 1 /
+        (2 * area) *
+        (p0.dx * p1.dy -
+            p0.dy * p1.dx +
+            (p0.dy - p1.dy) * p.dx +
+            (p1.dx - p0.dx) * p.dy);
+    return s > 0 && t > 0 && 1 - s - t > 0;
+  }
+
   /// Verifica se um ponto está dentro de um diamante (losango).
   static bool isPointInDiamond(Offset point, Rect bounds) {
     // Transforma o ponto para coordenadas relativas ao centro do diamante

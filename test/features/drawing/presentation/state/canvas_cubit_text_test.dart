@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
@@ -16,8 +16,6 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/elemen
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
-
-class CanvasElementFake extends Fake implements CanvasElement {}
 
 void main() {
   late CanvasCubit cubit;
@@ -35,7 +33,15 @@ void main() {
         updatedAt: DateTime.now(),
       ),
     );
-    registerFallbackValue(CanvasElementFake());
+    registerFallbackValue(CanvasElement.rectangle(
+      id: 'fallback',
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      strokeColor: Colors.black,
+      updatedAt: DateTime.now(),
+    ));
   });
 
   setUp(() {

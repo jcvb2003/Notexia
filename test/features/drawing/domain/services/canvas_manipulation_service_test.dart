@@ -1,7 +1,7 @@
 ﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
@@ -17,7 +17,7 @@ void main() {
 
   group('moveElements', () {
     test('move only selected elements by delta', () {
-      final r1 = RectangleElement(
+      final r1 = CanvasElement.rectangle(
         id: 'r1',
         x: 10,
         y: 20,
@@ -26,7 +26,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final e1 = EllipseElement(
+      final e1 = CanvasElement.ellipse(
         id: 'e1',
         x: 50,
         y: 60,
@@ -35,7 +35,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final t1 = TextElement(
+      final t1 = CanvasElement.text(
         id: 't1',
         x: 0,
         y: 0,
@@ -74,7 +74,7 @@ void main() {
 
   group('deleteElements', () {
     test('remove selected elements from list', () {
-      final r1 = RectangleElement(
+      final r1 = CanvasElement.rectangle(
         id: 'r1',
         x: 0,
         y: 0,
@@ -83,7 +83,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final e1 = EllipseElement(
+      final e1 = CanvasElement.ellipse(
         id: 'e1',
         x: 0,
         y: 0,
@@ -92,7 +92,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final t1 = TextElement(
+      final t1 = CanvasElement.text(
         id: 't1',
         x: 0,
         y: 0,
@@ -116,7 +116,7 @@ void main() {
 
   group('updateElementsProperties', () {
     test('update common style properties on selected elements', () {
-      final r1 = RectangleElement(
+      final r1 = CanvasElement.rectangle(
         id: 'r1',
         x: 0,
         y: 0,
@@ -125,7 +125,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final e1 = EllipseElement(
+      final e1 = CanvasElement.ellipse(
         id: 'e1',
         x: 0,
         y: 0,
@@ -167,7 +167,7 @@ void main() {
     });
 
     test('update text-specific properties when element is TextElement', () {
-      final t1 = TextElement(
+      final t1 = CanvasElement.text(
         id: 't1',
         x: 0,
         y: 0,
@@ -210,7 +210,7 @@ void main() {
 
   group('updateDrawingElement (shapes)', () {
     test('basic rectangle from corner', () {
-      final rect = RectangleElement(
+      final rect = CanvasElement.rectangle(
         id: 'r',
         x: 0,
         y: 0,
@@ -219,8 +219,8 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final start = const Offset(10, 10);
-      final current = const Offset(110, 60);
+      const start = Offset(10, 10);
+      const current = Offset(110, 60);
       final updated = service.updateDrawingElement(
         rect,
         current,
@@ -235,7 +235,7 @@ void main() {
     });
 
     test('keepAspect true (square)', () {
-      final rect = RectangleElement(
+      final rect = CanvasElement.rectangle(
         id: 'r',
         x: 0,
         y: 0,
@@ -244,8 +244,8 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final start = const Offset(10, 10);
-      final current = const Offset(110, 60);
+      const start = Offset(10, 10);
+      const current = Offset(110, 60);
       final updated = service.updateDrawingElement(
         rect,
         current,
@@ -260,7 +260,7 @@ void main() {
     });
 
     test('createFromCenter true', () {
-      final rect = RectangleElement(
+      final rect = CanvasElement.rectangle(
         id: 'r',
         x: 0,
         y: 0,
@@ -269,8 +269,8 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final start = const Offset(10, 10);
-      final current = const Offset(110, 60);
+      const start = Offset(10, 10);
+      const current = Offset(110, 60);
       final updated = service.updateDrawingElement(
         rect,
         current,
@@ -285,7 +285,7 @@ void main() {
     });
 
     test('createFromCenter + keepAspect', () {
-      final rect = RectangleElement(
+      final rect = CanvasElement.rectangle(
         id: 'r',
         x: 0,
         y: 0,
@@ -294,8 +294,8 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final start = const Offset(10, 10);
-      final current = const Offset(110, 60);
+      const start = Offset(10, 10);
+      const current = Offset(110, 60);
       final updated = service.updateDrawingElement(
         rect,
         current,
@@ -313,7 +313,7 @@ void main() {
 
   group('updateDrawingElement (line/arrow/freeDraw)', () {
     test('line with snapAngle true snaps to nearest angle step', () {
-      final line = LineElement(
+      final line = CanvasElement.line(
         id: 'l1',
         x: 0,
         y: 0,
@@ -323,8 +323,8 @@ void main() {
         updatedAt: now,
         points: const [Offset(0, 0)],
       );
-      final start = const Offset(20, 50);
-      final delta = const Offset(70, 30);
+      const start = Offset(20, 50);
+      const delta = Offset(70, 30);
       final current = start + delta;
       final updated = service.updateDrawingElement(
         line,
@@ -345,7 +345,7 @@ void main() {
     });
 
     test('arrow updates points without snapping', () {
-      final arr = ArrowElement(
+      final arr = CanvasElement.arrow(
         id: 'a1',
         x: 0,
         y: 0,
@@ -355,8 +355,8 @@ void main() {
         updatedAt: now,
         points: const [Offset(0, 0)],
       );
-      final start = const Offset(0, 0);
-      final current = const Offset(30, 40);
+      const start = Offset(0, 0);
+      const current = Offset(30, 40);
       final updated = service.updateDrawingElement(
         arr,
         current,
@@ -374,7 +374,7 @@ void main() {
     });
 
     test('freeDraw adds points and normalizes bounding box', () {
-      final fd = FreeDrawElement(
+      final fd = CanvasElement.freeDraw(
         id: 'fd1',
         x: 0,
         y: 0,
@@ -384,8 +384,8 @@ void main() {
         updatedAt: now,
         points: const [],
       );
-      final start = const Offset(10, 10);
-      final current = const Offset(40, 50);
+      const start = Offset(10, 10);
+      const current = Offset(40, 50);
       final updated = service.updateDrawingElement(
         fd,
         current,

@@ -2,7 +2,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 void main() {
   group('SelectionUtils', () {
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('lineEndpoints for LineElement returns absolute endpoints', () {
-      final line = LineElement(
+      final line = CanvasElement.line(
         id: 'l1',
         x: 10,
         y: 20,
@@ -71,7 +71,7 @@ void main() {
     });
 
     test('lineEndpoints for ArrowElement returns absolute endpoints', () {
-      final arr = ArrowElement(
+      final arr = CanvasElement.arrow(
         id: 'a1',
         x: 5,
         y: 6,
@@ -101,4 +101,3 @@ void main() {
     );
   });
 }
-

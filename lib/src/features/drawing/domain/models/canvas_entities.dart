@@ -1,9 +1,7 @@
-export 'elements/rectangle_element.dart';
-export 'elements/ellipse_element.dart';
-export 'elements/diamond_element.dart';
-export 'elements/triangle_element.dart';
+/// Re-exports all canvas element types from the freezed union.
+///
+/// Prefer importing `canvas_element.dart` directly in new code.
+/// This file exists for backward compatibility.
+library;
 
-export 'elements/line_element.dart';
-export 'elements/arrow_element.dart';
-export 'elements/free_draw_element.dart';
-export 'elements/text_element.dart';
+export 'canvas_element.dart';

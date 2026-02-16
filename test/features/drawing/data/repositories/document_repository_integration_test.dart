@@ -5,7 +5,7 @@ import 'package:notexia/src/core/storage/local_database/database_service.dart';
 import 'package:notexia/src/features/drawing/data/queries.dart';
 import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/rectangle_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class MockDatabaseService extends Mock implements DatabaseService {}
@@ -44,7 +44,7 @@ void main() {
       createdAt: now,
       updatedAt: now,
       elements: [
-        RectangleElement(
+        CanvasElement.rectangle(
           id: 'rect-1',
           x: 10,
           y: 10,
@@ -95,7 +95,7 @@ void main() {
     test('saveElement updates individual element', () async {
       await repository.saveDocument(testDoc);
 
-      final updatedRect = (testDoc.elements.first as RectangleElement).copyWith(
+      final updatedRect = testDoc.elements.first.copyWith(
         width: 200,
       );
 

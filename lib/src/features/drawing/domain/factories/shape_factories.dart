@@ -1,7 +1,5 @@
-﻿import 'package:notexia/src/features/drawing/domain/models/elements/rectangle_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/ellipse_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/diamond_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/triangle_element.dart';
+﻿import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
+
 import 'package:notexia/src/features/drawing/domain/factories/element_factory.dart';
 
 class RectangleFactory implements ElementFactory<RectangleElement> {

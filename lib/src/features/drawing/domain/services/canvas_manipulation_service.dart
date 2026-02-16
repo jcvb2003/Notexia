@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/app/config/constants/notexia_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
@@ -60,30 +59,31 @@ class CanvasManipulationService {
             patch.opacity != null ||
             patch.roughness != null) {
           updated = updated.copyWith(
-            strokeColor: patch.strokeColor,
-            fillColor: patch.fillColor,
-            strokeWidth: patch.strokeWidth,
-            strokeStyle: patch.strokeStyle,
-            fillType: patch.fillType,
-            opacity: patch.opacity,
-            roughness: patch.roughness,
+            strokeColor: patch.strokeColor ?? updated.strokeColor,
+            fillColor: patch.fillColor ?? updated.fillColor,
+            strokeWidth: patch.strokeWidth ?? updated.strokeWidth,
+            strokeStyle: patch.strokeStyle ?? updated.strokeStyle,
+            fillType: patch.fillType ?? updated.fillType,
+            opacity: patch.opacity ?? updated.opacity,
+            roughness: patch.roughness ?? updated.roughness,
             updatedAt: DateTime.now(),
           );
         }
 
         // Propriedades de Texto
         if (updated is TextElement) {
-          updated = updated.copyWith(
-            text: patch.text,
-            fontFamily: patch.fontFamily,
-            fontSize: patch.fontSize,
-            textAlign: patch.textAlign,
-            backgroundColor: patch.backgroundColor,
-            backgroundRadius: patch.backgroundRadius,
-            isBold: patch.isBold,
-            isItalic: patch.isItalic,
-            isUnderlined: patch.isUnderlined,
-            isStrikethrough: patch.isStrikethrough,
+          final textEl = updated;
+          updated = textEl.copyWith(
+            text: patch.text ?? textEl.text,
+            fontFamily: patch.fontFamily ?? textEl.fontFamily,
+            fontSize: patch.fontSize ?? textEl.fontSize,
+            textAlign: patch.textAlign ?? textEl.textAlign,
+            backgroundColor: patch.backgroundColor ?? textEl.backgroundColor,
+            backgroundRadius: patch.backgroundRadius ?? textEl.backgroundRadius,
+            isBold: patch.isBold ?? textEl.isBold,
+            isItalic: patch.isItalic ?? textEl.isItalic,
+            isUnderlined: patch.isUnderlined ?? textEl.isUnderlined,
+            isStrikethrough: patch.isStrikethrough ?? textEl.isStrikethrough,
             updatedAt: DateTime.now(),
           );
         }

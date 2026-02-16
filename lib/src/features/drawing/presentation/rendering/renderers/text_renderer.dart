@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/rendering/element_renderer.dart';
 
 class TextRenderer implements ElementRenderer<TextElement> {
@@ -7,7 +7,8 @@ class TextRenderer implements ElementRenderer<TextElement> {
   void render(Canvas canvas, TextElement element) {
     if (element.text.isEmpty) return;
 
-    if (element.backgroundColor != null && element.backgroundColor != Colors.transparent) {
+    if (element.backgroundColor != null &&
+        element.backgroundColor != Colors.transparent) {
       final paint = Paint()
         ..color = element.backgroundColor!
         ..style = PaintingStyle.fill;
@@ -20,7 +21,8 @@ class TextRenderer implements ElementRenderer<TextElement> {
       );
 
       canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, Radius.circular(element.backgroundRadius)),
+        RRect.fromRectAndRadius(
+            rect, Radius.circular(element.backgroundRadius)),
         paint,
       );
     }
@@ -46,8 +48,8 @@ class TextRenderer implements ElementRenderer<TextElement> {
       textDirection: TextDirection.ltr,
     );
 
-    textPainter.layout(maxWidth: element.width > 0 ? element.width : double.infinity);
+    textPainter.layout(
+        maxWidth: element.width > 0 ? element.width : double.infinity);
     textPainter.paint(canvas, Offset(element.x, element.y));
   }
 }
-

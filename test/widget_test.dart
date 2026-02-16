@@ -25,8 +25,6 @@ class MockAppSettingsRepository extends Mock implements AppSettingsRepository {}
 
 class DrawingDocumentFake extends Fake implements DrawingDocument {}
 
-class CanvasElementFake extends Fake implements CanvasElement {}
-
 class MsgDrawingService extends Mock implements DrawingService {}
 
 class MockPersistenceService extends Mock implements PersistenceService {}
@@ -43,7 +41,15 @@ void main() {
 
   setUpAll(() async {
     registerFallbackValue(DrawingDocumentFake());
-    registerFallbackValue(CanvasElementFake());
+    registerFallbackValue(CanvasElement.rectangle(
+      id: 'fallback',
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      strokeColor: Colors.black,
+      updatedAt: DateTime.now(),
+    ));
 
     if (!sl.isRegistered<TransformationService>()) {
       sl.registerLazySingleton<TransformationService>(

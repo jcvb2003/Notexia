@@ -2,14 +2,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element_mapper.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 void main() {
   group('CanvasElementMapper Serialization Round-Trip (All Types)', () {
     final now = DateTime.now();
 
     test('RectangleElement round-trip', () {
-      final element = RectangleElement(
+      final element = CanvasElement.rectangle(
         id: 'rect-1',
         x: 10,
         y: 20,
@@ -51,7 +51,6 @@ void main() {
       expect(result.isDeleted, element.isDeleted);
       expect(result.version, element.version);
       expect(result.versionNonce, element.versionNonce);
-      // Comparar datas pode ter microdiferenÃ§as de parse, usar isAtSameMomentAs ou string compare
       expect(
         result.updatedAt.toIso8601String(),
         element.updatedAt.toIso8601String(),
@@ -59,7 +58,7 @@ void main() {
     });
 
     test('EllipseElement round-trip', () {
-      final element = EllipseElement(
+      final element = CanvasElement.ellipse(
         id: 'ellipse-1',
         x: 50,
         y: 50,
@@ -78,7 +77,7 @@ void main() {
     });
 
     test('DiamondElement round-trip', () {
-      final element = DiamondElement(
+      final element = CanvasElement.diamond(
         id: 'diamond-1',
         x: 100,
         y: 100,
@@ -96,7 +95,7 @@ void main() {
     });
 
     test('TriangleElement round-trip', () {
-      final element = TriangleElement(
+      final element = CanvasElement.triangle(
         id: 'triangle-1',
         x: 30,
         y: 40,
@@ -116,7 +115,7 @@ void main() {
     });
 
     test('LineElement round-trip', () {
-      final element = LineElement(
+      final element = CanvasElement.line(
         id: 'line-1',
         x: 0,
         y: 0,
@@ -137,7 +136,7 @@ void main() {
     });
 
     test('ArrowElement round-trip', () {
-      final element = ArrowElement(
+      final element = CanvasElement.arrow(
         id: 'arrow-1',
         x: 10,
         y: 10,
@@ -157,7 +156,7 @@ void main() {
     });
 
     test('FreeDrawElement round-trip', () {
-      final element = FreeDrawElement(
+      final element = CanvasElement.freeDraw(
         id: 'freedraw-1',
         x: 0,
         y: 0,
@@ -177,7 +176,7 @@ void main() {
     });
 
     test('TextElement round-trip', () {
-      final element = TextElement(
+      final element = CanvasElement.text(
         id: 'text-1',
         x: 50,
         y: 50,

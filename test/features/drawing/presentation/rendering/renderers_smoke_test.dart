@@ -2,14 +2,7 @@ import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/rectangle_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/ellipse_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/diamond_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/triangle_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/line_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/arrow_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/free_draw_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/rendering/renderer_provider.dart';
 
 class MockCanvas extends Mock implements Canvas {}
@@ -21,13 +14,11 @@ void main() {
 
   setUp(() {
     mockCanvas = MockCanvas();
-    // Stubbing comum para evitar erros de missing stub se necessário,
-    // mas em smoke tests o objetivo é ver se o código roda sem exception interna.
   });
 
   group('Renderer Smoke Tests', () {
     test('RectangleRenderer smoke test (all styles)', () {
-      final rect = RectangleElement(
+      final rect = CanvasElement.rectangle(
         id: 'r1',
         x: 0,
         y: 0,
@@ -45,7 +36,7 @@ void main() {
     });
 
     test('EllipseRenderer smoke test', () {
-      final el = EllipseElement(
+      final el = CanvasElement.ellipse(
         id: 'e1',
         x: 0,
         y: 0,
@@ -59,7 +50,7 @@ void main() {
     });
 
     test('DiamondRenderer smoke test', () {
-      final el = DiamondElement(
+      final el = CanvasElement.diamond(
         id: 'd1',
         x: 0,
         y: 0,
@@ -73,7 +64,7 @@ void main() {
     });
 
     test('TriangleRenderer smoke test', () {
-      final el = TriangleElement(
+      final el = CanvasElement.triangle(
         id: 't1',
         x: 0,
         y: 0,
@@ -87,7 +78,7 @@ void main() {
     });
 
     test('LineRenderer smoke test', () {
-      final el = LineElement(
+      final el = CanvasElement.line(
         id: 'l1',
         x: 0,
         y: 0,
@@ -102,7 +93,7 @@ void main() {
     });
 
     test('ArrowRenderer smoke test', () {
-      final el = ArrowElement(
+      final el = CanvasElement.arrow(
         id: 'a1',
         x: 0,
         y: 0,
@@ -117,7 +108,7 @@ void main() {
     });
 
     test('FreeDrawRenderer smoke test', () {
-      final el = FreeDrawElement(
+      final el = CanvasElement.freeDraw(
         id: 'f1',
         x: 0,
         y: 0,
@@ -132,7 +123,7 @@ void main() {
     });
 
     test('TextRenderer smoke test', () {
-      final el = TextElement(
+      final el = CanvasElement.text(
         id: 'txt1',
         x: 0,
         y: 0,
@@ -143,8 +134,6 @@ void main() {
         updatedAt: now,
       );
       final renderer = RendererProvider.getRenderer(el);
-      // O TextRenderer pode usar TextPainter, que exige binding de fontes se real,
-      // mas em smoke test com mock canvas deve apenas rodar as chamadas.
       expect(() => renderer.render(mockCanvas, el), returnsNormally);
     });
   });

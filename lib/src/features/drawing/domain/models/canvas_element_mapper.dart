@@ -4,10 +4,6 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/core/utils/extensions/color_extensions.dart';
 import 'package:notexia/src/features/drawing/domain/factories/element_factory.dart';
 import 'package:notexia/src/features/drawing/domain/factories/element_factory_provider.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/text_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/line_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/arrow_element.dart';
-import 'package:notexia/src/features/drawing/domain/models/elements/free_draw_element.dart';
 
 class CanvasElementMapper {
   static CanvasElement fromMap(Map<String, dynamic> map) {
