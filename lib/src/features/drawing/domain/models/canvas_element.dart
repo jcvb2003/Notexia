@@ -205,18 +205,9 @@ sealed class CanvasElement with _$CanvasElement {
   /// Calcula o bounding box (retângulo delimitador) do elemento.
   Rect get bounds => Rect.fromLTWH(x, y, width, height);
 
-  /// Determina se o ponto clicado atinge este elemento (hit-test básico ou preciso).
+  /// Determines if the clicked point hits this element (precise hit-test).
   bool containsPoint(Offset point) {
-    return map(
-      rectangle: (e) => e.bounds.contains(point),
-      diamond: (e) => GeometryService.isPointInDiamond(point, e.bounds),
-      ellipse: (e) => GeometryService.isPointInEllipse(point, e.bounds),
-      text: (e) => e.bounds.contains(point),
-      line: (e) => _containsPointLine(point, e.x, e.y, e.points),
-      arrow: (e) => _containsPointLine(point, e.x, e.y, e.points),
-      freeDraw: (e) => _containsPointFreeDraw(point, e.x, e.y, e.points),
-      triangle: (e) => _containsPointTriangle(point, e.x, e.y, e.width, e.height),
-    );
+    return GeometryService.containsPoint(this, point);
   }
 
   /// Se o elemento pode ser redimensionado por alças padrão.
@@ -243,39 +234,4 @@ sealed class CanvasElement with _$CanvasElement {
         freeDraw: (_) => true,
         triangle: (_) => false,
       );
-
-  static bool _containsPointLine(
-      Offset point, double x, double y, List<Offset> points) {
-    if (points.length < 2) return false;
-    final localPoint = Offset(point.dx - x, point.dy - y);
-    return GeometryService.distanceToSegment(
-            localPoint, points[0], points[1]) <=
-        10.0;
-  }
-
-  static bool _containsPointFreeDraw(
-      Offset point, double x, double y, List<Offset> points) {
-    if (points.isEmpty) return false;
-    final localPoint = Offset(point.dx - x, point.dy - y);
-    for (int i = 0; i < points.length - 1; i++) {
-      if (GeometryService.distanceToSegment(
-            localPoint,
-            points[i],
-            points[i + 1],
-          ) <=
-          10.0) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  static bool _containsPointTriangle(
-      Offset point, double x, double y, double w, double h) {
-    final p0 = Offset(x + w / 2, y);
-    final p1 = Offset(x + w, y + h);
-    final p2 = Offset(x, y + h);
-
-    return GeometryService.isPointInTriangle(point, p0, p1, p2);
-  }
 }

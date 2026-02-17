@@ -7,6 +7,7 @@ import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
+import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_input_router.dart';
@@ -19,17 +20,24 @@ import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation
 
 class _DocumentRepositoryFake implements DocumentRepository {
   @override
-  Future<void> deleteDocument(String id) async {}
+  Future<Result<void>> deleteDocument(String id) async => Result.success(null);
   @override
-  Future<void> deleteElement(String drawingId, String elementId) async {}
+  Future<Result<void>> deleteElement(
+          String drawingId, String elementId) async =>
+      Result.success(null);
   @override
-  Future<DrawingDocument?> getDocumentById(String id) async => null;
+  Future<Result<DrawingDocument?>> getDocumentById(String id) async =>
+      Result.success(null);
   @override
-  Future<List<DrawingDocument>> getDocuments() async => [];
+  Future<Result<List<DrawingDocument>>> getDocuments() async =>
+      Result.success([]);
   @override
-  Future<void> saveDocument(DrawingDocument document) async {}
+  Future<Result<void>> saveDocument(DrawingDocument document) async =>
+      Result.success(null);
   @override
-  Future<void> saveElement(String drawingId, CanvasElement element) async {}
+  Future<Result<void>> saveElement(
+          String drawingId, CanvasElement element) async =>
+      Result.success(null);
 }
 
 Offset _rotate(Offset delta, double angle) {

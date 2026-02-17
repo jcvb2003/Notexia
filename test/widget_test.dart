@@ -2,6 +2,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:notexia/src/app/app.dart';
+import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/drawing/presentation/pages/drawing_page.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/sidebar_widget.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
@@ -98,8 +99,10 @@ void main() {
     when(
       () => mockSettingsRepo.getSetting(any()),
     ).thenAnswer((_) async => null);
-    when(() => mockDocRepo.saveDocument(any())).thenAnswer((_) async {});
-    when(() => mockDocRepo.saveElement(any(), any())).thenAnswer((_) async {});
+    when(() => mockDocRepo.saveDocument(any()))
+        .thenAnswer((_) async => Result.success(null));
+    when(() => mockDocRepo.saveElement(any(), any()))
+        .thenAnswer((_) async => Result.success(null));
   });
 
   testWidgets('Smoke test: NotexiaApp renders MainLayout and DrawingPage', (

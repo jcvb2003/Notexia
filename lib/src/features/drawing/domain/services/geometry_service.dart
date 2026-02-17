@@ -5,15 +5,46 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 /// ServiÃ§o responsÃ¡vel por toda a lÃ³gica geomÃ©trica do canvas.
 /// NÃ£o depende de estado, apenas realiza cÃ¡lculos.
 class GeometryService {
-  /// Verifica se um ponto estÃ¡ dentro do bounding box de um elemento.
-  bool isPointInElement(Offset point, CanvasElement element) {
-    // Hit-test bÃ¡sico usando o bounding box.
-    // Futuramente implementaremos hit-tests precisos para elipses e diamantes.
+  /// Centralized hit-test that handles rotation and delegates to shape-specific logic.
+  static bool containsPoint(CanvasElement element, Offset worldPoint) {
+    Offset point = worldPoint;
+
+    // 1. Handle Rotation: Un-rotate the point relative to element center
+    if (element.angle != 0) {
+      final center = element.bounds.center;
+      final cosA = math.cos(-element.angle);
+      final sinA = math.sin(-element.angle);
+      final dx = worldPoint.dx - center.dx;
+      final dy = worldPoint.dy - center.dy;
+
+      point = Offset(
+        dx * cosA - dy * sinA + center.dx,
+        dx * sinA + dy * cosA + center.dy,
+      );
+    }
+
+    // 2. Delegate to specific shape hit-test (on the local/un-rotated space)
+    return element.map(
+      rectangle: (e) => e.bounds.contains(point),
+      diamond: (e) => isPointInDiamond(point, e.bounds),
+      ellipse: (e) => isPointInEllipse(point, e.bounds),
+      text: (e) => e.bounds.contains(point),
+      line: (e) => _isPointNearPath(point, e.x, e.y, e.points, 10.0),
+      arrow: (e) => _isPointNearPath(point, e.x, e.y, e.points, 10.0),
+      freeDraw: (e) => _isPointNearPath(point, e.x, e.y, e.points, 10.0),
+      triangle: (e) => _isPointInTriangleElement(point, e.bounds),
+    );
+  }
+
+  /// Verifica se um ponto estÃ¡ dentro do bounding box de um elemento (Axis-Aligned).
+  bool isPointInElementBounds(Offset point, CanvasElement element) {
     return element.bounds.contains(point);
   }
 
   /// Verifica se um elemento estÃ¡ contido em uma Ã¡rea de seleÃ§Ã£o (retÃ¢ngulo).
   bool isElementInSelection(Rect selectionRect, CanvasElement element) {
+    // Para seleÃ§Ã£o, geralmente usamos o bounding box axis-aligned para simplicidade,
+    // ou o bounding box rotacionado se quisermos precisÃ£o total.
     return selectionRect.overlaps(element.bounds);
   }
 
@@ -74,7 +105,7 @@ class GeometryService {
     return (originX + minX, originY + minY, width, height, shiftedPoints);
   }
 
-  /// Calcula a distância de um ponto para um segmento de reta definido por [a] e [b].
+  /// Calcula a distÃ¢ncia de um ponto para um segmento de reta definido por [a] e [b].
   static double distanceToSegment(Offset p, Offset a, Offset b) {
     final x = p.dx;
     final y = p.dy;
@@ -136,21 +167,19 @@ class GeometryService {
     return s > 0 && t > 0 && 1 - s - t > 0;
   }
 
-  /// Verifica se um ponto está dentro de um diamante (losango).
+  /// Verifica se um ponto estÃ¡ dentro de um diamante (losango).
   static bool isPointInDiamond(Offset point, Rect bounds) {
-    // Transforma o ponto para coordenadas relativas ao centro do diamante
     final center = bounds.center;
     final dx = (point.dx - center.dx).abs();
     final dy = (point.dy - center.dy).abs();
     final width = bounds.width;
     final height = bounds.height;
 
-    // Equação do losango: |x|/a + |y|/b <= 1
-    // onde a = width/2 e b = height/2
+    if (width == 0 || height == 0) return false;
     return (dx / (width / 2)) + (dy / (height / 2)) <= 1.0;
   }
 
-  /// Verifica se um ponto está dentro de uma elipse.
+  /// Verifica se um ponto estÃ¡ dentro de uma elipse.
   static bool isPointInEllipse(Offset point, Rect bounds) {
     final center = bounds.center;
     final rx = bounds.width / 2;
@@ -161,7 +190,29 @@ class GeometryService {
     final dx = point.dx - center.dx;
     final dy = point.dy - center.dy;
 
-    // Equação da elipse: (x-h)²/a² + (y-k)²/b² <= 1
     return ((dx * dx) / (rx * rx)) + ((dy * dy) / (ry * ry)) <= 1.0;
+  }
+
+  static bool _isPointNearPath(
+    Offset p,
+    double x,
+    double y,
+    List<Offset> points,
+    double tolerance,
+  ) {
+    if (points.length < 2) return false;
+    for (int i = 0; i < points.length - 1; i++) {
+      final p1 = Offset(x + points[i].dx, y + points[i].dy);
+      final p2 = Offset(x + points[i + 1].dx, y + points[i + 1].dy);
+      if (distanceToSegment(p, p1, p2) < tolerance) return true;
+    }
+    return false;
+  }
+
+  static bool _isPointInTriangleElement(Offset p, Rect bounds) {
+    final p0 = Offset(bounds.left + bounds.width / 2, bounds.top);
+    final p1 = Offset(bounds.left, bounds.bottom);
+    final p2 = Offset(bounds.right, bounds.bottom);
+    return isPointInTriangle(p, p0, p1, p2);
   }
 }

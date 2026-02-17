@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:notexia/src/core/errors/failure.dart';
+import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
@@ -41,7 +43,8 @@ void main() {
   group('PersistenceService', () {
     test('scheduleSaveDocument calls repository after debounce', () async {
       final doc = MockDrawingDocument();
-      when(() => mockRepository.saveDocument(any())).thenAnswer((_) async {});
+      when(() => mockRepository.saveDocument(any()))
+          .thenAnswer((_) async => Result.success(null));
 
       persistenceService.scheduleSaveDocument(
         doc,
@@ -60,7 +63,8 @@ void main() {
     test('scheduleSaveDocument cancels previous timer on new call', () async {
       final doc1 = MockDrawingDocument();
       final doc2 = MockDrawingDocument();
-      when(() => mockRepository.saveDocument(any())).thenAnswer((_) async {});
+      when(() => mockRepository.saveDocument(any()))
+          .thenAnswer((_) async => Result.success(null));
 
       persistenceService.scheduleSaveDocument(doc1,
           debounceDuration: const Duration(milliseconds: 50));
@@ -85,7 +89,7 @@ void main() {
       );
       const docId = 'doc-123';
       when(() => mockRepository.saveElement(any(), any()))
-          .thenAnswer((_) async {});
+          .thenAnswer((_) async => Result.success(null));
 
       await persistenceService.saveElement(docId, element);
 
@@ -94,33 +98,40 @@ void main() {
 
     test('onComplete is called with null on success', () async {
       final doc = MockDrawingDocument();
-      String? result;
-      when(() => mockRepository.saveDocument(any())).thenAnswer((_) async {});
+      Failure? result;
+      var called = false;
+      when(() => mockRepository.saveDocument(any()))
+          .thenAnswer((_) async => Result.success(null));
 
       persistenceService.scheduleSaveDocument(
         doc,
         debounceDuration: Duration.zero,
-        onComplete: (error) => result = error,
+        onComplete: (failure) {
+          result = failure;
+          called = true;
+        },
       );
 
       await Future.delayed(Duration.zero);
+      expect(called, isTrue);
       expect(result, isNull);
     });
 
-    test('onComplete is called with error message on failure', () async {
+    test('onComplete is called with failure object on failure', () async {
       final doc = MockDrawingDocument();
-      String? result;
+      Failure? result;
+      const failure = DatabaseFailure('Save failed');
       when(() => mockRepository.saveDocument(any()))
-          .thenThrow(Exception('Save failed'));
+          .thenAnswer((_) async => Result.failure(failure));
 
       persistenceService.scheduleSaveDocument(
         doc,
         debounceDuration: Duration.zero,
-        onComplete: (error) => result = error,
+        onComplete: (f) => result = f,
       );
 
       await Future.delayed(Duration.zero);
-      expect(result, contains('Save failed'));
+      expect(result, equals(failure));
     });
   });
 }

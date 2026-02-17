@@ -57,10 +57,13 @@ void main() {
     );
 
     test('saveDocument and getDocumentById', () async {
-      await repository.saveDocument(testDoc);
+      final saveResult = await repository.saveDocument(testDoc);
+      expect(saveResult.isSuccess, isTrue);
 
-      final retrieved = await repository.getDocumentById(testDoc.id);
+      final result = await repository.getDocumentById(testDoc.id);
+      expect(result.isSuccess, isTrue);
 
+      final retrieved = result.data;
       expect(retrieved, isNotNull);
       expect(retrieved!.id, testDoc.id);
       expect(retrieved.title, testDoc.title);
@@ -83,8 +86,10 @@ void main() {
         updatedAt: now,
       ));
 
-      final docs = await repository.getDocuments();
+      final result = await repository.getDocuments();
+      expect(result.isSuccess, isTrue);
 
+      final docs = result.data!;
       expect(docs.length, 2);
       expect(docs.any((d) => d.id == 'doc-1'), isTrue);
       expect(docs.any((d) => d.id == 'doc-2'), isTrue);
@@ -97,31 +102,37 @@ void main() {
 
       final updatedRect = testDoc.elements.first.copyWith(
         width: 200,
-      );
+      ) as RectangleElement;
 
-      await repository.saveElement(testDoc.id, updatedRect);
+      final saveResult = await repository.saveElement(testDoc.id, updatedRect);
+      expect(saveResult.isSuccess, isTrue);
 
-      final retrieved = await repository.getDocumentById(testDoc.id);
-      expect(retrieved!.elements.first.width, 200);
+      final result = await repository.getDocumentById(testDoc.id);
+      expect(result.isSuccess, isTrue);
+      expect(result.data!.elements.first.width, 200);
     });
 
     test('deleteElement removes specific element', () async {
       await repository.saveDocument(testDoc);
 
-      await repository.deleteElement(testDoc.id, 'rect-1');
+      final deleteResult = await repository.deleteElement(testDoc.id, 'rect-1');
+      expect(deleteResult.isSuccess, isTrue);
 
-      final retrieved = await repository.getDocumentById(testDoc.id);
-      expect(retrieved!.elements, isEmpty);
+      final result = await repository.getDocumentById(testDoc.id);
+      expect(result.isSuccess, isTrue);
+      expect(result.data!.elements, isEmpty);
     });
 
     test('deleteDocument removes document and its elements (cascade)',
         () async {
       await repository.saveDocument(testDoc);
 
-      await repository.deleteDocument(testDoc.id);
+      final deleteResult = await repository.deleteDocument(testDoc.id);
+      expect(deleteResult.isSuccess, isTrue);
 
-      final retrieved = await repository.getDocumentById(testDoc.id);
-      expect(retrieved, isNull);
+      final result = await repository.getDocumentById(testDoc.id);
+      expect(result.isSuccess, isTrue);
+      expect(result.data, isNull);
 
       // Verificar se os elementos foram removidos (cascade manual ou automático)
       final elementMaps = await db.query(

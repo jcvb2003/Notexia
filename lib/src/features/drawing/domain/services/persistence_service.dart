@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:notexia/src/core/errors/failure.dart';
+import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
@@ -17,21 +19,22 @@ class PersistenceService {
   void scheduleSaveDocument(
     DrawingDocument doc, {
     Duration debounceDuration = const Duration(milliseconds: 350),
-    void Function(String?)? onComplete,
+    void Function(Failure?)? onComplete,
   }) {
     _saveDebounceTimer?.cancel();
     _saveDebounceTimer = Timer(debounceDuration, () async {
-      try {
-        await _repository.saveDocument(doc);
+      final result = await _repository.saveDocument(doc);
+      if (result.isSuccess) {
         onComplete?.call(null); // Success
-      } catch (e) {
-        onComplete?.call(e.toString()); // Error
+      } else {
+        onComplete?.call(result.failure);
       }
     });
   }
 
   /// Salva um elemento individual imediatamente.
-  Future<void> saveElement(String documentId, CanvasElement element) async {
-    await _repository.saveElement(documentId, element);
+  Future<Result<void>> saveElement(
+      String documentId, CanvasElement element) async {
+    return await _repository.saveElement(documentId, element);
   }
 }

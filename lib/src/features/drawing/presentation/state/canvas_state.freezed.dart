@@ -1109,6 +1109,7 @@ mixin _$CanvasState {
   bool get isToolbarAtTop => throw _privateConstructorUsedError;
   bool get isZoomMode => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  Failure? get lastFailure => throw _privateConstructorUsedError;
 
   /// Create a copy of CanvasState
   /// with the given fields replaced by the non-null parameter values.
@@ -1131,7 +1132,8 @@ abstract class $CanvasStateCopyWith<$Res> {
       bool isFullScreen,
       bool isToolbarAtTop,
       bool isZoomMode,
-      String? error});
+      String? error,
+      Failure? lastFailure});
 
   $CanvasTransformCopyWith<$Res> get transform;
   $InteractionStateCopyWith<$Res> get interaction;
@@ -1160,6 +1162,7 @@ class _$CanvasStateCopyWithImpl<$Res, $Val extends CanvasState>
     Object? isToolbarAtTop = null,
     Object? isZoomMode = null,
     Object? error = freezed,
+    Object? lastFailure = freezed,
   }) {
     return _then(_value.copyWith(
       document: null == document
@@ -1194,6 +1197,10 @@ class _$CanvasStateCopyWithImpl<$Res, $Val extends CanvasState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      lastFailure: freezed == lastFailure
+          ? _value.lastFailure
+          : lastFailure // ignore: cast_nullable_to_non_nullable
+              as Failure?,
     ) as $Val);
   }
 
@@ -1234,7 +1241,8 @@ abstract class _$$CanvasStateImplCopyWith<$Res>
       bool isFullScreen,
       bool isToolbarAtTop,
       bool isZoomMode,
-      String? error});
+      String? error,
+      Failure? lastFailure});
 
   @override
   $CanvasTransformCopyWith<$Res> get transform;
@@ -1263,6 +1271,7 @@ class __$$CanvasStateImplCopyWithImpl<$Res>
     Object? isToolbarAtTop = null,
     Object? isZoomMode = null,
     Object? error = freezed,
+    Object? lastFailure = freezed,
   }) {
     return _then(_$CanvasStateImpl(
       document: null == document
@@ -1297,6 +1306,10 @@ class __$$CanvasStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      lastFailure: freezed == lastFailure
+          ? _value.lastFailure
+          : lastFailure // ignore: cast_nullable_to_non_nullable
+              as Failure?,
     ));
   }
 }
@@ -1312,7 +1325,8 @@ class _$CanvasStateImpl extends _CanvasState {
       this.isFullScreen = false,
       this.isToolbarAtTop = false,
       this.isZoomMode = false,
-      this.error})
+      this.error,
+      this.lastFailure})
       : super._();
 
   @override
@@ -1337,10 +1351,12 @@ class _$CanvasStateImpl extends _CanvasState {
   final bool isZoomMode;
   @override
   final String? error;
+  @override
+  final Failure? lastFailure;
 
   @override
   String toString() {
-    return 'CanvasState(document: $document, transform: $transform, interaction: $interaction, isSkeletonMode: $isSkeletonMode, isFullScreen: $isFullScreen, isToolbarAtTop: $isToolbarAtTop, isZoomMode: $isZoomMode, error: $error)';
+    return 'CanvasState(document: $document, transform: $transform, interaction: $interaction, isSkeletonMode: $isSkeletonMode, isFullScreen: $isFullScreen, isToolbarAtTop: $isToolbarAtTop, isZoomMode: $isZoomMode, error: $error, lastFailure: $lastFailure)';
   }
 
   @override
@@ -1362,12 +1378,23 @@ class _$CanvasStateImpl extends _CanvasState {
                 other.isToolbarAtTop == isToolbarAtTop) &&
             (identical(other.isZoomMode, isZoomMode) ||
                 other.isZoomMode == isZoomMode) &&
-            (identical(other.error, error) || other.error == error));
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.lastFailure, lastFailure) ||
+                other.lastFailure == lastFailure));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, document, transform, interaction,
-      isSkeletonMode, isFullScreen, isToolbarAtTop, isZoomMode, error);
+  int get hashCode => Object.hash(
+      runtimeType,
+      document,
+      transform,
+      interaction,
+      isSkeletonMode,
+      isFullScreen,
+      isToolbarAtTop,
+      isZoomMode,
+      error,
+      lastFailure);
 
   /// Create a copy of CanvasState
   /// with the given fields replaced by the non-null parameter values.
@@ -1387,7 +1414,8 @@ abstract class _CanvasState extends CanvasState {
       final bool isFullScreen,
       final bool isToolbarAtTop,
       final bool isZoomMode,
-      final String? error}) = _$CanvasStateImpl;
+      final String? error,
+      final Failure? lastFailure}) = _$CanvasStateImpl;
   const _CanvasState._() : super._();
 
   @override
@@ -1406,6 +1434,8 @@ abstract class _CanvasState extends CanvasState {
   bool get isZoomMode;
   @override
   String? get error;
+  @override
+  Failure? get lastFailure;
 
   /// Create a copy of CanvasState
   /// with the given fields replaced by the non-null parameter values.

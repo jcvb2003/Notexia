@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:notexia/src/core/errors/failure.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
@@ -76,6 +77,7 @@ class CanvasState with _$CanvasState {
     @Default(false) bool isToolbarAtTop,
     @Default(false) bool isZoomMode,
     String? error,
+    Failure? lastFailure,
   }) = _CanvasState;
 
   List<CanvasElement> get elements => document.elements;

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
+import 'package:notexia/src/core/errors/result.dart';
 
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
@@ -57,9 +58,9 @@ void main() {
     );
 
     when(() => mockDocumentRepository.saveDocument(any()))
-        .thenAnswer((_) async {});
+        .thenAnswer((_) async => Result.success(null));
     when(() => mockDocumentRepository.saveElement(any(), any()))
-        .thenAnswer((_) async {});
+        .thenAnswer((_) async => Result.success(null));
 
     final transformationService = TransformationService();
     final canvasManipulationService =

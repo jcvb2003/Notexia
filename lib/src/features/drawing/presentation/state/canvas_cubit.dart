@@ -96,33 +96,39 @@ class CanvasCubit extends Cubit<CanvasState> {
   void _scheduleSaveDocument(DrawingDocument doc) {
     _persistenceService.scheduleSaveDocument(
       doc,
-      onComplete: (error) {
+      onComplete: (failure) {
         if (isClosed) return;
-        if (error != null) {
-          emit(state.copyWith(error: 'Erro ao salvar documento: $error'));
+        if (failure != null) {
+          emit(state.copyWith(
+            error: failure.message,
+            lastFailure: failure,
+          ));
         } else {
-          emit(state.copyWith(error: null));
+          emit(state.copyWith(error: null, lastFailure: null));
         }
       },
     );
   }
 
   Future<void> updateTitle(String newTitle) async {
-    try {
-      final updatedDoc = state.document.copyWith(title: newTitle);
-      _persistenceService.scheduleSaveDocument(
-        updatedDoc,
-        debounceDuration: Duration.zero, // Save immediately for title
-        onComplete: (error) {
-          if (!isClosed && error != null) {
-            emit(state.copyWith(error: 'Erro ao atualizar título: $error'));
+    final updatedDoc = state.document.copyWith(title: newTitle);
+    _persistenceService.scheduleSaveDocument(
+      updatedDoc,
+      debounceDuration: Duration.zero, // Save immediately for title
+      onComplete: (failure) {
+        if (!isClosed) {
+          if (failure != null) {
+            emit(state.copyWith(
+              error: 'Erro ao atualizar título: ${failure.message}',
+              lastFailure: failure,
+            ));
+          } else {
+            emit(state.copyWith(error: null, lastFailure: null));
           }
-        },
-      );
-      emit(state.copyWith(document: updatedDoc, error: null));
-    } catch (e) {
-      emit(state.copyWith(error: 'Erro ao atualizar título: $e'));
-    }
+        }
+      },
+    );
+    emit(state.copyWith(document: updatedDoc));
   }
 
   late final viewport = ViewportScope(
