@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-/// Specific constants for Notexia drawing elements and canvas.
-class NotexiaConstants {
+/// Constants for drawing elements and canvas configuration.
+class AppDrawingConstants {
   // Drawing Defaults
   static const double defaultStrokeWidth = 2.0;
   static const double defaultRoughness = 1.0;

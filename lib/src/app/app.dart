@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notexia/src/app/config/themes/notexia_colors.dart';
+import 'package:notexia/src/app/config/themes/app_theme.dart';
 import 'package:notexia/src/app/config/routes/app_router.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
@@ -31,7 +31,7 @@ class NotexiaApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Notexia',
         debugShowCheckedModeBanner: false,
-        theme: NotexiaTheme.lightTheme,
+        theme: AppTheme.lightTheme,
         onGenerateRoute: AppRouter.generateRoute,
         initialRoute: AppRouter.initialRoute,
       ),

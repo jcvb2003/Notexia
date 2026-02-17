@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:notexia/src/features/drawing/data/queries.dart';
+import 'package:notexia/src/core/storage/queries.dart';
 
 class DatabaseService {
   static const String _dbName = 'notexia.db';

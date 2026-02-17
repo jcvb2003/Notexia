@@ -1,19 +1,17 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/core/utils/extensions/color_extensions.dart';
-import 'package:notexia/src/features/drawing/domain/factories/element_factory.dart';
-import 'package:notexia/src/features/drawing/domain/factories/element_factory_provider.dart';
 
 class CanvasElementMapper {
   static CanvasElement fromMap(Map<String, dynamic> map) {
+    // 1. Identificar tipo
     final typeName = map['type'] as String;
     final type = CanvasElementType.values.firstWhere(
       (e) => e.name == typeName,
       orElse: () => CanvasElementType.rectangle,
     );
 
-    // Campos comuns
+    // 2. Extrair dados comuns
     final id = map['id'] as String;
     final x = (map['x'] as num).toDouble();
     final y = (map['y'] as num).toDouble();
@@ -48,36 +46,232 @@ class CanvasElementMapper {
         ? DateTime.parse(map['updatedAt'] as String)
         : DateTime.now();
 
-    final commonData = CanvasElementCommonData(
-      id: id,
-      type: type,
-      x: x,
-      y: y,
-      width: width,
-      height: height,
-      angle: angle,
-      strokeColor: strokeColor,
-      fillColor: fillColor,
-      strokeWidth: strokeWidth,
-      strokeStyle: strokeStyle,
-      fillType: fillType,
-      opacity: opacity,
-      roughness: roughness,
-      zIndex: zIndex,
-      isDeleted: isDeleted,
-      version: version,
-      versionNonce: versionNonce,
-      updatedAt: updatedAt,
-    );
-
-    try {
-      final factory = ElementFactoryProvider.getFactory(type);
-      return factory.create(commonData, map);
-    } catch (e) {
-      // Fallback para tipos nÃ£o suportados ou erros de factory
-      // Retorna um retÃ¢ngulo como fallback seguro, ou relanÃ§a erro dependendo da polÃ­tica
-      // Neste caso, vamos relanÃ§ar se for um erro de factory nÃ£o encontrada
-      rethrow;
+    // 3. Instanciar elemento específico baseado no tipo
+    switch (type) {
+      case CanvasElementType.rectangle:
+        return RectangleElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+        );
+      case CanvasElementType.diamond:
+        return DiamondElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+        );
+      case CanvasElementType.ellipse:
+        return EllipseElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+        );
+      case CanvasElementType.triangle:
+        return TriangleElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+        );
+      case CanvasElementType.line:
+        final pointsList = (map['points'] as List?) ?? [];
+        final points = pointsList
+            .map((p) =>
+                Offset((p['x'] as num).toDouble(), (p['y'] as num).toDouble()))
+            .toList();
+        return LineElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+          points: points,
+        );
+      case CanvasElementType.arrow:
+        final pointsList = (map['points'] as List?) ?? [];
+        final points = pointsList
+            .map((p) =>
+                Offset((p['x'] as num).toDouble(), (p['y'] as num).toDouble()))
+            .toList();
+        return ArrowElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+          points: points,
+        );
+      case CanvasElementType.freeDraw:
+        final pointsList = (map['points'] as List?) ?? [];
+        final points = pointsList
+            .map((p) =>
+                Offset((p['x'] as num).toDouble(), (p['y'] as num).toDouble()))
+            .toList();
+        return FreeDrawElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+          points: points,
+        );
+      case CanvasElementType.text:
+        return TextElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          fillColor: fillColor,
+          strokeWidth: strokeWidth,
+          strokeStyle: strokeStyle,
+          fillType: fillType,
+          opacity: opacity,
+          roughness: roughness,
+          zIndex: zIndex,
+          isDeleted: isDeleted,
+          version: version,
+          versionNonce: versionNonce,
+          updatedAt: updatedAt,
+          text: map['text'] as String? ?? '',
+          fontFamily: map['fontFamily'] as String? ?? 'Virgil',
+          fontSize: (map['fontSize'] as num?)?.toDouble() ?? 20.0,
+          textAlign: TextAlign.values.firstWhere(
+            (e) => e.name == (map['textAlign'] as String? ?? 'left'),
+            orElse: () => TextAlign.left,
+          ),
+          backgroundColor: map['backgroundColor'] != null
+              ? _parseColor(map['backgroundColor'])
+              : null,
+          backgroundRadius:
+              (map['backgroundRadius'] as num?)?.toDouble() ?? 4.0,
+          isBold: map['isBold'] is int
+              ? map['isBold'] == 1
+              : (map['isBold'] as bool? ?? false),
+          isItalic: map['isItalic'] is int
+              ? map['isItalic'] == 1
+              : (map['isItalic'] as bool? ?? false),
+          isUnderlined: map['isUnderlined'] is int
+              ? map['isUnderlined'] == 1
+              : (map['isUnderlined'] as bool? ?? false),
+          isStrikethrough: map['isStrikethrough'] is int
+              ? map['isStrikethrough'] == 1
+              : (map['isStrikethrough'] as bool? ?? false),
+        );
+      default:
+        // Caso de tipo desconhecido, retorna retângulo seguro ou lança erro
+        // Neste caso, retornamos um retÃ¢ngulo vazio para não crashear
+        return RectangleElement(
+          id: id,
+          x: x,
+          y: y,
+          width: width,
+          height: height,
+          angle: angle,
+          strokeColor: strokeColor,
+          updatedAt: updatedAt,
+          zIndex: zIndex,
+        );
     }
   }
 
@@ -94,8 +288,10 @@ class CanvasElementMapper {
       'width': element.width,
       'height': element.height,
       'angle': element.angle,
-      'strokeColor': element.strokeColor.toHex(),
-      'fillColor': element.fillColor?.toHex(),
+      'strokeColor': _colorToHexOrInt(element.strokeColor, useIntColors),
+      'fillColor': element.fillColor != null
+          ? _colorToHexOrInt(element.fillColor!, useIntColors)
+          : null,
       'strokeWidth': element.strokeWidth,
       'strokeStyle': element.strokeStyle.name,
       'fillType': element.fillType.name,
@@ -114,7 +310,9 @@ class CanvasElementMapper {
         'fontFamily': element.fontFamily,
         'fontSize': element.fontSize,
         'textAlign': element.textAlign.name,
-        'backgroundColor': element.backgroundColor?.toHex(),
+        'backgroundColor': element.backgroundColor != null
+            ? _colorToHexOrInt(element.backgroundColor!, useIntColors)
+            : null,
         'backgroundRadius': element.backgroundRadius,
         'isBold': element.isBold,
         'isItalic': element.isItalic,
@@ -132,19 +330,6 @@ class CanvasElementMapper {
           element.points.map((p) => {'x': p.dx, 'y': p.dy}).toList();
     }
 
-    if (useIntColors) {
-      // Converte cores de Hex string de volta para int
-      if (map['strokeColor'] is String) {
-        map['strokeColor'] = hexToColor(map['strokeColor']).toARGB32();
-      }
-      if (map['fillColor'] is String) {
-        map['fillColor'] = hexToColor(map['fillColor']).toARGB32();
-      }
-      if (map['backgroundColor'] is String) {
-        map['backgroundColor'] = hexToColor(map['backgroundColor']).toARGB32();
-      }
-    }
-
     if (useIntBools) {
       // Converte campos booleanos para int (0/1) para SQLite
       final boolFields = [
@@ -156,7 +341,7 @@ class CanvasElementMapper {
       ];
 
       for (var field in boolFields) {
-        if (map[field] is bool) {
+        if (map.containsKey(field) && map[field] is bool) {
           map[field] = (map[field] as bool) ? 1 : 0;
         }
       }
@@ -165,12 +350,33 @@ class CanvasElementMapper {
     return map;
   }
 
+  static dynamic _colorToHexOrInt(Color color, bool asInt) {
+    if (asInt) {
+      return color.toARGB32();
+    }
+    return color.toHex();
+  }
+
   static Color _parseColor(dynamic value) {
     if (value is int) {
       return Color(value);
     } else if (value is String) {
-      return hexToColor(value);
+      return HexColorExtension.fromHex(value);
     }
     return Colors.black; // Fallback seguro
+  }
+}
+
+// Pequena extensão local helper se a global não estiver disponível ou para garantir
+extension HexColorExtension on Color {
+  String toHex() {
+    return '#${toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}';
+  }
+
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/features/settings/domain/services/user_colors_storage.dart';
+import 'package:notexia/src/app/di/service_locator/service_locator.dart';
 import 'package:notexia/src/core/utils/constants/open_color_palette.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/color_picker/color_section.dart';
@@ -53,7 +54,7 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
   }
 
   Future<void> _loadUserColors() async {
-    final colors = await UserColorsStorage().loadUserColors();
+    final colors = await sl<UserColorsStorage>().loadUserColors();
     if (mounted) {
       setState(() {
         _userColors = colors;
@@ -63,12 +64,12 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
   }
 
   Future<void> _saveUserColor(Color color) async {
-    await UserColorsStorage().saveUserColor(color);
+    await sl<UserColorsStorage>().saveUserColor(color);
     await _loadUserColors();
   }
 
   Future<void> _removeUserColor(Color color) async {
-    await UserColorsStorage().removeUserColor(color);
+    await sl<UserColorsStorage>().removeUserColor(color);
     await _loadUserColors();
   }
 

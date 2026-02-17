@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
-import 'package:notexia/src/app/config/constants/notexia_constants.dart';
+import 'package:notexia/src/app/config/constants/app_drawing_constants.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
@@ -516,7 +516,7 @@ void main() {
 
       final updated =
           drawingCubit.state.document.elements.first as RectangleElement;
-      final step = NotexiaConstants.angleSnapStep;
+      final step = AppDrawingConstants.angleSnapStep;
       final expected = ((startAngle + delta) / step).round() * step;
       expect(updated.angle, closeTo(expected, 0.001));
     });

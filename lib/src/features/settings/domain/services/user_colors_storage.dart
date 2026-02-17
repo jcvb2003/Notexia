@@ -5,9 +5,7 @@ class UserColorsStorage {
   static const String _key = 'user_custom_colors';
   static const int _maxColors = 12;
 
-  static final UserColorsStorage _instance = UserColorsStorage._internal();
-  factory UserColorsStorage() => _instance;
-  UserColorsStorage._internal();
+  UserColorsStorage();
 
   SharedPreferences? _prefs;
   List<Color> _inMemoryColors = [];

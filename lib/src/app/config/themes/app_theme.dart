@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 
-class NotexiaTheme {
+class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,

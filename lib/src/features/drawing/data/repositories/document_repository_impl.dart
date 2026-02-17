@@ -7,7 +7,7 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document_mapp
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
-import 'package:notexia/src/features/drawing/data/queries.dart';
+import 'package:notexia/src/core/storage/queries.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 
 class DocumentRepositoryImpl implements DocumentRepository {

@@ -3,7 +3,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 
-// Removed import
 import 'package:notexia/src/core/widgets/common/app_text_field.dart';
 import 'package:notexia/src/features/drawing/presentation/utils/shortcuts/app_intents.dart';
 import 'package:notexia/src/features/drawing/presentation/utils/shortcuts/app_shortcuts.dart';

@@ -14,6 +14,7 @@ import 'package:notexia/src/features/file_management/data/repositories/file_repo
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 import 'package:notexia/src/features/settings/data/repositories/app_settings_repository_impl.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/settings/domain/services/user_colors_storage.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';
 
@@ -63,6 +64,7 @@ Future<void> initServiceLocator() async {
   sl.registerLazySingleton<AppSettingsRepository>(
     () => AppSettingsRepositoryImpl(sl<DatabaseService>()),
   );
+  sl.registerLazySingleton<UserColorsStorage>(() => UserColorsStorage());
 
   // Undo Redo Feature
   sl.registerLazySingleton<CommandStackService>(() => CommandStackService());

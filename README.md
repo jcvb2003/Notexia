@@ -1,6 +1,6 @@
 # Notexia
 
-Editor de desenho e anotações em Flutter, inspirado no Excalidraw e Obsidian Canvas.
+Editor de desenho e anotações em Flutter.
 
 ## Funcionalidades Principais
 

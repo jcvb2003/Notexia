@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:notexia/src/app/config/constants/notexia_constants.dart';
+import 'package:notexia/src/app/config/constants/app_drawing_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
@@ -75,7 +75,7 @@ class TransformationService {
           ? fixed +
               GeometryService.snapVector(
                 moving - fixed,
-                angleStep ?? NotexiaConstants.angleSnapStep,
+                angleStep ?? AppDrawingConstants.angleSnapStep,
               )
           : moving;
       final finalStart = isStart ? nextMoving : fixed;
@@ -105,7 +105,7 @@ class TransformationService {
           ? fixed +
               GeometryService.snapVector(
                 moving - fixed,
-                angleStep ?? NotexiaConstants.angleSnapStep,
+                angleStep ?? AppDrawingConstants.angleSnapStep,
               )
           : moving;
       final finalStart = isStart ? nextMoving : fixed;
