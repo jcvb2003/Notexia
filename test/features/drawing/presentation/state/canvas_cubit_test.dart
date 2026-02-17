@@ -159,13 +159,17 @@ void main() {
         isA<CanvasState>()
             .having((s) => s.document.elements, 'elements', isEmpty)
             .having((s) => s.isDrawing, 'isDrawing', true)
-            .having((s) => s.activeElementId, 'activeId', isNotNull)
-            .having((s) => s.activeDrawingElement, 'drawingElement', isNotNull),
+            .having((s) => s.activeElementId, 'activeId', isNotNull),
       ],
+      verify: (cubit) {
+        // With ValueNotifier optimization, the active element is stored
+        // in the notifier rather than in the Cubit state.
+        expect(cubit.drawing.activeElementNotifier.value, isNotNull);
+      },
     );
 
     blocTest<CanvasCubit, CanvasState>(
-      'updateDrawing updates the active element',
+      'updateDrawing updates the active element via ValueNotifier',
       build: () => cubit,
       seed: () => CanvasState(
         document: initialDoc.copyWith(elements: []),
@@ -178,13 +182,15 @@ void main() {
         cubit.drawing.updateDrawing(const Offset(50, 50));
       },
       expect: () => [
-        isA<CanvasState>(), // startDrawing
-        isA<CanvasState>().having(
-          (s) => s.activeDrawingElement!.width,
-          'width',
-          40,
-        ),
+        isA<CanvasState>(), // startDrawing (only state emitted)
       ],
+      verify: (cubit) {
+        // With ValueNotifier optimization, updateDrawing updates
+        // the notifier directly instead of emitting a Cubit state.
+        final element = cubit.drawing.activeElementNotifier.value;
+        expect(element, isNotNull);
+        expect(element!.width, 40);
+      },
     );
 
     blocTest<CanvasCubit, CanvasState>(
@@ -276,21 +282,17 @@ void main() {
         cubit.drawing.updateDrawing(const Offset(50, 50));
       },
       expect: () => [
-        isA<CanvasState>(), // startDrawing
-        isA<CanvasState>().having(
-          (s) {
-            final line = s.activeDrawingElement as LineElement;
-            // Normalization should set x,y to min coordinate (50, 50)
-            // and points to [(50, 50), (0, 0)]
-            return line.x == 50 &&
-                line.y == 50 &&
-                line.points[0] == const Offset(50, 50) &&
-                line.points[1] == const Offset(0, 0);
-          },
-          'coordinates normalized correctly',
-          true,
-        ),
+        isA<CanvasState>(), // startDrawing (only state emitted)
       ],
+      verify: (cubit) {
+        final line = cubit.drawing.activeElementNotifier.value as LineElement;
+        // Normalization should set x,y to min coordinate (50, 50)
+        // and points to [(50, 50), (0, 0)]
+        expect(line.x, 50);
+        expect(line.y, 50);
+        expect(line.points[0], const Offset(50, 50));
+        expect(line.points[1], const Offset(0, 0));
+      },
     );
 
     blocTest<CanvasCubit, CanvasState>(
@@ -313,23 +315,18 @@ void main() {
         cubit.drawing.updateDrawing(const Offset(80, 80));
       },
       expect: () => [
-        isA<CanvasState>(), // startDrawing
-        isA<CanvasState>(), // update 1
-        isA<CanvasState>().having(
-          (s) {
-            final fd = s.activeDrawingElement as FreeDrawElement;
-            // Normalization should set x,y to (80, 80)
-            // points relative to (80, 80) should be [(20, 20), (10, 10), (0, 0)]
-            return fd.x == 80 &&
-                fd.y == 80 &&
-                fd.points.length == 3 &&
-                fd.points.last == const Offset(0, 0) &&
-                fd.points.first == const Offset(20, 20);
-          },
-          'coordinates normalized correctly',
-          true,
-        ),
+        isA<CanvasState>(), // startDrawing (only state emitted)
       ],
+      verify: (cubit) {
+        final fd = cubit.drawing.activeElementNotifier.value as FreeDrawElement;
+        // Normalization should set x,y to (80, 80)
+        // points relative to (80, 80) should be [(20, 20), (10, 10), (0, 0)]
+        expect(fd.x, 80);
+        expect(fd.y, 80);
+        expect(fd.points.length, 3);
+        expect(fd.points.last, const Offset(0, 0));
+        expect(fd.points.first, const Offset(20, 20));
+      },
     );
   });
 

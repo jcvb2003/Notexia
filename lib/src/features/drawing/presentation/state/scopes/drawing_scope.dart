@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
@@ -16,6 +18,12 @@ class DrawingScope {
   DateTime _lastDrawUpdate = DateTime.fromMillisecondsSinceEpoch(0);
   Timer? _drawThrottleTimer;
 
+  bool _isDisposed = false;
+  bool get isDisposed => _isDisposed || _isClosed();
+
+  final ValueNotifier<CanvasElement?> activeElementNotifier =
+      ValueNotifier(null);
+
   DrawingScope(
     this._getState,
     this._emit,
@@ -24,6 +32,13 @@ class DrawingScope {
     this._isClosed,
   );
 
+  void dispose() {
+    if (_isDisposed) return;
+    _isDisposed = true;
+    _drawThrottleTimer?.cancel();
+    activeElementNotifier.dispose();
+  }
+
   void startDrawing(Offset position) {
     _drawThrottleTimer?.cancel();
     _delegate.startDrawing(
@@ -31,6 +46,8 @@ class DrawingScope {
       position: position,
       drawingService: _drawingService,
       emit: _emit,
+      elementNotifier: activeElementNotifier,
+      isDisposed: () => isDisposed,
     );
   }
 
@@ -42,13 +59,13 @@ class DrawingScope {
     double? snapAngleStep,
   }) {
     final state = _getState();
-    if (!state.isDrawing || state.activeElementId == null) return;
+    if (!state.isDrawing && state.activeElementId == null) return;
 
     final now = DateTime.now();
     if (now.difference(_lastDrawUpdate) < const Duration(milliseconds: 16)) {
       _drawThrottleTimer?.cancel();
       _drawThrottleTimer = Timer(const Duration(milliseconds: 16), () {
-        if (_isClosed()) return;
+        if (isDisposed) return;
         updateDrawing(
           currentPosition,
           keepAspect: keepAspect,
@@ -68,6 +85,8 @@ class DrawingScope {
       currentPosition: currentPosition,
       drawingService: _drawingService,
       emit: _emit,
+      elementNotifier: activeElementNotifier,
+      isDisposed: () => isDisposed,
       keepAspect: keepAspect,
       snapAngle: snapAngle,
       snapAngleStep: snapAngleStep,
@@ -79,5 +98,7 @@ class DrawingScope {
         state: _getState(),
         persistenceService: _persistenceService,
         emit: _emit,
+        elementNotifier: activeElementNotifier,
+        isDisposed: () => isDisposed,
       );
 }

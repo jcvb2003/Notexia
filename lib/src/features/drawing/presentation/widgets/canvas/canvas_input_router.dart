@@ -117,11 +117,39 @@ class CanvasInputRouter {
     _pipeline.process(inputEvent);
   }
 
+  bool isRawPointerMode(CanvasElementType tool) {
+    return tool == CanvasElementType.freeDraw;
+  }
+
+  void handlePointerDown(PointerDownEvent event, CanvasState uiState) {
+    if (!isRawPointerMode(uiState.selectedTool)) return;
+
+    final worldPosition = toWorld(event.localPosition, uiState);
+    canvasCubit.drawing.startDrawing(worldPosition);
+  }
+
+  void handlePointerMove(PointerMoveEvent event, CanvasState uiState) {
+    if (!isRawPointerMode(uiState.selectedTool)) return;
+    // Only update if we are actually drawing (to avoid hover moves triggering drawing logic unexpectedly)
+    // However, startDrawing sets the state.
+
+    final worldPosition = toWorld(event.localPosition, uiState);
+    canvasCubit.drawing.updateDrawing(worldPosition);
+  }
+
+  void handlePointerUp(PointerUpEvent event, CanvasState uiState) {
+    if (!isRawPointerMode(uiState.selectedTool)) return;
+
+    canvasCubit.drawing.stopDrawing();
+  }
+
   void handleScaleStart(
     ScaleStartDetails details,
     CanvasState uiState,
     CanvasElementType selectedTool,
   ) {
+    if (isRawPointerMode(selectedTool)) return;
+
     final event = ScaleStartInputEvent(
       details: details,
       state: uiState,
@@ -136,6 +164,8 @@ class CanvasInputRouter {
     CanvasState uiState,
     CanvasElementType selectedTool,
   ) {
+    if (isRawPointerMode(selectedTool)) return;
+
     // Cria o evento e passa pelo pipeline
     final worldFocal = toWorld(details.localFocalPoint, uiState);
     final worldFocalDelta = toWorldDelta(details.focalPointDelta, uiState);
@@ -157,6 +187,8 @@ class CanvasInputRouter {
     CanvasState uiState,
     CanvasElementType selectedTool,
   ) {
+    if (isRawPointerMode(selectedTool)) return;
+
     final event = ScaleEndInputEvent(
       details: details,
       state: uiState,

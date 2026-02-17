@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/background_grid_painter.dart';
@@ -52,7 +53,6 @@ class StaticCanvasPainter extends CustomPainter {
     canvas.translate(panOffset.dx, panOffset.dy);
     canvas.scale(zoomLevel);
 
-    // Context minimal for static rendering
     final ctx = PainterCtx(
       elements: elements,
       selectedElementIds: const [],
@@ -93,6 +93,7 @@ class DynamicCanvasPainter extends CustomPainter {
   final bool isEraserActive;
   final List<SnapGuide> snapGuides;
   final CanvasElement? activeDrawingElement;
+  final ValueListenable<CanvasElement?>? activeElementListenable;
 
   DynamicCanvasPainter({
     required this.elements,
@@ -105,13 +106,17 @@ class DynamicCanvasPainter extends CustomPainter {
     required this.isEraserActive,
     required this.snapGuides,
     this.activeDrawingElement,
-  });
+    this.activeElementListenable,
+  }) : super(repaint: activeElementListenable);
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.translate(panOffset.dx, panOffset.dy);
     canvas.scale(zoomLevel);
+
+    final currentActiveElement =
+        activeElementListenable?.value ?? activeDrawingElement;
 
     final ctx = PainterCtx(
       elements: elements,
@@ -124,12 +129,12 @@ class DynamicCanvasPainter extends CustomPainter {
       eraserTrail: eraserTrail,
       isEraserActive: isEraserActive,
       snapGuides: snapGuides,
-      activeDrawingElement: activeDrawingElement,
+      activeDrawingElement: currentActiveElement,
     );
 
-    // Render active drawing element first (or last depending on layer preference, usually on top)
-    if (activeDrawingElement != null) {
-      ElementsPainter.renderSingleElement(ctx, canvas, activeDrawingElement!);
+    if (ctx.activeDrawingElement != null) {
+      ElementsPainter.renderSingleElement(
+          ctx, canvas, ctx.activeDrawingElement!);
     }
 
     OverlaysPainter.drawSelectionBox(ctx, canvas);
@@ -142,7 +147,6 @@ class DynamicCanvasPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant DynamicCanvasPainter oldDelegate) {
-    // Zoom and Pan affect positions, so we must repaint overlays if they change
     if (oldDelegate.zoomLevel != zoomLevel ||
         oldDelegate.panOffset != panOffset) {
       return true;
@@ -155,11 +159,7 @@ class DynamicCanvasPainter extends CustomPainter {
         oldDelegate.isEraserActive != isEraserActive ||
         oldDelegate.snapGuides != snapGuides ||
         oldDelegate.activeDrawingElement != activeDrawingElement ||
-        // Elements change might affect selection handles position
+        oldDelegate.activeElementListenable != activeElementListenable ||
         oldDelegate.elements != elements;
   }
 }
-
-// Deprecated: Kept for backward compatibility if needed, but ideally should be removed
-// or refactored to use the new painters.
-// For now, removing the old CanvasPainter class completely to force usage of new ones.

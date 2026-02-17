@@ -100,11 +100,6 @@ void main() {
         isA<CanvasState>()
             .having((s) => s.interaction.isDrawing, 'isDrawing', isTrue)
             .having(
-              (s) => s.interaction.activeDrawingElement,
-              'activeDrawingElement',
-              isNotNull,
-            )
-            .having(
               (s) => s.interaction.activeElementId,
               'activeElementId',
               isNotNull,
@@ -115,6 +110,11 @@ void main() {
               const Offset(100, 100),
             ),
       ],
+      verify: (cubit) {
+        // With ValueNotifier optimization, the active element is stored
+        // in the notifier rather than in the Cubit state.
+        expect(cubit.drawing.activeElementNotifier.value, isNotNull);
+      },
     );
 
     blocTest<CanvasCubit, CanvasState>(

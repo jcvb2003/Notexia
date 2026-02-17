@@ -35,7 +35,6 @@ class _CanvasWidgetState extends State<CanvasWidget> {
       ..addListener(() {
         final cubit = context.read<CanvasCubit>();
         final editingId = cubit.state.editingTextId;
-        // Se perdeu o foco e estava editando, comita as alteraÃ§Ãµes
         if (!_textFocusNode.hasFocus && editingId != null) {
           _commitTextEditing(cubit, editingId);
         }
@@ -62,19 +61,16 @@ class _CanvasWidgetState extends State<CanvasWidget> {
           previous.editingTextId != current.editingTextId,
       listener: (context, state) {
         if (state.editingTextId != null) {
-          // Entrou no modo de ediÃ§Ã£o
           final element = state.elements
               .where((e) => e.id == state.editingTextId)
               .firstOrNull;
           if (element is TextElement) {
             _textController.text = element.text;
-            // Aguarda o widget ser construÃ­do para focar
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) _textFocusNode.requestFocus();
             });
           }
         }
-        // Se saiu do modo de ediÃ§Ã£o, o foco jÃ¡ deve ter sido perdido ou tratado
       },
       child: BlocBuilder<CanvasCubit, CanvasState>(
         buildWhen: (previous, current) {
@@ -90,15 +86,15 @@ class _CanvasWidgetState extends State<CanvasWidget> {
           final selectedTool = uiState.selectedTool;
           final editingTextId = uiState.editingTextId;
 
-          final shortcuts = editingTextId != null
-              ? const <LogicalKeySet, Intent>{}
+          final Map<ShortcutActivator, Intent> shortcuts = editingTextId != null
+              ? const <ShortcutActivator, Intent>{}
               : AppShortcuts.defaultShortcuts;
 
           return ExcludeSemantics(
             child: Shortcuts(
               shortcuts: shortcuts,
               child: Actions(
-                actions: {
+                actions: <Type, Action<Intent>>{
                   DeleteSelectedElementsIntent:
                       CallbackAction<DeleteSelectedElementsIntent>(
                     onInvoke: (_) {
@@ -139,11 +135,17 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                   autofocus: true,
                   child: RepaintBoundary(
                     child: Listener(
-                      onPointerDown: (_) {
+                      behavior: HitTestBehavior.opaque,
+                      onPointerDown: (event) {
                         if (editingTextId == null) {
                           _focusNode.requestFocus();
                         }
+                        _router.handlePointerDown(event, uiState);
                       },
+                      onPointerMove: (event) =>
+                          _router.handlePointerMove(event, uiState),
+                      onPointerUp: (event) =>
+                          _router.handlePointerUp(event, uiState),
                       onPointerSignal: (signal) => _router.handlePointerSignal(
                         signal,
                         uiState,
@@ -201,6 +203,10 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                                     snapGuides: uiState.snapGuides,
                                     activeDrawingElement:
                                         uiState.activeDrawingElement,
+                                    activeElementListenable: context
+                                        .read<CanvasCubit>()
+                                        .drawing
+                                        .activeElementNotifier,
                                   ),
                                   size: Size.infinite,
                                 ),

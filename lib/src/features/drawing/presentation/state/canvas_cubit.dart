@@ -61,6 +61,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   @override
   Future<void> close() {
     _persistenceService.dispose();
+    drawing.dispose();
     return super.close();
   }
 

@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
@@ -13,8 +15,11 @@ class DrawingDelegate {
     required Offset position,
     required DrawingService drawingService,
     required void Function(CanvasState) emit,
+    ValueNotifier<CanvasElement?>? elementNotifier,
+    bool Function()? isDisposed,
   }) {
     if (state.selectedTool == CanvasElementType.selection) return;
+    if (isDisposed != null && isDisposed()) return;
 
     final newElement = drawingService.startDrawing(
       type: state.selectedTool,
@@ -24,16 +29,29 @@ class DrawingDelegate {
 
     if (newElement == null) return;
 
-    emit(
-      state.copyWith(
-        interaction: state.interaction.copyWith(
-          isDrawing: true,
-          activeElementId: newElement.id,
-          activeDrawingElement: newElement,
-          gestureStartPosition: position,
+    if (elementNotifier != null) {
+      elementNotifier.value = newElement;
+      emit(
+        state.copyWith(
+          interaction: state.interaction.copyWith(
+            isDrawing: true,
+            activeElementId: newElement.id,
+            gestureStartPosition: position,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      emit(
+        state.copyWith(
+          interaction: state.interaction.copyWith(
+            isDrawing: true,
+            activeElementId: newElement.id,
+            activeDrawingElement: newElement,
+            gestureStartPosition: position,
+          ),
+        ),
+      );
+    }
   }
 
   void updateDrawing({
@@ -41,12 +59,16 @@ class DrawingDelegate {
     required Offset currentPosition,
     required DrawingService drawingService,
     required void Function(CanvasState) emit,
+    ValueNotifier<CanvasElement?>? elementNotifier,
+    bool Function()? isDisposed,
     bool keepAspect = false,
     bool snapAngle = false,
     bool createFromCenter = false,
     double? snapAngleStep,
   }) {
-    final element = state.activeElement;
+    if (isDisposed != null && isDisposed()) return;
+    final element = elementNotifier?.value ?? state.activeElement;
+
     if (element == null) return;
 
     final updatedElement = drawingService.updateDrawingElement(
@@ -60,7 +82,12 @@ class DrawingDelegate {
     );
     if (updatedElement == null) return;
 
-    // Drawing new element
+    if (elementNotifier != null &&
+        (state.isDrawing || state.activeDrawingElement != null)) {
+      elementNotifier.value = updatedElement;
+      return;
+    }
+
     if (state.activeDrawingElement != null) {
       emit(
         state.copyWith(
@@ -72,7 +99,6 @@ class DrawingDelegate {
       return;
     }
 
-    // Editing existing element
     final updatedElements = state.elements
         .map((e) => e.id == updatedElement.id ? updatedElement : e)
         .toList();
@@ -84,15 +110,18 @@ class DrawingDelegate {
     required CanvasState state,
     required PersistenceService persistenceService,
     required void Function(CanvasState) emit,
+    ValueNotifier<CanvasElement?>? elementNotifier,
+    bool Function()? isDisposed,
   }) async {
     if (!state.isDrawing) return;
+    if (isDisposed != null && isDisposed()) return;
 
-    final elementOfDrawing = state.activeDrawingElement;
+    final elementOfDrawing =
+        elementNotifier?.value ?? state.activeDrawingElement;
     final elementId = state.activeElementId;
 
     DrawingDocument? updatedDoc;
 
-    // Case 1: Creating new element
     if (elementOfDrawing != null) {
       updatedDoc = state.document.copyWith(
         elements: [...state.document.elements, elementOfDrawing],
@@ -106,9 +135,7 @@ class DrawingDelegate {
       } catch (e) {
         emit(state.copyWith(error: 'Erro ao salvar elemento: $e'));
       }
-    }
-    // Case 2: Editing existing element
-    else {
+    } else {
       final existingElement =
           state.document.elements.where((e) => e.id == elementId).firstOrNull;
 
@@ -123,6 +150,9 @@ class DrawingDelegate {
         }
       }
     }
+
+    if (isDisposed != null && isDisposed()) return;
+    elementNotifier?.value = null;
 
     emit(
       state.copyWith(

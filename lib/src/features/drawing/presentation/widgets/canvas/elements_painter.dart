@@ -1,14 +1,12 @@
 import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_painter.dart';
 import 'package:notexia/src/features/drawing/presentation/rendering/renderer_provider.dart';
 
 class ElementsPainter {
   static void renderElements(PainterCtx ctx, Canvas canvas, Size size) {
-    // Calcula o viewport visível em coordenadas do mundo
-    // O canvas já tem a transformação aplicada, mas para culling precisamos saber
-    // quais elementos estão na área visível da tela.
-    // Viewport no mundo:
     final visibleRect = Rect.fromLTWH(
       -ctx.panOffset.dx / ctx.zoomLevel,
       -ctx.panOffset.dy / ctx.zoomLevel,
@@ -16,20 +14,13 @@ class ElementsPainter {
       size.height / ctx.zoomLevel,
     );
 
-    // Margem de segurança para evitar cortes abruptos em elementos rotacionados ou com strokes grossos
     final cullingRect = visibleRect.inflate(100);
-
-    // Elements are already sorted and filtered by DrawingDocument
     final elementsToRender = ctx.elements;
 
     for (final element in elementsToRender) {
       if (ctx.editingElementId == element.id) continue;
-      // if (element.isDeleted) continue; // Already filtered
-
-      // Culling: verifica se o bounding box do elemento intercepta a viewport
-      // Nota: element.bounds não considera rotação, mas a margem de segurança ajuda.
-      // Para maior precisão, poderíamos calcular o rotated bounding box.
-      if (!cullingRect.overlaps(element.bounds)) {
+      final elementBounds = _getRotatedBounds(element);
+      if (!cullingRect.overlaps(elementBounds)) {
         continue;
       }
 
@@ -55,5 +46,36 @@ class ElementsPainter {
     renderer.render(canvas, element);
 
     canvas.restore();
+  }
+
+  static Rect _getRotatedBounds(CanvasElement element) {
+    if (element.angle == 0) return element.bounds;
+
+    final cx = element.x + element.width / 2;
+    final cy = element.y + element.height / 2;
+
+    return _computeRotatedRect(element.bounds, element.angle, Offset(cx, cy));
+  }
+
+  static Rect _computeRotatedRect(Rect bounds, double angle, Offset center) {
+    final matrix = vector.Matrix4.identity()
+      ..translateByVector3(vector.Vector3(center.dx, center.dy, 0.0))
+      ..rotateZ(angle)
+      ..translateByVector3(vector.Vector3(-center.dx, -center.dy, 0.0));
+
+    // Transform 4 corners
+    final p1 = matrix.transform3(vector.Vector3(bounds.left, bounds.top, 0));
+    final p2 = matrix.transform3(vector.Vector3(bounds.right, bounds.top, 0));
+    final p3 =
+        matrix.transform3(vector.Vector3(bounds.right, bounds.bottom, 0));
+    final p4 = matrix.transform3(vector.Vector3(bounds.left, bounds.bottom, 0));
+
+    final xs = [p1.x, p2.x, p3.x, p4.x];
+    final ys = [p1.y, p2.y, p3.y, p4.y];
+
+    xs.sort();
+    ys.sort();
+
+    return Rect.fromLTRB(xs.first, ys.first, xs.last, ys.last);
   }
 }
