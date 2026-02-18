@@ -19,7 +19,7 @@ class TextScope {
   final PersistenceService _persistenceService;
   final Uuid _uuid;
 
-  final _delegate = const TextEditingDelegate();
+  final TextEditingDelegate _delegate;
 
   TextScope(
     this._getState,
@@ -30,6 +30,7 @@ class TextScope {
     this._commandStack,
     this._persistenceService,
     this._uuid,
+    this._delegate,
   );
 
   String? createTextElement(Offset position) => _delegate.createTextElement(

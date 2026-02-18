@@ -16,6 +16,12 @@ import 'package:notexia/src/features/drawing/domain/services/drawing_service.dar
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
 
@@ -80,6 +86,12 @@ void main() {
       drawingService,
       persistenceService,
       elementManipulationDelegate,
+      const SelectionDelegate(),
+      const TextEditingDelegate(),
+      const ViewportDelegate(),
+      const DrawingDelegate(),
+      const EraserDelegate(),
+      const SnapDelegate(),
       initialDoc,
     );
   });
@@ -112,9 +124,7 @@ void main() {
             ),
       ],
       verify: (cubit) {
-        // With ValueNotifier optimization, the active element is stored
-        // in the notifier rather than in the Cubit state.
-        expect(cubit.drawing.activeElementNotifier.value, isNotNull);
+        expect(cubit.state.activeDrawingElement, isNotNull);
       },
     );
 
@@ -153,12 +163,12 @@ void main() {
           strokeColor: Colors.black,
           updatedAt: DateTime.now(),
         );
-        cubit.drawing.activeElementNotifier.value = r;
         return CanvasState(
           document: initialDoc,
-          interaction: const InteractionState(
+          interaction: InteractionState(
             isDrawing: true,
             activeElementId: 'r1',
+            activeDrawingElement: r,
           ),
         );
       },

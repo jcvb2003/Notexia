@@ -66,7 +66,6 @@ class CanvasElementMapper {
           isDeleted: isDeleted,
           version: version,
           updatedAt: updatedAt,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
         return element;
       case CanvasElementType.diamond:
@@ -88,7 +87,6 @@ class CanvasElementMapper {
           isDeleted: isDeleted,
           version: version,
           updatedAt: updatedAt,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.ellipse:
         return EllipseElement(
@@ -109,7 +107,6 @@ class CanvasElementMapper {
           isDeleted: isDeleted,
           version: version,
           updatedAt: updatedAt,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.triangle:
         return TriangleElement(
@@ -130,7 +127,6 @@ class CanvasElementMapper {
           isDeleted: isDeleted,
           version: version,
           updatedAt: updatedAt,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.line:
         final pointsList = (map['points'] as List?) ?? [];
@@ -157,7 +153,6 @@ class CanvasElementMapper {
           version: version,
           updatedAt: updatedAt,
           points: points,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.arrow:
         final pointsList = (map['points'] as List?) ?? [];
@@ -184,7 +179,6 @@ class CanvasElementMapper {
           version: version,
           updatedAt: updatedAt,
           points: points,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.freeDraw:
         final pointsList = (map['points'] as List?) ?? [];
@@ -211,7 +205,6 @@ class CanvasElementMapper {
           version: version,
           updatedAt: updatedAt,
           points: points,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.text:
         return TextElement(
@@ -256,7 +249,6 @@ class CanvasElementMapper {
           isStrikethrough: map['isStrikethrough'] is int
               ? map['isStrikethrough'] == 1
               : (map['isStrikethrough'] as bool? ?? false),
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       default:
         // Caso de tipo desconhecido, retorna retângulo seguro ou lança erro
@@ -271,7 +263,6 @@ class CanvasElementMapper {
           strokeColor: strokeColor,
           updatedAt: updatedAt,
           zIndex: zIndex,
-          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
     }
   }
@@ -305,7 +296,6 @@ class CanvasElementMapper {
     };
 
     // Adiciona o customData do elemento
-    map['customData'] = element.customData;
 
     if (element is TextElement) {
       map.addAll({

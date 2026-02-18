@@ -16,6 +16,12 @@ import 'package:notexia/src/features/drawing/domain/services/transformation_serv
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
@@ -79,6 +85,36 @@ void main() {
     if (!sl.isRegistered<ElementManipulationDelegate>()) {
       sl.registerLazySingleton<ElementManipulationDelegate>(
         () => MockElementManipulationDelegate(),
+      );
+    }
+    if (!sl.isRegistered<SelectionDelegate>()) {
+      sl.registerLazySingleton<SelectionDelegate>(
+        () => const SelectionDelegate(),
+      );
+    }
+    if (!sl.isRegistered<TextEditingDelegate>()) {
+      sl.registerLazySingleton<TextEditingDelegate>(
+        () => const TextEditingDelegate(),
+      );
+    }
+    if (!sl.isRegistered<ViewportDelegate>()) {
+      sl.registerLazySingleton<ViewportDelegate>(
+        () => const ViewportDelegate(),
+      );
+    }
+    if (!sl.isRegistered<DrawingDelegate>()) {
+      sl.registerLazySingleton<DrawingDelegate>(
+        () => const DrawingDelegate(),
+      );
+    }
+    if (!sl.isRegistered<EraserDelegate>()) {
+      sl.registerLazySingleton<EraserDelegate>(
+        () => const EraserDelegate(),
+      );
+    }
+    if (!sl.isRegistered<SnapDelegate>()) {
+      sl.registerLazySingleton<SnapDelegate>(
+        () => const SnapDelegate(),
       );
     }
 

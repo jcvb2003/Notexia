@@ -5,9 +5,9 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/viewpo
 class ViewportScope {
   final CanvasState Function() _getState;
   final void Function(CanvasState) _emit;
-  final _delegate = const ViewportDelegate();
+  final ViewportDelegate _delegate;
 
-  ViewportScope(this._getState, this._emit);
+  ViewportScope(this._getState, this._emit, this._delegate);
 
   void zoomIn() => _emit(_delegate.zoomIn(_getState()));
 

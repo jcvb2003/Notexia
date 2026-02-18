@@ -17,6 +17,12 @@ import 'package:notexia/src/features/drawing/domain/services/drawing_service.dar
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 
 class _DocumentRepositoryFake implements DocumentRepository {
   @override
@@ -76,6 +82,12 @@ void main() {
         drawingService,
         persistenceService,
         elementManipulationDelegate,
+        const SelectionDelegate(),
+        const TextEditingDelegate(),
+        const ViewportDelegate(),
+        const DrawingDelegate(),
+        const EraserDelegate(),
+        const SnapDelegate(),
         doc,
       );
 
@@ -165,6 +177,12 @@ void main() {
         drawingService,
         persistenceService,
         elementManipulationDelegate,
+        const SelectionDelegate(),
+        const TextEditingDelegate(),
+        const ViewportDelegate(),
+        const DrawingDelegate(),
+        const EraserDelegate(),
+        const SnapDelegate(),
         doc,
       );
 
@@ -258,6 +276,12 @@ void main() {
         drawingService,
         persistenceService,
         elementManipulationDelegate,
+        const SelectionDelegate(),
+        const TextEditingDelegate(),
+        const ViewportDelegate(),
+        const DrawingDelegate(),
+        const EraserDelegate(),
+        const SnapDelegate(),
         doc,
       );
 
@@ -349,6 +373,12 @@ void main() {
           drawingService,
           persistenceService,
           elementManipulationDelegate,
+          const SelectionDelegate(),
+          const TextEditingDelegate(),
+          const ViewportDelegate(),
+          const DrawingDelegate(),
+          const EraserDelegate(),
+          const SnapDelegate(),
           doc,
         );
 
@@ -450,6 +480,12 @@ void main() {
         drawingService,
         persistenceService,
         elementManipulationDelegate,
+        const SelectionDelegate(),
+        const TextEditingDelegate(),
+        const ViewportDelegate(),
+        const DrawingDelegate(),
+        const EraserDelegate(),
+        const SnapDelegate(),
         doc,
       );
 
@@ -549,6 +585,12 @@ void main() {
           drawingService,
           persistenceService,
           elementManipulationDelegate,
+          const SelectionDelegate(),
+          const TextEditingDelegate(),
+          const ViewportDelegate(),
+          const DrawingDelegate(),
+          const EraserDelegate(),
+          const SnapDelegate(),
           doc,
         );
         await drawingCubit.setAngleSnapEnabled(true);

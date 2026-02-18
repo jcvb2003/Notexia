@@ -14,7 +14,14 @@ import 'package:notexia/src/app/di/service_locator/service_locator.dart';
 
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
@@ -52,6 +59,12 @@ class _MainLayoutState extends State<MainLayout> {
               sl<DrawingService>(),
               sl<PersistenceService>(),
               sl<ElementManipulationDelegate>(),
+              sl<SelectionDelegate>(),
+              sl<TextEditingDelegate>(),
+              sl<ViewportDelegate>(),
+              sl<DrawingDelegate>(),
+              sl<EraserDelegate>(),
+              sl<SnapDelegate>(),
               initialDoc,
               appSettingsRepository: sl<AppSettingsRepository>(),
             );

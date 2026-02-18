@@ -17,6 +17,12 @@ import 'package:notexia/src/features/drawing/domain/services/drawing_service.dar
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 
 class MockAppSettingsRepository extends Mock implements AppSettingsRepository {}
 
@@ -85,6 +91,12 @@ void main() {
       drawingService,
       persistenceService,
       elementManipulationDelegate,
+      const SelectionDelegate(),
+      const TextEditingDelegate(),
+      const ViewportDelegate(),
+      const DrawingDelegate(),
+      const EraserDelegate(),
+      const SnapDelegate(),
       initialDoc,
     );
   });
@@ -162,14 +174,12 @@ void main() {
             .having((s) => s.activeElementId, 'activeId', isNotNull),
       ],
       verify: (cubit) {
-        // With ValueNotifier optimization, the active element is stored
-        // in the notifier rather than in the Cubit state.
-        expect(cubit.drawing.activeElementNotifier.value, isNotNull);
+        expect(cubit.state.activeDrawingElement, isNotNull);
       },
     );
 
     blocTest<CanvasCubit, CanvasState>(
-      'updateDrawing updates the active element via ValueNotifier',
+      'updateDrawing updates the active element via state',
       build: () => cubit,
       seed: () => CanvasState(
         document: initialDoc.copyWith(elements: []),
@@ -182,12 +192,11 @@ void main() {
         cubit.drawing.updateDrawing(const Offset(50, 50));
       },
       expect: () => [
-        isA<CanvasState>(), // startDrawing (only state emitted)
+        isA<CanvasState>(), // startDrawing
+        isA<CanvasState>(), // updateDrawing
       ],
       verify: (cubit) {
-        // With ValueNotifier optimization, updateDrawing updates
-        // the notifier directly instead of emitting a Cubit state.
-        final element = cubit.drawing.activeElementNotifier.value;
+        final element = cubit.state.activeDrawingElement;
         expect(element, isNotNull);
         expect(element!.width, 40);
       },
@@ -282,10 +291,11 @@ void main() {
         cubit.drawing.updateDrawing(const Offset(50, 50));
       },
       expect: () => [
-        isA<CanvasState>(), // startDrawing (only state emitted)
+        isA<CanvasState>(), // startDrawing
+        isA<CanvasState>(), // updateDrawing
       ],
       verify: (cubit) {
-        final line = cubit.drawing.activeElementNotifier.value as LineElement;
+        final line = cubit.state.activeDrawingElement as LineElement;
         // Normalization should set x,y to min coordinate (50, 50)
         // and points to [(50, 50), (0, 0)]
         expect(line.x, 50);
@@ -315,10 +325,12 @@ void main() {
         cubit.drawing.updateDrawing(const Offset(80, 80));
       },
       expect: () => [
-        isA<CanvasState>(), // startDrawing (only state emitted)
+        isA<CanvasState>(), // startDrawing
+        isA<CanvasState>(), // updateDrawing 1
+        isA<CanvasState>(), // updateDrawing 2
       ],
       verify: (cubit) {
-        final fd = cubit.drawing.activeElementNotifier.value as FreeDrawElement;
+        final fd = cubit.state.activeDrawingElement as FreeDrawElement;
         // Normalization should set x,y to (80, 80)
         // points relative to (80, 80) should be [(20, 20), (10, 10), (0, 0)]
         expect(fd.x, 80);
@@ -580,6 +592,12 @@ void main() {
           drawingService,
           persistenceService,
           elementManipulationDelegate,
+          const SelectionDelegate(),
+          const TextEditingDelegate(),
+          const ViewportDelegate(),
+          const DrawingDelegate(),
+          const EraserDelegate(),
+          const SnapDelegate(),
           initialDoc,
           appSettingsRepository: repo,
         );
@@ -614,6 +632,12 @@ void main() {
           drawingService,
           persistenceService,
           elementManipulationDelegate,
+          const SelectionDelegate(),
+          const TextEditingDelegate(),
+          const ViewportDelegate(),
+          const DrawingDelegate(),
+          const EraserDelegate(),
+          const SnapDelegate(),
           initialDoc,
           appSettingsRepository: repo,
         );
@@ -651,6 +675,12 @@ void main() {
           drawingService,
           persistenceService,
           elementManipulationDelegate,
+          const SelectionDelegate(),
+          const TextEditingDelegate(),
+          const ViewportDelegate(),
+          const DrawingDelegate(),
+          const EraserDelegate(),
+          const SnapDelegate(),
           initialDoc,
           appSettingsRepository: repo,
         );

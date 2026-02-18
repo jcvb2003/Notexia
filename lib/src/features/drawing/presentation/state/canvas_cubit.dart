@@ -24,6 +24,10 @@ import 'package:notexia/src/features/drawing/presentation/state/scopes/viewport_
 
 import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
@@ -42,8 +46,12 @@ class CanvasCubit extends Cubit<CanvasState> {
   final DrawingService _drawingService;
   final PersistenceService _persistenceService;
   final ElementManipulationDelegate _elementManipulationDelegate;
-  final _eraserDelegate = const EraserDelegate();
-  final _snapDelegate = const SnapDelegate();
+  final SelectionDelegate _selectionDelegate;
+  final TextEditingDelegate _textEditingDelegate;
+  final ViewportDelegate _viewportDelegate;
+  final DrawingDelegate _drawingDelegate;
+  final EraserDelegate _eraserDelegate;
+  final SnapDelegate _snapDelegate;
   final _uuid = const Uuid();
 
   List<CanvasElement>? _gestureStartElements;
@@ -55,6 +63,12 @@ class CanvasCubit extends Cubit<CanvasState> {
     this._drawingService,
     this._persistenceService,
     this._elementManipulationDelegate,
+    this._selectionDelegate,
+    this._textEditingDelegate,
+    this._viewportDelegate,
+    this._drawingDelegate,
+    this._eraserDelegate,
+    this._snapDelegate,
     DrawingDocument initialDocument, {
     AppSettingsRepository? appSettingsRepository,
   })  : _settingsRepository = appSettingsRepository,
@@ -139,6 +153,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   late final viewport = ViewportScope(
     () => state,
     (s) => emit(s),
+    _viewportDelegate,
   );
 
   void toggleSkeletonMode() {
@@ -210,6 +225,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   late final selection = SelectionScope(
     () => state,
     (s) => emit(s),
+    _selectionDelegate,
   );
 
   // Eraser Operations
@@ -271,6 +287,7 @@ class CanvasCubit extends Cubit<CanvasState> {
     _drawingService,
     _persistenceService,
     () => isClosed,
+    _drawingDelegate,
   );
 
   late final text = TextScope(
@@ -282,6 +299,7 @@ class CanvasCubit extends Cubit<CanvasState> {
     _commandStack,
     _persistenceService,
     _uuid,
+    _textEditingDelegate,
   );
 
   late final manipulation = ManipulationScope(

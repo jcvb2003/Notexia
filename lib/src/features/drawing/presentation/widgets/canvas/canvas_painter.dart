@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/background_grid_painter.dart';
@@ -93,7 +93,6 @@ class DynamicCanvasPainter extends CustomPainter {
   final bool isEraserActive;
   final List<SnapGuide> snapGuides;
   final CanvasElement? activeDrawingElement;
-  final ValueListenable<CanvasElement?>? activeElementListenable;
 
   DynamicCanvasPainter({
     required this.elements,
@@ -106,17 +105,13 @@ class DynamicCanvasPainter extends CustomPainter {
     required this.isEraserActive,
     required this.snapGuides,
     this.activeDrawingElement,
-    this.activeElementListenable,
-  }) : super(repaint: activeElementListenable);
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.translate(panOffset.dx, panOffset.dy);
     canvas.scale(zoomLevel);
-
-    final currentActiveElement =
-        activeElementListenable?.value ?? activeDrawingElement;
 
     final ctx = PainterCtx(
       elements: elements,
@@ -129,7 +124,7 @@ class DynamicCanvasPainter extends CustomPainter {
       eraserTrail: eraserTrail,
       isEraserActive: isEraserActive,
       snapGuides: snapGuides,
-      activeDrawingElement: currentActiveElement,
+      activeDrawingElement: activeDrawingElement,
     );
 
     if (ctx.activeDrawingElement != null) {
@@ -159,7 +154,6 @@ class DynamicCanvasPainter extends CustomPainter {
         oldDelegate.isEraserActive != isEraserActive ||
         oldDelegate.snapGuides != snapGuides ||
         oldDelegate.activeDrawingElement != activeDrawingElement ||
-        oldDelegate.activeElementListenable != activeElementListenable ||
         oldDelegate.elements != elements;
   }
 }

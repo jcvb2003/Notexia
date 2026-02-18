@@ -65,8 +65,7 @@ void main() {
         ),
       ),
     );
-    when(() => drawingCubit.drawing.activeElementNotifier)
-        .thenReturn(ValueNotifier(null));
+
     when(() => undoRedoCubit.state).thenReturn(UndoRedoInitial());
   });
 

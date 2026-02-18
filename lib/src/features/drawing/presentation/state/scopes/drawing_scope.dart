@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
@@ -13,7 +11,7 @@ class DrawingScope {
   final DrawingService _drawingService;
   final PersistenceService _persistenceService;
   final bool Function() _isClosed;
-  final _delegate = const DrawingDelegate();
+  final DrawingDelegate _delegate;
 
   DateTime _lastDrawUpdate = DateTime.fromMillisecondsSinceEpoch(0);
   Timer? _drawThrottleTimer;
@@ -21,22 +19,19 @@ class DrawingScope {
   bool _isDisposed = false;
   bool get isDisposed => _isDisposed || _isClosed();
 
-  final ValueNotifier<CanvasElement?> activeElementNotifier =
-      ValueNotifier(null);
-
   DrawingScope(
     this._getState,
     this._emit,
     this._drawingService,
     this._persistenceService,
     this._isClosed,
+    this._delegate,
   );
 
   void dispose() {
     if (_isDisposed) return;
     _isDisposed = true;
     _drawThrottleTimer?.cancel();
-    activeElementNotifier.dispose();
   }
 
   void startDrawing(Offset position) {
@@ -46,7 +41,6 @@ class DrawingScope {
       position: position,
       drawingService: _drawingService,
       emit: _emit,
-      elementNotifier: activeElementNotifier,
       isDisposed: () => isDisposed,
     );
   }
@@ -85,7 +79,6 @@ class DrawingScope {
       currentPosition: currentPosition,
       drawingService: _drawingService,
       emit: _emit,
-      elementNotifier: activeElementNotifier,
       isDisposed: () => isDisposed,
       keepAspect: keepAspect,
       snapAngle: snapAngle,
@@ -98,7 +91,6 @@ class DrawingScope {
         state: _getState(),
         persistenceService: _persistenceService,
         emit: _emit,
-        elementNotifier: activeElementNotifier,
         isDisposed: () => isDisposed,
       );
 }

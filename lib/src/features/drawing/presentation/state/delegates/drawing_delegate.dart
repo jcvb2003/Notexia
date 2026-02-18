@@ -1,6 +1,4 @@
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
-import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
@@ -15,7 +13,6 @@ class DrawingDelegate {
     required Offset position,
     required DrawingService drawingService,
     required void Function(CanvasState) emit,
-    ValueNotifier<CanvasElement?>? elementNotifier,
     bool Function()? isDisposed,
   }) {
     if (state.selectedTool == CanvasElementType.selection) return;
@@ -29,29 +26,16 @@ class DrawingDelegate {
 
     if (newElement == null) return;
 
-    if (elementNotifier != null) {
-      elementNotifier.value = newElement;
-      emit(
-        state.copyWith(
-          interaction: state.interaction.copyWith(
-            isDrawing: true,
-            activeElementId: newElement.id,
-            gestureStartPosition: position,
-          ),
+    emit(
+      state.copyWith(
+        interaction: state.interaction.copyWith(
+          isDrawing: true,
+          activeElementId: newElement.id,
+          activeDrawingElement: newElement,
+          gestureStartPosition: position,
         ),
-      );
-    } else {
-      emit(
-        state.copyWith(
-          interaction: state.interaction.copyWith(
-            isDrawing: true,
-            activeElementId: newElement.id,
-            activeDrawingElement: newElement,
-            gestureStartPosition: position,
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 
   void updateDrawing({
@@ -59,7 +43,6 @@ class DrawingDelegate {
     required Offset currentPosition,
     required DrawingService drawingService,
     required void Function(CanvasState) emit,
-    ValueNotifier<CanvasElement?>? elementNotifier,
     bool Function()? isDisposed,
     bool keepAspect = false,
     bool snapAngle = false,
@@ -67,7 +50,7 @@ class DrawingDelegate {
     double? snapAngleStep,
   }) {
     if (isDisposed != null && isDisposed()) return;
-    final element = elementNotifier?.value ?? state.activeElement;
+    final element = state.activeElement;
 
     if (element == null) return;
 
@@ -81,12 +64,6 @@ class DrawingDelegate {
       createFromCenter: createFromCenter,
     );
     if (updatedElement == null) return;
-
-    if (elementNotifier != null &&
-        (state.isDrawing || state.activeDrawingElement != null)) {
-      elementNotifier.value = updatedElement;
-      return;
-    }
 
     if (state.activeDrawingElement != null) {
       emit(
@@ -110,14 +87,12 @@ class DrawingDelegate {
     required CanvasState state,
     required PersistenceService persistenceService,
     required void Function(CanvasState) emit,
-    ValueNotifier<CanvasElement?>? elementNotifier,
     bool Function()? isDisposed,
   }) async {
     if (!state.isDrawing) return;
     if (isDisposed != null && isDisposed()) return;
 
-    final elementOfDrawing =
-        elementNotifier?.value ?? state.activeDrawingElement;
+    final elementOfDrawing = state.activeDrawingElement;
     final elementId = state.activeElementId;
 
     DrawingDocument? updatedDoc;
@@ -150,7 +125,6 @@ class DrawingDelegate {
     }
 
     if (isDisposed != null && isDisposed()) return;
-    elementNotifier?.value = null;
 
     emit(
       state.copyWith(

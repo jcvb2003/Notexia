@@ -5,9 +5,8 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/select
 class SelectionScope {
   final CanvasState Function() _getState;
   final void Function(CanvasState) _emit;
-  final _delegate = const SelectionDelegate();
-
-  SelectionScope(this._getState, this._emit);
+  final SelectionDelegate _delegate;
+  SelectionScope(this._getState, this._emit, this._delegate);
 
   void setSelectionBox(Rect? rect) =>
       _emit(_delegate.setSelectionBox(_getState(), rect));

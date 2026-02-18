@@ -5,6 +5,13 @@ import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 import 'package:notexia/src/features/drawing/data/repositories/asset_repository_impl.dart';
 import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
@@ -41,6 +48,14 @@ Future<void> initServiceLocator() async {
       sl<TransformationService>(),
     ),
   );
+  sl.registerLazySingleton<SelectionDelegate>(() => const SelectionDelegate());
+  sl.registerLazySingleton<TextEditingDelegate>(
+      () => const TextEditingDelegate());
+  sl.registerLazySingleton<ViewportDelegate>(() => const ViewportDelegate());
+
+  sl.registerLazySingleton<DrawingDelegate>(() => const DrawingDelegate());
+  sl.registerLazySingleton<EraserDelegate>(() => const EraserDelegate());
+  sl.registerLazySingleton<SnapDelegate>(() => const SnapDelegate());
 
   // --- Core / Infrastructure ---
   final dbService = DatabaseService();
