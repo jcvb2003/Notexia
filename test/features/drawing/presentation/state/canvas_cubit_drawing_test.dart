@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:notexia/src/core/errors/failure.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
@@ -138,6 +139,43 @@ void main() {
       act: (c) => c.drawing.stopDrawing(),
       expect: () => <CanvasState>[],
     );
+
+    blocTest<CanvasCubit, CanvasState>(
+      'emits error state when saving fails',
+      build: () => cubit,
+      seed: () {
+        final r = CanvasElement.rectangle(
+          id: 'r1',
+          x: 0,
+          y: 0,
+          width: 100,
+          height: 100,
+          strokeColor: Colors.black,
+          updatedAt: DateTime.now(),
+        );
+        cubit.drawing.activeElementNotifier.value = r;
+        return CanvasState(
+          document: initialDoc,
+          interaction: const InteractionState(
+            isDrawing: true,
+            activeElementId: 'r1',
+          ),
+        );
+      },
+      act: (c) {
+        when(() => mockDocRepo.saveElement(any(), any())).thenAnswer(
+          (_) async => Result.failure(const PersistenceFailure('Erro de Mock')),
+        );
+        return c.drawing.stopDrawing();
+      },
+      expect: () => [
+        isA<CanvasState>()
+            .having((s) => s.error, 'error message', 'Erro de Mock'),
+        isA<CanvasState>()
+            .having((s) => s.interaction.isDrawing, 'drawing stopped', false)
+            .having((s) => s.error, 'error cleared', isNull),
+      ],
+    );
   });
 
   group('Drawing - clearCanvas', () {
@@ -156,7 +194,7 @@ void main() {
         );
         return CanvasState(
           document: initialDoc.copyWith(elements: [r]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) => c.clearCanvas(),

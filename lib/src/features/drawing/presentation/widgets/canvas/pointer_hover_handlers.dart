@@ -55,10 +55,10 @@ class PointerHoverHandlers {
     if (self.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
       final worldPoint = self.toWorld(details.localPosition, uiState);
       SnapshotHitUtils.beginGestureSnapshot(self.canvasCubit, 'Apagar');
-      self.canvasCubit.eraser.startEraser(worldPoint);
+      self.canvasCubit.startEraser(worldPoint);
       ScaleGestureHandlers.eraseAt(self, uiState, worldPoint);
       Future.delayed(const Duration(milliseconds: 120), () {
-        self.canvasCubit.eraser.endEraser();
+        self.canvasCubit.endEraser();
         SnapshotHitUtils.endGestureSnapshot(self.canvasCubit);
       });
       return;

@@ -76,7 +76,7 @@ class DrawingPage extends StatelessWidget {
                   toolbarBottom: toolbarBottom,
                   isMobile: isMobile,
                   onPositionChanged: (atTop) =>
-                      uiCubit.preferences.setToolbarPosition(atTop),
+                      uiCubit.setToolbarPosition(atTop),
                 ),
                 Positioned(
                   bottom: isCompactLayout
@@ -88,7 +88,7 @@ class DrawingPage extends StatelessWidget {
                     child: SlidableUtilityControl(
                       isZoomMode: uiState.isZoomMode,
                       zoomLevel: uiState.zoomLevel,
-                      onToggle: () => uiCubit.preferences.toggleZoomUndoRedo(),
+                      onToggle: () => uiCubit.toggleZoomUndoRedo(),
                       onZoomIn: () => uiCubit.viewport.zoomIn(),
                       onZoomOut: () => uiCubit.viewport.zoomOut(),
                       onUndo: () => context.read<UndoRedoCubit>().undo(),
@@ -108,7 +108,7 @@ class DrawingPage extends StatelessWidget {
                       child: AppIconButton(
                         icon: LucideIcons.minimize2,
                         tooltip: 'Sair da tela cheia',
-                        onTap: () => uiCubit.preferences.toggleFullScreen(),
+                        onTap: () => uiCubit.toggleFullScreen(),
                       ),
                     ),
                   ),

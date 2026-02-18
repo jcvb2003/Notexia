@@ -47,13 +47,8 @@ void main() {
       );
 
       final elements = [r1, e1, t1];
-      final moved = service.moveElements(
-          elements,
-          [
-            'r1',
-            't1',
-          ],
-          const Offset(5, -3));
+      final moved =
+          service.moveElements(elements, {'r1', 't1'}, const Offset(5, -3));
 
       final movedR1 = moved.firstWhere((e) => e.id == 'r1');
       final movedT1 = moved.firstWhere((e) => e.id == 't1');
@@ -104,10 +99,10 @@ void main() {
       );
 
       final elements = [r1, e1, t1];
-      final remaining = service.deleteElements(elements, [
+      final remaining = service.deleteElements(elements, {
         'r1',
         't1',
-      ]);
+      });
 
       expect(remaining.length, 1);
       expect(remaining.first.id, 'e1');
@@ -137,7 +132,7 @@ void main() {
 
       final updated = service.updateElementsProperties(
         [r1, e1],
-        ['r1'],
+        {'r1'},
         const ElementStylePatch(
           strokeColor: Colors.blue,
           fillColor: Colors.green,
@@ -180,7 +175,7 @@ void main() {
 
       final updated = service.updateElementsProperties(
         [t1],
-        ['t1'],
+        {'t1'},
         const ElementStylePatch(
           text: 'new text',
           fontFamily: 'Inter',

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
-import 'package:notexia/src/features/drawing/domain/commands/add_element_command.dart';
-import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
-import 'package:notexia/src/features/drawing/domain/commands/transform_element_command.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 import 'package:notexia/src/features/undo_redo/domain/entities/command.dart';
 
 // Callback para aplicação de comandos
@@ -47,35 +45,51 @@ class CanvasHelpers {
 
   /// Constrói o comando de Undo/Redo apropriado baseado na diferença entre estados.
   static Command buildElementsCommand({
-    required String label,
     required List<CanvasElement> before,
     required List<CanvasElement> after,
     required ApplyElementsCallback applyCallback,
+    String? label, // Label opcional, calculado se nulo
   }) {
-    // Detecta adição
-    if (after.length > before.length) {
-      return AddElementCommand(
-        before: before,
-        after: after,
-        applyElements: applyCallback,
-        label: label,
-      );
+    final String cmdLabel;
+
+    if (label != null) {
+      cmdLabel = label;
+    } else if (after.length > before.length) {
+      cmdLabel = 'Adicionar Elemento';
+    } else if (after.length < before.length) {
+      cmdLabel = 'Remover Elemento';
+    } else {
+      // Se tamanhos iguais, verificar se foi estilo ou transformação
+      bool isTransform = false;
+
+      // Verifica se houve mudança em propriedades de transformação (x, y, width, height, angle)
+      // Se sim, é uma transformação. Se mudou algo mas não esses campos, é estilo.
+      for (int i = 0; i < before.length; i++) {
+        // Encontrar o elemento correspondente (assumindo mesma ordem/id para simplificar,
+        // ou comparar diretamente se os arrays estão alinhados pelo índice, o que é o caso comum aqui)
+        final b = before[i];
+        final a = after[i];
+
+        if (b == a) continue;
+
+        if (b.x != a.x ||
+            b.y != a.y ||
+            b.width != a.width ||
+            b.height != a.height ||
+            b.angle != a.angle) {
+          isTransform = true;
+          break;
+        }
+      }
+
+      cmdLabel = isTransform ? 'Transformar Elemento' : 'Alterar Estilo';
     }
-    // Detecta remoção
-    if (after.length < before.length) {
-      return RemoveElementCommand(
-        before: before,
-        after: after,
-        applyElements: applyCallback,
-        label: label,
-      );
-    }
-    // Assume transformação se tamanhos iguais
-    return TransformElementCommand(
+
+    return ElementsCommand(
+      label: cmdLabel,
       before: before,
       after: after,
       applyElements: applyCallback,
-      label: label,
     );
   }
 }

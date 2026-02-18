@@ -23,7 +23,7 @@ class SelectionDelegate {
 
     if (foundId != null) {
       if (isMultiSelect) {
-        final newSelection = List<String>.from(state.selectedElementIds);
+        final newSelection = Set<String>.from(state.selectedElementIds);
         if (newSelection.contains(foundId)) {
           newSelection.remove(foundId);
         } else {
@@ -38,7 +38,7 @@ class SelectionDelegate {
         if (!state.selectedElementIds.contains(foundId)) {
           return state.copyWith(
             interaction: state.interaction.copyWith(
-              selectedElementIds: [foundId],
+              selectedElementIds: {foundId},
             ),
           );
         }
@@ -47,7 +47,7 @@ class SelectionDelegate {
     } else {
       if (!isMultiSelect) {
         return state.copyWith(
-          interaction: state.interaction.copyWith(selectedElementIds: []),
+          interaction: state.interaction.copyWith(selectedElementIds: {}),
         );
       }
       return state;
@@ -55,7 +55,7 @@ class SelectionDelegate {
   }
 
   CanvasState selectElementsInRect(CanvasState state, Rect selectionRect) {
-    final selected = <String>[];
+    final selected = <String>{};
     for (final element in state.elements) {
       if (selectionRect.overlaps(element.bounds)) {
         selected.add(element.id);

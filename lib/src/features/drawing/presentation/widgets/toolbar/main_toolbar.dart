@@ -119,7 +119,7 @@ class MainToolbar extends StatelessWidget {
               tooltip:
                   '${uiState.snapMode.tooltip} (Toque duplo para configurar)',
               isActive: uiState.snapMode != SnapMode.none,
-              onTap: () => context.read<CanvasCubit>().snap.cycleSnapMode(),
+              onTap: () => context.read<CanvasCubit>().cycleSnapMode(),
               onDoubleTap: () {
                 const pi = 3.141592653589793;
                 final currentValue = uiState.snapMode.isAngleSnapEnabled
@@ -142,10 +142,10 @@ class MainToolbar extends StatelessWidget {
                     onChanged: (val) {
                       final cubit = context.read<CanvasCubit>();
                       if (val == 0.0) {
-                        cubit.snap.setAngleSnapEnabled(false);
+                        cubit.setAngleSnapEnabled(false);
                       } else {
-                        cubit.snap.setAngleSnapStep(val);
-                        cubit.snap.setAngleSnapEnabled(true);
+                        cubit.setAngleSnapStep(val);
+                        cubit.setAngleSnapEnabled(true);
                       }
                       Navigator.of(context).pop();
                     },

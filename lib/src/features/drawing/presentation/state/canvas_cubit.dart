@@ -1,5 +1,6 @@
 ﻿import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,7 +8,7 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 
-import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 
@@ -16,13 +17,14 @@ import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dar
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/eraser_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/manipulation_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/preferences_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/selection_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/snap_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/viewport_scope.dart';
+
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
+import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
@@ -40,6 +42,8 @@ class CanvasCubit extends Cubit<CanvasState> {
   final DrawingService _drawingService;
   final PersistenceService _persistenceService;
   final ElementManipulationDelegate _elementManipulationDelegate;
+  final _eraserDelegate = const EraserDelegate();
+  final _snapDelegate = const SnapDelegate();
   final _uuid = const Uuid();
 
   List<CanvasElement>? _gestureStartElements;
@@ -137,27 +141,129 @@ class CanvasCubit extends Cubit<CanvasState> {
     (s) => emit(s),
   );
 
-  late final preferences = PreferencesScope(
-    () => state,
-    (s) => emit(s),
-  );
+  void toggleSkeletonMode() {
+    emit(state.copyWith(isSkeletonMode: !state.isSkeletonMode));
+  }
 
-  late final snap = SnapScope(
-    () => state,
-    (s) => emit(s),
-    _settingsRepository,
-  );
+  void toggleFullScreen() {
+    final newValue = !state.isFullScreen;
+    if (newValue) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    } else {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
+    emit(state.copyWith(isFullScreen: newValue));
+  }
+
+  void toggleToolbarPosition() {
+    emit(state.copyWith(isToolbarAtTop: !state.isToolbarAtTop));
+  }
+
+  void setToolbarPosition(bool atTop) {
+    emit(state.copyWith(isToolbarAtTop: atTop));
+  }
+
+  void toggleZoomUndoRedo() {
+    emit(state.copyWith(isZoomMode: !state.isZoomMode));
+  }
+
+  // Snap Operations
+  Future<void> loadAngleSnapSettings() async {
+    if (_settingsRepository == null) return;
+    emit(await _snapDelegate.loadAngleSnapSettings(
+      state,
+      _settingsRepository,
+    ));
+  }
+
+  Future<void> setSnapMode(SnapMode mode) async {
+    emit(await _snapDelegate.setSnapMode(state, mode, _settingsRepository));
+  }
+
+  Future<void> cycleSnapMode() async {
+    emit(await _snapDelegate.cycleSnapMode(state, _settingsRepository));
+  }
+
+  Future<void> setAngleSnapEnabled(bool value) async {
+    emit(await _snapDelegate.setAngleSnapEnabled(
+      state,
+      value,
+      _settingsRepository,
+    ));
+  }
+
+  Future<void> toggleAngleSnapEnabled() async {
+    await cycleSnapMode();
+  }
+
+  void setSnapGuides(List<SnapGuide> guides) =>
+      emit(_snapDelegate.setSnapGuides(state, guides));
+
+  Future<void> setAngleSnapStep(double value) async {
+    emit(await _snapDelegate.setAngleSnapStep(
+      state,
+      value,
+      _settingsRepository,
+    ));
+  }
 
   late final selection = SelectionScope(
     () => state,
     (s) => emit(s),
   );
 
-  late final eraser = EraserScope(
-    () => state,
-    (s) => emit(s),
-    _scheduleSaveDocument,
-  );
+  // Eraser Operations
+  void setEraserMode(EraserMode mode) => emit(
+        state.copyWith(
+          interaction: _eraserDelegate.setEraserMode(
+            state.interaction,
+            mode,
+          ),
+        ),
+      );
+
+  void startEraser(Offset point) => emit(
+        state.copyWith(
+          interaction: _eraserDelegate.startEraser(
+            state.interaction,
+            point,
+          ),
+        ),
+      );
+
+  void updateEraserTrail(Offset point) => emit(
+        state.copyWith(
+          interaction: _eraserDelegate.updateEraserTrail(
+            state.interaction,
+            point,
+          ),
+        ),
+      );
+
+  void endEraser() => emit(
+        state.copyWith(
+          interaction: _eraserDelegate.endEraser(state.interaction),
+        ),
+      );
+
+  void eraseElementsAtPoint(Offset worldPoint, double radius) {
+    final updatedElements = _eraserDelegate.eraseElements(
+      state.document.elements,
+      worldPoint,
+      radius,
+    );
+
+    if (updatedElements.length == state.document.elements.length) return;
+
+    final updatedDoc = state.document.copyWith(elements: updatedElements);
+    emit(
+      state.copyWith(
+        document: updatedDoc,
+        interaction: state.interaction.copyWith(selectedElementIds: {}),
+      ),
+    );
+    _scheduleSaveDocument(updatedDoc);
+  }
 
   late final drawing = DrawingScope(
     () => state,
@@ -191,10 +297,10 @@ class CanvasCubit extends Cubit<CanvasState> {
   void selectTool(CanvasElementType tool) {
     if (state.selectedTool == tool) return;
 
-    final List<String> newSelection = (tool == CanvasElementType.selection ||
+    final Set<String> newSelection = (tool == CanvasElementType.selection ||
             tool == CanvasElementType.navigation)
         ? state.selectedElementIds
-        : [];
+        : {};
 
     emit(
       state.copyWith(
@@ -214,11 +320,11 @@ class CanvasCubit extends Cubit<CanvasState> {
     emit(
       state.copyWith(
         document: updatedDoc,
-        interaction: state.interaction.copyWith(selectedElementIds: []),
+        interaction: state.interaction.copyWith(selectedElementIds: {}),
       ),
     );
     _commandStack.add(
-      RemoveElementCommand(
+      ElementsCommand(
         before: before,
         after: const [],
         applyElements: _applyElementsFromCommand,
@@ -233,7 +339,7 @@ class CanvasCubit extends Cubit<CanvasState> {
       state.copyWith(
         document: document,
         interaction: state.interaction.copyWith(
-          selectedElementIds: [],
+          selectedElementIds: {},
           activeElementId: null,
         ),
       ),
@@ -251,7 +357,7 @@ class CanvasCubit extends Cubit<CanvasState> {
 
     // Se o elemento deletado estava selecionado, remove da seleção
     final updatedSelection =
-        List<String>.from(state.interaction.selectedElementIds)..remove(id);
+        Set<String>.from(state.interaction.selectedElementIds)..remove(id);
 
     emit(state.copyWith(
       document: state.document.copyWith(elements: updatedElements),
@@ -261,7 +367,7 @@ class CanvasCubit extends Cubit<CanvasState> {
     ));
 
     _commandStack.add(
-      RemoveElementCommand(
+      ElementsCommand(
         before: [element],
         after: const [],
         applyElements: _applyElementsFromCommand,

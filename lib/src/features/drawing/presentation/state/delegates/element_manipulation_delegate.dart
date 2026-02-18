@@ -9,8 +9,7 @@ import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
-import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
-import 'package:notexia/src/features/drawing/domain/commands/update_style_command.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 
 class ElementManipulationDelegate {
@@ -126,14 +125,14 @@ class ElementManipulationDelegate {
       state.copyWith(
         document: updatedDoc,
         interaction: state.interaction.copyWith(
-          selectedElementIds: [],
+          selectedElementIds: {},
           activeElementId: null,
         ),
       ),
     );
 
     commandStack.add(
-      RemoveElementCommand(
+      ElementsCommand(
         before: before,
         after: List<CanvasElement>.from(updatedElements),
         applyElements: applyCallback,
@@ -156,7 +155,7 @@ class ElementManipulationDelegate {
         state.document.elements.where((e) => e.id != elementId).toList();
     if (updatedElements.length == before.length) return;
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    final updatedSelection = List<String>.from(state.selectedElementIds)
+    final updatedSelection = Set<String>.from(state.selectedElementIds)
       ..remove(elementId);
 
     emit(
@@ -171,7 +170,7 @@ class ElementManipulationDelegate {
     );
 
     commandStack.add(
-      RemoveElementCommand(
+      ElementsCommand(
         before: before,
         after: List<CanvasElement>.from(updatedElements),
         applyElements: applyCallback,
@@ -214,7 +213,7 @@ class ElementManipulationDelegate {
 
     if (!listEquals(before, updatedElements)) {
       commandStack.add(
-        UpdateStyleCommand(
+        ElementsCommand(
           before: before,
           after: List<CanvasElement>.from(updatedElements),
           applyElements: applyCallback,

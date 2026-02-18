@@ -9,7 +9,7 @@ class ObjectSnapService {
   static SnapResult snapMove({
     required Rect targetRect,
     required List<CanvasElement> referenceElements,
-    required List<String> excludedElementIds,
+    required Set<String> excludedElementIds,
   }) {
     double snapDx = 0;
     double snapDy = 0;
@@ -59,7 +59,7 @@ class ObjectSnapService {
     required double targetCenter,
     required double targetMax,
     required List<CanvasElement> references,
-    required List<String> excludedIds,
+    required Set<String> excludedIds,
     required bool isVertical,
     required double snapDistance,
     required double targetCrossMin,

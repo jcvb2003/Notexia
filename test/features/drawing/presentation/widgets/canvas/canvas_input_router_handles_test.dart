@@ -94,7 +94,7 @@ void main() {
           document: doc.copyWith(elements: [el]),
           interaction: drawingCubit.state.interaction.copyWith(
             selectedTool: CanvasElementType.selection,
-            selectedElementIds: const ['r1'],
+            selectedElementIds: const {'r1'},
           ),
         ),
       );
@@ -183,7 +183,7 @@ void main() {
           document: doc.copyWith(elements: [el]),
           interaction: drawingCubit.state.interaction.copyWith(
             selectedTool: CanvasElementType.selection,
-            selectedElementIds: const ['r2'],
+            selectedElementIds: const {'r2'},
           ),
         ),
       );
@@ -276,7 +276,7 @@ void main() {
           document: doc.copyWith(elements: [el]),
           interaction: drawingCubit.state.interaction.copyWith(
             selectedTool: CanvasElementType.selection,
-            selectedElementIds: const ['r3'],
+            selectedElementIds: const {'r3'},
           ),
         ),
       );
@@ -367,7 +367,7 @@ void main() {
             document: doc.copyWith(elements: [el]),
             interaction: drawingCubit.state.interaction.copyWith(
               selectedTool: CanvasElementType.selection,
-              selectedElementIds: const ['r4'],
+              selectedElementIds: const {'r4'},
             ),
           ),
         );
@@ -469,7 +469,7 @@ void main() {
           document: doc.copyWith(elements: [el]),
           interaction: drawingCubit.state.interaction.copyWith(
             selectedTool: CanvasElementType.selection,
-            selectedElementIds: const ['r5'],
+            selectedElementIds: const {'r5'},
           ),
         ),
       );
@@ -551,8 +551,8 @@ void main() {
           elementManipulationDelegate,
           doc,
         );
-        await drawingCubit.snap.setAngleSnapEnabled(true);
-        await drawingCubit.snap.setAngleSnapStep(math.pi / 6);
+        await drawingCubit.setAngleSnapEnabled(true);
+        await drawingCubit.setAngleSnapStep(math.pi / 6);
 
         final startAngle = math.pi / 7;
         final el = CanvasElement.rectangle(
@@ -570,7 +570,7 @@ void main() {
             document: doc.copyWith(elements: [el]),
             interaction: drawingCubit.state.interaction.copyWith(
               selectedTool: CanvasElementType.selection,
-              selectedElementIds: const ['r6'],
+              selectedElementIds: const {'r6'},
             ),
           ),
         );

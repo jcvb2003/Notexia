@@ -55,7 +55,7 @@ class _MainLayoutState extends State<MainLayout> {
               initialDoc,
               appSettingsRepository: sl<AppSettingsRepository>(),
             );
-            cubit.snap.loadAngleSnapSettings();
+            cubit.loadAngleSnapSettings();
             return cubit;
           },
         ),

@@ -131,7 +131,7 @@ void main() {
         final rect = _makeRect('r1', x: 10, y: 10, w: 100, h: 100);
         return CanvasState(
           document: initialDoc.copyWith(elements: [rect]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) => c.selection.selectElementAt(const Offset(500, 500)),
@@ -152,7 +152,7 @@ void main() {
         final r2 = _makeRect('r2', x: 200, y: 200, w: 50, h: 50);
         return CanvasState(
           document: initialDoc.copyWith(elements: [r1, r2]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) => c.selection
@@ -173,7 +173,7 @@ void main() {
         final r1 = _makeRect('r1', x: 10, y: 10, w: 50, h: 50);
         return CanvasState(
           document: initialDoc.copyWith(elements: [r1]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) => c.selection
@@ -194,7 +194,7 @@ void main() {
         final r1 = _makeRect('r1', x: 10, y: 10, w: 100, h: 100);
         return CanvasState(
           document: initialDoc.copyWith(elements: [r1]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) => c.selection.selectElementAt(const Offset(50, 50)),
@@ -233,7 +233,7 @@ void main() {
         final r1 = _makeRect('r1', x: 100, y: 100, w: 50, h: 50);
         return CanvasState(
           document: initialDoc.copyWith(elements: [r1]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) =>
@@ -289,7 +289,7 @@ void main() {
         final r2 = _makeRect('r2', x: 200);
         return CanvasState(
           document: initialDoc.copyWith(elements: [r1, r2]),
-          interaction: const InteractionState(selectedElementIds: ['r1']),
+          interaction: const InteractionState(selectedElementIds: {'r1'}),
         );
       },
       act: (c) => c.manipulation.deleteSelectedElements(),

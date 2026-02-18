@@ -16,7 +16,7 @@ class CanvasManipulationService {
   /// Move os elementos selecionados por um determinado delta.
   List<CanvasElement> moveElements(
     List<CanvasElement> elements,
-    List<String> selectedIds,
+    Set<String> selectedIds,
     Offset delta,
   ) {
     if (selectedIds.isEmpty) return elements;
@@ -32,7 +32,7 @@ class CanvasManipulationService {
   /// Remove os elementos selecionados da lista.
   List<CanvasElement> deleteElements(
     List<CanvasElement> elements,
-    List<String> selectedIds,
+    Set<String> selectedIds,
   ) {
     if (selectedIds.isEmpty) return elements;
     return elements.where((e) => !selectedIds.contains(e.id)).toList();
@@ -41,7 +41,7 @@ class CanvasManipulationService {
   /// Atualiza propriedades visuais dos elementos selecionados.
   List<CanvasElement> updateElementsProperties(
     List<CanvasElement> elements,
-    List<String> selectedIds,
+    Set<String> selectedIds,
     ElementStylePatch patch,
   ) {
     if (selectedIds.isEmpty) return elements;

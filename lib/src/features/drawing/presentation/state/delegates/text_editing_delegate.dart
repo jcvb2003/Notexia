@@ -7,7 +7,7 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart
 import 'package:notexia/src/features/drawing/domain/factories/canvas_element_factory.dart';
 import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
-import 'package:notexia/src/features/drawing/domain/commands/add_element_command.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 
@@ -42,14 +42,14 @@ class TextEditingDelegate {
       state.copyWith(
         document: updatedDoc,
         interaction: state.interaction.copyWith(
-          selectedElementIds: [newId],
+          selectedElementIds: {newId},
           activeElementId: newId,
         ),
       ),
     );
 
     commandStack.add(
-      AddElementCommand(
+      ElementsCommand(
         before: before,
         after: List<CanvasElement>.from(updatedDoc.elements),
         applyElements: applyCallback,

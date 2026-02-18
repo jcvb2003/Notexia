@@ -41,7 +41,6 @@ class CanvasElementMapper {
         : (isDeletedVal as bool? ?? false);
 
     final version = map['version'] as int? ?? 1;
-    final versionNonce = map['versionNonce'] as int? ?? 0;
     final updatedAt = map['updatedAt'] != null
         ? DateTime.parse(map['updatedAt'] as String)
         : DateTime.now();
@@ -49,7 +48,7 @@ class CanvasElementMapper {
     // 3. Instanciar elemento específico baseado no tipo
     switch (type) {
       case CanvasElementType.rectangle:
-        return RectangleElement(
+        final element = RectangleElement(
           id: id,
           x: x,
           y: y,
@@ -66,9 +65,10 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
+        return element;
       case CanvasElementType.diamond:
         return DiamondElement(
           id: id,
@@ -87,8 +87,8 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.ellipse:
         return EllipseElement(
@@ -108,8 +108,8 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.triangle:
         return TriangleElement(
@@ -129,8 +129,8 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.line:
         final pointsList = (map['points'] as List?) ?? [];
@@ -155,9 +155,9 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
           points: points,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.arrow:
         final pointsList = (map['points'] as List?) ?? [];
@@ -182,9 +182,9 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
           points: points,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.freeDraw:
         final pointsList = (map['points'] as List?) ?? [];
@@ -209,9 +209,9 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
           points: points,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       case CanvasElementType.text:
         return TextElement(
@@ -231,7 +231,6 @@ class CanvasElementMapper {
           zIndex: zIndex,
           isDeleted: isDeleted,
           version: version,
-          versionNonce: versionNonce,
           updatedAt: updatedAt,
           text: map['text'] as String? ?? '',
           fontFamily: map['fontFamily'] as String? ?? 'Virgil',
@@ -257,10 +256,11 @@ class CanvasElementMapper {
           isStrikethrough: map['isStrikethrough'] is int
               ? map['isStrikethrough'] == 1
               : (map['isStrikethrough'] as bool? ?? false),
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
       default:
         // Caso de tipo desconhecido, retorna retângulo seguro ou lança erro
-        // Neste caso, retornamos um retÃ¢ngulo vazio para não crashear
+        // Neste caso, retornamos um retângulo vazio para não crashear
         return RectangleElement(
           id: id,
           x: x,
@@ -271,6 +271,7 @@ class CanvasElementMapper {
           strokeColor: strokeColor,
           updatedAt: updatedAt,
           zIndex: zIndex,
+          customData: map['customData'] as Map<String, dynamic>? ?? {},
         );
     }
   }
@@ -300,9 +301,11 @@ class CanvasElementMapper {
       'zIndex': element.zIndex,
       'isDeleted': element.isDeleted,
       'version': element.version,
-      'versionNonce': element.versionNonce,
       'updatedAt': element.updatedAt.toIso8601String(),
     };
+
+    // Adiciona o customData do elemento
+    map['customData'] = element.customData;
 
     if (element is TextElement) {
       map.addAll({
@@ -364,6 +367,32 @@ class CanvasElementMapper {
       return HexColorExtension.fromHex(value);
     }
     return Colors.black; // Fallback seguro
+  }
+
+  static List<String> customDataKeys(CanvasElementType type) {
+    switch (type) {
+      case CanvasElementType.line:
+      case CanvasElementType.arrow:
+      case CanvasElementType.freeDraw:
+        return ['points'];
+      case CanvasElementType.text:
+        return [
+          'text',
+          'fontFamily',
+          'fontSize',
+          'textAlign',
+          'backgroundColor',
+          'backgroundRadius',
+          'isBold',
+          'isItalic',
+          'isUnderlined',
+          'isStrikethrough',
+        ];
+      case CanvasElementType.image:
+        return ['fileId', 'status', 'scale'];
+      default:
+        return [];
+    }
   }
 }
 

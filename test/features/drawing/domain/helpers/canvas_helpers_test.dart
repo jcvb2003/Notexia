@@ -4,9 +4,7 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 
 import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
-import 'package:notexia/src/features/drawing/domain/commands/add_element_command.dart';
-import 'package:notexia/src/features/drawing/domain/commands/remove_element_command.dart';
-import 'package:notexia/src/features/drawing/domain/commands/transform_element_command.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 
 void main() {
   group('CanvasHelpers', () {
@@ -46,7 +44,7 @@ void main() {
     );
 
     group('buildElementsCommand', () {
-      test('should return AddElementCommand when elements are added', () {
+      test('should return ElementsCommand when elements are added', () {
         final List<CanvasElement> before = [element1];
         final List<CanvasElement> after = [element1, element2];
 
@@ -57,10 +55,11 @@ void main() {
           applyCallback: (_) {},
         );
 
-        expect(command, isA<AddElementCommand>());
+        expect(command, isA<ElementsCommand>());
+        expect((command as ElementsCommand).label, 'Add');
       });
 
-      test('should return RemoveElementCommand when elements are removed', () {
+      test('should return ElementsCommand when elements are removed', () {
         final List<CanvasElement> before = [element1, element2];
         final List<CanvasElement> after = [element1];
 
@@ -71,10 +70,11 @@ void main() {
           applyCallback: (_) {},
         );
 
-        expect(command, isA<RemoveElementCommand>());
+        expect(command, isA<ElementsCommand>());
+        expect((command as ElementsCommand).label, 'Remove');
       });
 
-      test('should return TransformElementCommand when sizes are equal', () {
+      test('should return ElementsCommand when sizes are equal', () {
         final movedElement = element1.copyWith(x: 20);
         final List<CanvasElement> before = [element1];
         final List<CanvasElement> after = [movedElement];
@@ -86,7 +86,8 @@ void main() {
           applyCallback: (_) {},
         );
 
-        expect(command, isA<TransformElementCommand>());
+        expect(command, isA<ElementsCommand>());
+        expect((command as ElementsCommand).label, 'Move');
       });
     });
   });

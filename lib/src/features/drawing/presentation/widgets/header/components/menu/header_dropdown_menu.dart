@@ -46,7 +46,7 @@ class HeaderDropdownMenu extends StatelessWidget {
                 label: 'Tela cheia',
                 showDivider: true,
                 onTap: () {
-                  canvasCubit.preferences.toggleFullScreen();
+                  canvasCubit.toggleFullScreen();
                   onClose();
                 },
               ),
@@ -121,7 +121,7 @@ class HeaderDropdownToggle extends StatelessWidget {
       builder: (context, state) {
         final value = state.isSkeletonMode;
         void toggle() {
-          context.read<CanvasCubit>().preferences.toggleSkeletonMode();
+          context.read<CanvasCubit>().toggleSkeletonMode();
           onClose?.call();
         }
 

@@ -127,26 +127,24 @@ class DrawingDelegate {
         elements: [...state.document.elements, elementOfDrawing],
       );
 
-      try {
-        await persistenceService.saveElement(
-          state.document.id,
-          elementOfDrawing,
-        );
-      } catch (e) {
-        emit(state.copyWith(error: 'Erro ao salvar elemento: $e'));
+      final result = await persistenceService.saveElement(
+        state.document.id,
+        elementOfDrawing,
+      );
+      if (result.isFailure) {
+        emit(state.copyWith(error: result.failure?.message));
       }
     } else {
       final existingElement =
           state.document.elements.where((e) => e.id == elementId).firstOrNull;
 
       if (existingElement != null) {
-        try {
-          await persistenceService.saveElement(
-            state.document.id,
-            existingElement,
-          );
-        } catch (e) {
-          emit(state.copyWith(error: 'Erro ao salvar elemento: $e'));
+        final result = await persistenceService.saveElement(
+          state.document.id,
+          existingElement,
+        );
+        if (result.isFailure) {
+          emit(state.copyWith(error: result.failure?.message));
         }
       }
     }
@@ -164,7 +162,7 @@ class DrawingDelegate {
           activeDrawingElement: null,
           gestureStartPosition: null,
           selectedElementIds:
-              elementId != null ? [elementId] : state.selectedElementIds,
+              elementId != null ? {elementId} : state.selectedElementIds,
         ),
       ),
     );

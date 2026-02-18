@@ -15,11 +15,8 @@ import 'package:notexia/src/features/drawing/presentation/state/scopes/manipulat
 
 import 'package:notexia/src/features/drawing/presentation/state/scopes/selection_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/eraser_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/viewport_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/snap_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/preferences_scope.dart';
 
 class MockManipulationScope extends Mock implements ManipulationScope {}
 
@@ -27,15 +24,9 @@ class MockSelectionScope extends Mock implements SelectionScope {}
 
 class MockDrawingScope extends Mock implements DrawingScope {}
 
-class MockEraserScope extends Mock implements EraserScope {}
-
 class MockTextScope extends Mock implements TextScope {}
 
 class MockViewportScope extends Mock implements ViewportScope {}
-
-class MockSnapScope extends Mock implements SnapScope {}
-
-class MockPreferencesScope extends Mock implements PreferencesScope {}
 
 class MockCanvasCubit extends MockCubit<CanvasState> implements CanvasCubit {
   @override
@@ -45,15 +36,9 @@ class MockCanvasCubit extends MockCubit<CanvasState> implements CanvasCubit {
   @override
   late final DrawingScope drawing = MockDrawingScope();
   @override
-  late final EraserScope eraser = MockEraserScope();
-  @override
   late final TextScope text = MockTextScope();
   @override
   late final ViewportScope viewport = MockViewportScope();
-  @override
-  late final SnapScope snap = MockSnapScope();
-  @override
-  late final PreferencesScope preferences = MockPreferencesScope();
 }
 
 class MockUndoRedoCubit extends MockCubit<UndoRedoState>

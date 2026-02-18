@@ -9,6 +9,35 @@ part 'canvas_element.freezed.dart';
 sealed class CanvasElement with _$CanvasElement {
   const CanvasElement._(); // Permite métodos e getters customizados
 
+  @override
+  Map<String, dynamic> get customData;
+
+  /// Obtém um valor do customData com tipagem.
+  T? getCustomData<T>(String key) => customData[key] as T?;
+
+  /// Retorna uma cópia do elemento com o valor atualizado no customData.
+  CanvasElement setCustomData(String key, dynamic value) {
+    final newData = Map<String, dynamic>.from(customData);
+    newData[key] = value;
+    return copyWithCustomData(newData);
+  }
+
+  /// Método auxiliar abstrato para o copyWith do freezed (implementado via macro ou manual wrap)
+  /// Na verdade, o freezed gera o copyWith, mas para o union abstrata
+  /// precisamos garantir que customData está disponível.
+  CanvasElement copyWithCustomData(Map<String, dynamic> customData) {
+    return map(
+      rectangle: (e) => e.copyWith(customData: customData),
+      diamond: (e) => e.copyWith(customData: customData),
+      ellipse: (e) => e.copyWith(customData: customData),
+      line: (e) => e.copyWith(customData: customData),
+      arrow: (e) => e.copyWith(customData: customData),
+      freeDraw: (e) => e.copyWith(customData: customData),
+      text: (e) => e.copyWith(customData: customData),
+      triangle: (e) => e.copyWith(customData: customData),
+    );
+  }
+
   // --- Propriedades Comuns como Getters Abstratos (para acesso direto) ---
   // Freezed gera getters para propriedades comuns automaticamente se definidas em todos os construtores.
   // Porém, garantimos que todas as factories tenham estes campos.
@@ -31,8 +60,8 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
+    @Default({}) Map<String, dynamic> customData,
   }) = RectangleElement;
 
   const factory CanvasElement.diamond({
@@ -53,8 +82,8 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
+    @Default({}) Map<String, dynamic> customData,
   }) = DiamondElement;
 
   const factory CanvasElement.ellipse({
@@ -75,8 +104,8 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
+    @Default({}) Map<String, dynamic> customData,
   }) = EllipseElement;
 
   const factory CanvasElement.line({
@@ -97,9 +126,9 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
     required List<Offset> points,
+    @Default({}) Map<String, dynamic> customData,
   }) = LineElement;
 
   const factory CanvasElement.arrow({
@@ -120,9 +149,9 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
     required List<Offset> points,
+    @Default({}) Map<String, dynamic> customData,
   }) = ArrowElement;
 
   const factory CanvasElement.freeDraw({
@@ -143,9 +172,9 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
     required List<Offset> points,
+    @Default({}) Map<String, dynamic> customData,
   }) = FreeDrawElement;
 
   const factory CanvasElement.text({
@@ -166,7 +195,6 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
     required String text,
     @Default('Virgil') String fontFamily,
@@ -178,6 +206,7 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(false) bool isItalic,
     @Default(false) bool isUnderlined,
     @Default(false) bool isStrikethrough,
+    @Default({}) Map<String, dynamic> customData,
   }) = TextElement;
 
   const factory CanvasElement.triangle({
@@ -198,8 +227,8 @@ sealed class CanvasElement with _$CanvasElement {
     @Default(0) int zIndex,
     @Default(false) bool isDeleted,
     @Default(1) int version,
-    @Default(0) int versionNonce,
     required DateTime updatedAt,
+    @Default({}) Map<String, dynamic> customData,
   }) = TriangleElement;
 
   /// Calcula o bounding box (retângulo delimitador) do elemento.

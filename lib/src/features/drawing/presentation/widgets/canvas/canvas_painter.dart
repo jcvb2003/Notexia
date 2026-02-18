@@ -8,7 +8,7 @@ import 'package:notexia/src/features/drawing/presentation/widgets/canvas/overlay
 
 class PainterCtx {
   final List<CanvasElement> elements;
-  final List<String> selectedElementIds;
+  final Set<String> selectedElementIds;
   final double zoomLevel;
   final Offset panOffset;
   final Rect? selectionBox;
@@ -55,7 +55,7 @@ class StaticCanvasPainter extends CustomPainter {
 
     final ctx = PainterCtx(
       elements: elements,
-      selectedElementIds: const [],
+      selectedElementIds: const {},
       zoomLevel: zoomLevel,
       panOffset: panOffset,
       selectionBox: null,
@@ -84,7 +84,7 @@ class StaticCanvasPainter extends CustomPainter {
 
 class DynamicCanvasPainter extends CustomPainter {
   final List<CanvasElement> elements;
-  final List<String> selectedElementIds;
+  final Set<String> selectedElementIds;
   final double zoomLevel;
   final Offset panOffset;
   final Rect? selectionBox;

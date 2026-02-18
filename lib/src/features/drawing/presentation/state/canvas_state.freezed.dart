@@ -675,7 +675,7 @@ abstract class _TextEditingState implements TextEditingState {
 /// @nodoc
 mixin _$InteractionState {
   CanvasElementType get selectedTool => throw _privateConstructorUsedError;
-  List<String> get selectedElementIds => throw _privateConstructorUsedError;
+  Set<String> get selectedElementIds => throw _privateConstructorUsedError;
   bool get isDrawing => throw _privateConstructorUsedError;
   String? get activeElementId => throw _privateConstructorUsedError;
   Offset? get gestureStartPosition => throw _privateConstructorUsedError;
@@ -701,7 +701,7 @@ abstract class $InteractionStateCopyWith<$Res> {
   @useResult
   $Res call(
       {CanvasElementType selectedTool,
-      List<String> selectedElementIds,
+      Set<String> selectedElementIds,
       bool isDrawing,
       String? activeElementId,
       Offset? gestureStartPosition,
@@ -753,7 +753,7 @@ class _$InteractionStateCopyWithImpl<$Res, $Val extends InteractionState>
       selectedElementIds: null == selectedElementIds
           ? _value.selectedElementIds
           : selectedElementIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       isDrawing: null == isDrawing
           ? _value.isDrawing
           : isDrawing // ignore: cast_nullable_to_non_nullable
@@ -848,7 +848,7 @@ abstract class _$$InteractionStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {CanvasElementType selectedTool,
-      List<String> selectedElementIds,
+      Set<String> selectedElementIds,
       bool isDrawing,
       String? activeElementId,
       Offset? gestureStartPosition,
@@ -902,7 +902,7 @@ class __$$InteractionStateImplCopyWithImpl<$Res>
       selectedElementIds: null == selectedElementIds
           ? _value._selectedElementIds
           : selectedElementIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       isDrawing: null == isDrawing
           ? _value.isDrawing
           : isDrawing // ignore: cast_nullable_to_non_nullable
@@ -948,7 +948,7 @@ class __$$InteractionStateImplCopyWithImpl<$Res>
 class _$InteractionStateImpl implements _InteractionState {
   const _$InteractionStateImpl(
       {this.selectedTool = CanvasElementType.rectangle,
-      final List<String> selectedElementIds = const [],
+      final Set<String> selectedElementIds = const {},
       this.isDrawing = false,
       this.activeElementId,
       this.gestureStartPosition,
@@ -963,14 +963,14 @@ class _$InteractionStateImpl implements _InteractionState {
   @override
   @JsonKey()
   final CanvasElementType selectedTool;
-  final List<String> _selectedElementIds;
+  final Set<String> _selectedElementIds;
   @override
   @JsonKey()
-  List<String> get selectedElementIds {
-    if (_selectedElementIds is EqualUnmodifiableListView)
+  Set<String> get selectedElementIds {
+    if (_selectedElementIds is EqualUnmodifiableSetView)
       return _selectedElementIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_selectedElementIds);
+    return EqualUnmodifiableSetView(_selectedElementIds);
   }
 
   @override
@@ -1057,7 +1057,7 @@ class _$InteractionStateImpl implements _InteractionState {
 abstract class _InteractionState implements InteractionState {
   const factory _InteractionState(
       {final CanvasElementType selectedTool,
-      final List<String> selectedElementIds,
+      final Set<String> selectedElementIds,
       final bool isDrawing,
       final String? activeElementId,
       final Offset? gestureStartPosition,
@@ -1071,7 +1071,7 @@ abstract class _InteractionState implements InteractionState {
   @override
   CanvasElementType get selectedTool;
   @override
-  List<String> get selectedElementIds;
+  Set<String> get selectedElementIds;
   @override
   bool get isDrawing;
   @override

@@ -33,8 +33,8 @@ mixin _$CanvasElement {
   int get zIndex => throw _privateConstructorUsedError;
   bool get isDeleted => throw _privateConstructorUsedError;
   int get version => throw _privateConstructorUsedError;
-  int get versionNonce => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
+  Map<String, dynamic> get customData => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
@@ -55,8 +55,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -76,8 +76,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -97,8 +97,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -118,9 +118,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -140,9 +140,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -162,9 +162,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -184,7 +184,6 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -195,7 +194,8 @@ mixin _$CanvasElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -215,8 +215,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) =>
       throw _privateConstructorUsedError;
@@ -240,8 +240,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -261,8 +261,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -282,8 +282,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -303,9 +303,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -325,9 +325,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -347,9 +347,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -369,7 +369,6 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -380,7 +379,8 @@ mixin _$CanvasElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -400,8 +400,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) =>
       throw _privateConstructorUsedError;
@@ -425,8 +425,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -446,8 +446,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -467,8 +467,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -488,9 +488,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -510,9 +510,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -532,9 +532,9 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -554,7 +554,6 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -565,7 +564,8 @@ mixin _$CanvasElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -585,8 +585,8 @@ mixin _$CanvasElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) =>
@@ -660,8 +660,8 @@ abstract class $CanvasElementCopyWith<$Res> {
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
-      DateTime updatedAt});
+      DateTime updatedAt,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -696,8 +696,8 @@ class _$CanvasElementCopyWithImpl<$Res, $Val extends CanvasElement>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
+    Object? customData = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -768,14 +768,14 @@ class _$CanvasElementCopyWithImpl<$Res, $Val extends CanvasElement>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      customData: null == customData
+          ? _value.customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ) as $Val);
   }
 }
@@ -806,8 +806,8 @@ abstract class _$$RectangleElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
-      DateTime updatedAt});
+      DateTime updatedAt,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -840,8 +840,8 @@ class __$$RectangleElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
+    Object? customData = null,
   }) {
     return _then(_$RectangleElementImpl(
       id: null == id
@@ -912,14 +912,14 @@ class __$$RectangleElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -945,9 +945,10 @@ class _$RectangleElementImpl extends RectangleElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
-      required this.updatedAt})
-      : super._();
+      required this.updatedAt,
+      final Map<String, dynamic> customData = const {}})
+      : _customData = customData,
+        super._();
 
   @override
   final String id;
@@ -994,14 +995,19 @@ class _$RectangleElementImpl extends RectangleElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
 
   @override
   String toString() {
-    return 'CanvasElement.rectangle(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt)';
+    return 'CanvasElement.rectangle(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, customData: $customData)';
   }
 
   @override
@@ -1033,10 +1039,10 @@ class _$RectangleElementImpl extends RectangleElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -1059,8 +1065,8 @@ class _$RectangleElementImpl extends RectangleElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt
+        updatedAt,
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -1093,8 +1099,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -1114,8 +1120,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -1135,8 +1141,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -1156,9 +1162,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -1178,9 +1184,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -1200,9 +1206,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -1222,7 +1228,6 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -1233,7 +1238,8 @@ class _$RectangleElementImpl extends RectangleElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -1253,8 +1259,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return rectangle(
@@ -1275,8 +1281,8 @@ class _$RectangleElementImpl extends RectangleElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -1300,8 +1306,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -1321,8 +1327,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -1342,8 +1348,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -1363,9 +1369,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -1385,9 +1391,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -1407,9 +1413,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -1429,7 +1435,6 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -1440,7 +1445,8 @@ class _$RectangleElementImpl extends RectangleElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -1460,8 +1466,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return rectangle?.call(
@@ -1482,8 +1488,8 @@ class _$RectangleElementImpl extends RectangleElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -1507,8 +1513,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -1528,8 +1534,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -1549,8 +1555,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -1570,9 +1576,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -1592,9 +1598,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -1614,9 +1620,9 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -1636,7 +1642,6 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -1647,7 +1652,8 @@ class _$RectangleElementImpl extends RectangleElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -1667,8 +1673,8 @@ class _$RectangleElementImpl extends RectangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -1691,8 +1697,8 @@ class _$RectangleElementImpl extends RectangleElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
-          updatedAt);
+          updatedAt,
+          customData);
     }
     return orElse();
   }
@@ -1766,8 +1772,8 @@ abstract class RectangleElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
-      required final DateTime updatedAt}) = _$RectangleElementImpl;
+      required final DateTime updatedAt,
+      final Map<String, dynamic> customData}) = _$RectangleElementImpl;
   const RectangleElement._() : super._();
 
   @override
@@ -1805,9 +1811,9 @@ abstract class RectangleElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -1843,8 +1849,8 @@ abstract class _$$DiamondElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
-      DateTime updatedAt});
+      DateTime updatedAt,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -1877,8 +1883,8 @@ class __$$DiamondElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
+    Object? customData = null,
   }) {
     return _then(_$DiamondElementImpl(
       id: null == id
@@ -1949,14 +1955,14 @@ class __$$DiamondElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -1982,9 +1988,10 @@ class _$DiamondElementImpl extends DiamondElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
-      required this.updatedAt})
-      : super._();
+      required this.updatedAt,
+      final Map<String, dynamic> customData = const {}})
+      : _customData = customData,
+        super._();
 
   @override
   final String id;
@@ -2031,14 +2038,19 @@ class _$DiamondElementImpl extends DiamondElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
 
   @override
   String toString() {
-    return 'CanvasElement.diamond(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt)';
+    return 'CanvasElement.diamond(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, customData: $customData)';
   }
 
   @override
@@ -2070,10 +2082,10 @@ class _$DiamondElementImpl extends DiamondElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -2096,8 +2108,8 @@ class _$DiamondElementImpl extends DiamondElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt
+        updatedAt,
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -2130,8 +2142,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -2151,8 +2163,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -2172,8 +2184,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -2193,9 +2205,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -2215,9 +2227,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -2237,9 +2249,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -2259,7 +2271,6 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -2270,7 +2281,8 @@ class _$DiamondElementImpl extends DiamondElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -2290,8 +2302,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return diamond(
@@ -2312,8 +2324,8 @@ class _$DiamondElementImpl extends DiamondElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -2337,8 +2349,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -2358,8 +2370,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -2379,8 +2391,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -2400,9 +2412,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -2422,9 +2434,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -2444,9 +2456,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -2466,7 +2478,6 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -2477,7 +2488,8 @@ class _$DiamondElementImpl extends DiamondElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -2497,8 +2509,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return diamond?.call(
@@ -2519,8 +2531,8 @@ class _$DiamondElementImpl extends DiamondElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -2544,8 +2556,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -2565,8 +2577,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -2586,8 +2598,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -2607,9 +2619,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -2629,9 +2641,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -2651,9 +2663,9 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -2673,7 +2685,6 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -2684,7 +2695,8 @@ class _$DiamondElementImpl extends DiamondElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -2704,8 +2716,8 @@ class _$DiamondElementImpl extends DiamondElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -2728,8 +2740,8 @@ class _$DiamondElementImpl extends DiamondElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
-          updatedAt);
+          updatedAt,
+          customData);
     }
     return orElse();
   }
@@ -2803,8 +2815,8 @@ abstract class DiamondElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
-      required final DateTime updatedAt}) = _$DiamondElementImpl;
+      required final DateTime updatedAt,
+      final Map<String, dynamic> customData}) = _$DiamondElementImpl;
   const DiamondElement._() : super._();
 
   @override
@@ -2842,9 +2854,9 @@ abstract class DiamondElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -2880,8 +2892,8 @@ abstract class _$$EllipseElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
-      DateTime updatedAt});
+      DateTime updatedAt,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -2914,8 +2926,8 @@ class __$$EllipseElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
+    Object? customData = null,
   }) {
     return _then(_$EllipseElementImpl(
       id: null == id
@@ -2986,14 +2998,14 @@ class __$$EllipseElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -3019,9 +3031,10 @@ class _$EllipseElementImpl extends EllipseElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
-      required this.updatedAt})
-      : super._();
+      required this.updatedAt,
+      final Map<String, dynamic> customData = const {}})
+      : _customData = customData,
+        super._();
 
   @override
   final String id;
@@ -3068,14 +3081,19 @@ class _$EllipseElementImpl extends EllipseElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
 
   @override
   String toString() {
-    return 'CanvasElement.ellipse(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt)';
+    return 'CanvasElement.ellipse(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, customData: $customData)';
   }
 
   @override
@@ -3107,10 +3125,10 @@ class _$EllipseElementImpl extends EllipseElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -3133,8 +3151,8 @@ class _$EllipseElementImpl extends EllipseElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt
+        updatedAt,
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -3167,8 +3185,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -3188,8 +3206,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -3209,8 +3227,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -3230,9 +3248,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -3252,9 +3270,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -3274,9 +3292,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -3296,7 +3314,6 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -3307,7 +3324,8 @@ class _$EllipseElementImpl extends EllipseElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -3327,8 +3345,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return ellipse(
@@ -3349,8 +3367,8 @@ class _$EllipseElementImpl extends EllipseElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -3374,8 +3392,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -3395,8 +3413,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -3416,8 +3434,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -3437,9 +3455,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -3459,9 +3477,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -3481,9 +3499,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -3503,7 +3521,6 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -3514,7 +3531,8 @@ class _$EllipseElementImpl extends EllipseElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -3534,8 +3552,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return ellipse?.call(
@@ -3556,8 +3574,8 @@ class _$EllipseElementImpl extends EllipseElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -3581,8 +3599,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -3602,8 +3620,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -3623,8 +3641,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -3644,9 +3662,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -3666,9 +3684,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -3688,9 +3706,9 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -3710,7 +3728,6 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -3721,7 +3738,8 @@ class _$EllipseElementImpl extends EllipseElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -3741,8 +3759,8 @@ class _$EllipseElementImpl extends EllipseElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -3765,8 +3783,8 @@ class _$EllipseElementImpl extends EllipseElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
-          updatedAt);
+          updatedAt,
+          customData);
     }
     return orElse();
   }
@@ -3840,8 +3858,8 @@ abstract class EllipseElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
-      required final DateTime updatedAt}) = _$EllipseElementImpl;
+      required final DateTime updatedAt,
+      final Map<String, dynamic> customData}) = _$EllipseElementImpl;
   const EllipseElement._() : super._();
 
   @override
@@ -3879,9 +3897,9 @@ abstract class EllipseElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -3917,9 +3935,9 @@ abstract class _$$LineElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
       DateTime updatedAt,
-      List<Offset> points});
+      List<Offset> points,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -3952,9 +3970,9 @@ class __$$LineElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
     Object? points = null,
+    Object? customData = null,
   }) {
     return _then(_$LineElementImpl(
       id: null == id
@@ -4025,10 +4043,6 @@ class __$$LineElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -4037,6 +4051,10 @@ class __$$LineElementImplCopyWithImpl<$Res>
           ? _value._points
           : points // ignore: cast_nullable_to_non_nullable
               as List<Offset>,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -4062,10 +4080,11 @@ class _$LineElementImpl extends LineElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
       required this.updatedAt,
-      required final List<Offset> points})
+      required final List<Offset> points,
+      final Map<String, dynamic> customData = const {}})
       : _points = points,
+        _customData = customData,
         super._();
 
   @override
@@ -4113,9 +4132,6 @@ class _$LineElementImpl extends LineElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
   final List<Offset> _points;
   @override
@@ -4125,9 +4141,18 @@ class _$LineElementImpl extends LineElement {
     return EqualUnmodifiableListView(_points);
   }
 
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
+
   @override
   String toString() {
-    return 'CanvasElement.line(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt, points: $points)';
+    return 'CanvasElement.line(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, points: $points, customData: $customData)';
   }
 
   @override
@@ -4159,11 +4184,11 @@ class _$LineElementImpl extends LineElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            const DeepCollectionEquality().equals(other._points, _points));
+            const DeepCollectionEquality().equals(other._points, _points) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -4186,9 +4211,9 @@ class _$LineElementImpl extends LineElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        const DeepCollectionEquality().hash(_points)
+        const DeepCollectionEquality().hash(_points),
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -4220,8 +4245,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -4241,8 +4266,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -4262,8 +4287,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -4283,9 +4308,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -4305,9 +4330,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -4327,9 +4352,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -4349,7 +4374,6 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -4360,7 +4384,8 @@ class _$LineElementImpl extends LineElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -4380,8 +4405,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return line(
@@ -4402,9 +4427,9 @@ class _$LineElementImpl extends LineElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        points);
+        points,
+        customData);
   }
 
   @override
@@ -4428,8 +4453,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -4449,8 +4474,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -4470,8 +4495,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -4491,9 +4516,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -4513,9 +4538,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -4535,9 +4560,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -4557,7 +4582,6 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -4568,7 +4592,8 @@ class _$LineElementImpl extends LineElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -4588,8 +4613,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return line?.call(
@@ -4610,9 +4635,9 @@ class _$LineElementImpl extends LineElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        points);
+        points,
+        customData);
   }
 
   @override
@@ -4636,8 +4661,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -4657,8 +4682,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -4678,8 +4703,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -4699,9 +4724,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -4721,9 +4746,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -4743,9 +4768,9 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -4765,7 +4790,6 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -4776,7 +4800,8 @@ class _$LineElementImpl extends LineElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -4796,8 +4821,8 @@ class _$LineElementImpl extends LineElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -4820,9 +4845,9 @@ class _$LineElementImpl extends LineElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
           updatedAt,
-          points);
+          points,
+          customData);
     }
     return orElse();
   }
@@ -4896,9 +4921,9 @@ abstract class LineElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
       required final DateTime updatedAt,
-      required final List<Offset> points}) = _$LineElementImpl;
+      required final List<Offset> points,
+      final Map<String, dynamic> customData}) = _$LineElementImpl;
   const LineElement._() : super._();
 
   @override
@@ -4936,10 +4961,10 @@ abstract class LineElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
   List<Offset> get points;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -4975,9 +5000,9 @@ abstract class _$$ArrowElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
       DateTime updatedAt,
-      List<Offset> points});
+      List<Offset> points,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -5010,9 +5035,9 @@ class __$$ArrowElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
     Object? points = null,
+    Object? customData = null,
   }) {
     return _then(_$ArrowElementImpl(
       id: null == id
@@ -5083,10 +5108,6 @@ class __$$ArrowElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -5095,6 +5116,10 @@ class __$$ArrowElementImplCopyWithImpl<$Res>
           ? _value._points
           : points // ignore: cast_nullable_to_non_nullable
               as List<Offset>,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -5120,10 +5145,11 @@ class _$ArrowElementImpl extends ArrowElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
       required this.updatedAt,
-      required final List<Offset> points})
+      required final List<Offset> points,
+      final Map<String, dynamic> customData = const {}})
       : _points = points,
+        _customData = customData,
         super._();
 
   @override
@@ -5171,9 +5197,6 @@ class _$ArrowElementImpl extends ArrowElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
   final List<Offset> _points;
   @override
@@ -5183,9 +5206,18 @@ class _$ArrowElementImpl extends ArrowElement {
     return EqualUnmodifiableListView(_points);
   }
 
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
+
   @override
   String toString() {
-    return 'CanvasElement.arrow(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt, points: $points)';
+    return 'CanvasElement.arrow(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, points: $points, customData: $customData)';
   }
 
   @override
@@ -5217,11 +5249,11 @@ class _$ArrowElementImpl extends ArrowElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            const DeepCollectionEquality().equals(other._points, _points));
+            const DeepCollectionEquality().equals(other._points, _points) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -5244,9 +5276,9 @@ class _$ArrowElementImpl extends ArrowElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        const DeepCollectionEquality().hash(_points)
+        const DeepCollectionEquality().hash(_points),
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -5278,8 +5310,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -5299,8 +5331,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -5320,8 +5352,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -5341,9 +5373,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -5363,9 +5395,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -5385,9 +5417,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -5407,7 +5439,6 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -5418,7 +5449,8 @@ class _$ArrowElementImpl extends ArrowElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -5438,8 +5470,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return arrow(
@@ -5460,9 +5492,9 @@ class _$ArrowElementImpl extends ArrowElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        points);
+        points,
+        customData);
   }
 
   @override
@@ -5486,8 +5518,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -5507,8 +5539,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -5528,8 +5560,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -5549,9 +5581,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -5571,9 +5603,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -5593,9 +5625,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -5615,7 +5647,6 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -5626,7 +5657,8 @@ class _$ArrowElementImpl extends ArrowElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -5646,8 +5678,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return arrow?.call(
@@ -5668,9 +5700,9 @@ class _$ArrowElementImpl extends ArrowElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        points);
+        points,
+        customData);
   }
 
   @override
@@ -5694,8 +5726,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -5715,8 +5747,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -5736,8 +5768,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -5757,9 +5789,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -5779,9 +5811,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -5801,9 +5833,9 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -5823,7 +5855,6 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -5834,7 +5865,8 @@ class _$ArrowElementImpl extends ArrowElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -5854,8 +5886,8 @@ class _$ArrowElementImpl extends ArrowElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -5878,9 +5910,9 @@ class _$ArrowElementImpl extends ArrowElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
           updatedAt,
-          points);
+          points,
+          customData);
     }
     return orElse();
   }
@@ -5954,9 +5986,9 @@ abstract class ArrowElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
       required final DateTime updatedAt,
-      required final List<Offset> points}) = _$ArrowElementImpl;
+      required final List<Offset> points,
+      final Map<String, dynamic> customData}) = _$ArrowElementImpl;
   const ArrowElement._() : super._();
 
   @override
@@ -5994,10 +6026,10 @@ abstract class ArrowElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
   List<Offset> get points;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -6033,9 +6065,9 @@ abstract class _$$FreeDrawElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
       DateTime updatedAt,
-      List<Offset> points});
+      List<Offset> points,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -6068,9 +6100,9 @@ class __$$FreeDrawElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
     Object? points = null,
+    Object? customData = null,
   }) {
     return _then(_$FreeDrawElementImpl(
       id: null == id
@@ -6141,10 +6173,6 @@ class __$$FreeDrawElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -6153,6 +6181,10 @@ class __$$FreeDrawElementImplCopyWithImpl<$Res>
           ? _value._points
           : points // ignore: cast_nullable_to_non_nullable
               as List<Offset>,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -6178,10 +6210,11 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
       required this.updatedAt,
-      required final List<Offset> points})
+      required final List<Offset> points,
+      final Map<String, dynamic> customData = const {}})
       : _points = points,
+        _customData = customData,
         super._();
 
   @override
@@ -6229,9 +6262,6 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
   final List<Offset> _points;
   @override
@@ -6241,9 +6271,18 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
     return EqualUnmodifiableListView(_points);
   }
 
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
+
   @override
   String toString() {
-    return 'CanvasElement.freeDraw(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt, points: $points)';
+    return 'CanvasElement.freeDraw(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, points: $points, customData: $customData)';
   }
 
   @override
@@ -6275,11 +6314,11 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            const DeepCollectionEquality().equals(other._points, _points));
+            const DeepCollectionEquality().equals(other._points, _points) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -6302,9 +6341,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        const DeepCollectionEquality().hash(_points)
+        const DeepCollectionEquality().hash(_points),
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -6337,8 +6376,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -6358,8 +6397,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -6379,8 +6418,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -6400,9 +6439,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -6422,9 +6461,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -6444,9 +6483,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -6466,7 +6505,6 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -6477,7 +6515,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -6497,8 +6536,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return freeDraw(
@@ -6519,9 +6558,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        points);
+        points,
+        customData);
   }
 
   @override
@@ -6545,8 +6584,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -6566,8 +6605,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -6587,8 +6626,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -6608,9 +6647,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -6630,9 +6669,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -6652,9 +6691,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -6674,7 +6713,6 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -6685,7 +6723,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -6705,8 +6744,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return freeDraw?.call(
@@ -6727,9 +6766,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
-        points);
+        points,
+        customData);
   }
 
   @override
@@ -6753,8 +6792,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -6774,8 +6813,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -6795,8 +6834,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -6816,9 +6855,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -6838,9 +6877,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -6860,9 +6899,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -6882,7 +6921,6 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -6893,7 +6931,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -6913,8 +6952,8 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -6937,9 +6976,9 @@ class _$FreeDrawElementImpl extends FreeDrawElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
           updatedAt,
-          points);
+          points,
+          customData);
     }
     return orElse();
   }
@@ -7013,9 +7052,9 @@ abstract class FreeDrawElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
       required final DateTime updatedAt,
-      required final List<Offset> points}) = _$FreeDrawElementImpl;
+      required final List<Offset> points,
+      final Map<String, dynamic> customData}) = _$FreeDrawElementImpl;
   const FreeDrawElement._() : super._();
 
   @override
@@ -7053,10 +7092,10 @@ abstract class FreeDrawElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
   List<Offset> get points;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -7092,7 +7131,6 @@ abstract class _$$TextElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
       DateTime updatedAt,
       String text,
       String fontFamily,
@@ -7103,7 +7141,8 @@ abstract class _$$TextElementImplCopyWith<$Res>
       bool isBold,
       bool isItalic,
       bool isUnderlined,
-      bool isStrikethrough});
+      bool isStrikethrough,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -7136,7 +7175,6 @@ class __$$TextElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
     Object? text = null,
     Object? fontFamily = null,
@@ -7148,6 +7186,7 @@ class __$$TextElementImplCopyWithImpl<$Res>
     Object? isItalic = null,
     Object? isUnderlined = null,
     Object? isStrikethrough = null,
+    Object? customData = null,
   }) {
     return _then(_$TextElementImpl(
       id: null == id
@@ -7218,10 +7257,6 @@ class __$$TextElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -7266,6 +7301,10 @@ class __$$TextElementImplCopyWithImpl<$Res>
           ? _value.isStrikethrough
           : isStrikethrough // ignore: cast_nullable_to_non_nullable
               as bool,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -7291,7 +7330,6 @@ class _$TextElementImpl extends TextElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
       required this.updatedAt,
       required this.text,
       this.fontFamily = 'Virgil',
@@ -7302,8 +7340,10 @@ class _$TextElementImpl extends TextElement {
       this.isBold = false,
       this.isItalic = false,
       this.isUnderlined = false,
-      this.isStrikethrough = false})
-      : super._();
+      this.isStrikethrough = false,
+      final Map<String, dynamic> customData = const {}})
+      : _customData = customData,
+        super._();
 
   @override
   final String id;
@@ -7350,9 +7390,6 @@ class _$TextElementImpl extends TextElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
   @override
   final String text;
@@ -7382,10 +7419,18 @@ class _$TextElementImpl extends TextElement {
   @override
   @JsonKey()
   final bool isStrikethrough;
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
 
   @override
   String toString() {
-    return 'CanvasElement.text(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt, text: $text, fontFamily: $fontFamily, fontSize: $fontSize, textAlign: $textAlign, backgroundColor: $backgroundColor, backgroundRadius: $backgroundRadius, isBold: $isBold, isItalic: $isItalic, isUnderlined: $isUnderlined, isStrikethrough: $isStrikethrough)';
+    return 'CanvasElement.text(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, text: $text, fontFamily: $fontFamily, fontSize: $fontSize, textAlign: $textAlign, backgroundColor: $backgroundColor, backgroundRadius: $backgroundRadius, isBold: $isBold, isItalic: $isItalic, isUnderlined: $isUnderlined, isStrikethrough: $isStrikethrough, customData: $customData)';
   }
 
   @override
@@ -7417,8 +7462,6 @@ class _$TextElementImpl extends TextElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.text, text) || other.text == text) &&
@@ -7438,7 +7481,9 @@ class _$TextElementImpl extends TextElement {
             (identical(other.isUnderlined, isUnderlined) ||
                 other.isUnderlined == isUnderlined) &&
             (identical(other.isStrikethrough, isStrikethrough) ||
-                other.isStrikethrough == isStrikethrough));
+                other.isStrikethrough == isStrikethrough) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -7461,7 +7506,6 @@ class _$TextElementImpl extends TextElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
         text,
         fontFamily,
@@ -7472,7 +7516,8 @@ class _$TextElementImpl extends TextElement {
         isBold,
         isItalic,
         isUnderlined,
-        isStrikethrough
+        isStrikethrough,
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -7504,8 +7549,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -7525,8 +7570,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -7546,8 +7591,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -7567,9 +7612,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -7589,9 +7634,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -7611,9 +7656,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -7633,7 +7678,6 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -7644,7 +7688,8 @@ class _$TextElementImpl extends TextElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -7664,8 +7709,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return text(
@@ -7686,7 +7731,6 @@ class _$TextElementImpl extends TextElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
         this.text,
         fontFamily,
@@ -7697,7 +7741,8 @@ class _$TextElementImpl extends TextElement {
         isBold,
         isItalic,
         isUnderlined,
-        isStrikethrough);
+        isStrikethrough,
+        customData);
   }
 
   @override
@@ -7721,8 +7766,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -7742,8 +7787,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -7763,8 +7808,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -7784,9 +7829,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -7806,9 +7851,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -7828,9 +7873,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -7850,7 +7895,6 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -7861,7 +7905,8 @@ class _$TextElementImpl extends TextElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -7881,8 +7926,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return text?.call(
@@ -7903,7 +7948,6 @@ class _$TextElementImpl extends TextElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
         updatedAt,
         this.text,
         fontFamily,
@@ -7914,7 +7958,8 @@ class _$TextElementImpl extends TextElement {
         isBold,
         isItalic,
         isUnderlined,
-        isStrikethrough);
+        isStrikethrough,
+        customData);
   }
 
   @override
@@ -7938,8 +7983,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -7959,8 +8004,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -7980,8 +8025,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -8001,9 +8046,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -8023,9 +8068,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -8045,9 +8090,9 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -8067,7 +8112,6 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -8078,7 +8122,8 @@ class _$TextElementImpl extends TextElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -8098,8 +8143,8 @@ class _$TextElementImpl extends TextElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -8122,7 +8167,6 @@ class _$TextElementImpl extends TextElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
           updatedAt,
           this.text,
           fontFamily,
@@ -8133,7 +8177,8 @@ class _$TextElementImpl extends TextElement {
           isBold,
           isItalic,
           isUnderlined,
-          isStrikethrough);
+          isStrikethrough,
+          customData);
     }
     return orElse();
   }
@@ -8207,7 +8252,6 @@ abstract class TextElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
       required final DateTime updatedAt,
       required final String text,
       final String fontFamily,
@@ -8218,7 +8262,8 @@ abstract class TextElement extends CanvasElement {
       final bool isBold,
       final bool isItalic,
       final bool isUnderlined,
-      final bool isStrikethrough}) = _$TextElementImpl;
+      final bool isStrikethrough,
+      final Map<String, dynamic> customData}) = _$TextElementImpl;
   const TextElement._() : super._();
 
   @override
@@ -8256,8 +8301,6 @@ abstract class TextElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
   String get text;
   String get fontFamily;
@@ -8269,6 +8312,8 @@ abstract class TextElement extends CanvasElement {
   bool get isItalic;
   bool get isUnderlined;
   bool get isStrikethrough;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.
@@ -8304,8 +8349,8 @@ abstract class _$$TriangleElementImplCopyWith<$Res>
       int zIndex,
       bool isDeleted,
       int version,
-      int versionNonce,
-      DateTime updatedAt});
+      DateTime updatedAt,
+      Map<String, dynamic> customData});
 }
 
 /// @nodoc
@@ -8338,8 +8383,8 @@ class __$$TriangleElementImplCopyWithImpl<$Res>
     Object? zIndex = null,
     Object? isDeleted = null,
     Object? version = null,
-    Object? versionNonce = null,
     Object? updatedAt = null,
+    Object? customData = null,
   }) {
     return _then(_$TriangleElementImpl(
       id: null == id
@@ -8410,14 +8455,14 @@ class __$$TriangleElementImplCopyWithImpl<$Res>
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
               as int,
-      versionNonce: null == versionNonce
-          ? _value.versionNonce
-          : versionNonce // ignore: cast_nullable_to_non_nullable
-              as int,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      customData: null == customData
+          ? _value._customData
+          : customData // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -8443,9 +8488,10 @@ class _$TriangleElementImpl extends TriangleElement {
       this.zIndex = 0,
       this.isDeleted = false,
       this.version = 1,
-      this.versionNonce = 0,
-      required this.updatedAt})
-      : super._();
+      required this.updatedAt,
+      final Map<String, dynamic> customData = const {}})
+      : _customData = customData,
+        super._();
 
   @override
   final String id;
@@ -8492,14 +8538,19 @@ class _$TriangleElementImpl extends TriangleElement {
   @JsonKey()
   final int version;
   @override
-  @JsonKey()
-  final int versionNonce;
-  @override
   final DateTime updatedAt;
+  final Map<String, dynamic> _customData;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get customData {
+    if (_customData is EqualUnmodifiableMapView) return _customData;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_customData);
+  }
 
   @override
   String toString() {
-    return 'CanvasElement.triangle(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, versionNonce: $versionNonce, updatedAt: $updatedAt)';
+    return 'CanvasElement.triangle(id: $id, type: $type, x: $x, y: $y, width: $width, height: $height, angle: $angle, strokeColor: $strokeColor, fillColor: $fillColor, strokeWidth: $strokeWidth, strokeStyle: $strokeStyle, fillType: $fillType, opacity: $opacity, roughness: $roughness, zIndex: $zIndex, isDeleted: $isDeleted, version: $version, updatedAt: $updatedAt, customData: $customData)';
   }
 
   @override
@@ -8531,10 +8582,10 @@ class _$TriangleElementImpl extends TriangleElement {
             (identical(other.isDeleted, isDeleted) ||
                 other.isDeleted == isDeleted) &&
             (identical(other.version, version) || other.version == version) &&
-            (identical(other.versionNonce, versionNonce) ||
-                other.versionNonce == versionNonce) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._customData, _customData));
   }
 
   @override
@@ -8557,8 +8608,8 @@ class _$TriangleElementImpl extends TriangleElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt
+        updatedAt,
+        const DeepCollectionEquality().hash(_customData)
       ]);
 
   /// Create a copy of CanvasElement
@@ -8591,8 +8642,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         rectangle,
     required TResult Function(
             String id,
@@ -8612,8 +8663,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         diamond,
     required TResult Function(
             String id,
@@ -8633,8 +8684,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         ellipse,
     required TResult Function(
             String id,
@@ -8654,9 +8705,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         line,
     required TResult Function(
             String id,
@@ -8676,9 +8727,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         arrow,
     required TResult Function(
             String id,
@@ -8698,9 +8749,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)
+            List<Offset> points,
+            Map<String, dynamic> customData)
         freeDraw,
     required TResult Function(
             String id,
@@ -8720,7 +8771,6 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -8731,7 +8781,8 @@ class _$TriangleElementImpl extends TriangleElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)
+            bool isStrikethrough,
+            Map<String, dynamic> customData)
         text,
     required TResult Function(
             String id,
@@ -8751,8 +8802,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)
+            DateTime updatedAt,
+            Map<String, dynamic> customData)
         triangle,
   }) {
     return triangle(
@@ -8773,8 +8824,8 @@ class _$TriangleElementImpl extends TriangleElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -8798,8 +8849,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult? Function(
             String id,
@@ -8819,8 +8870,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult? Function(
             String id,
@@ -8840,8 +8891,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult? Function(
             String id,
@@ -8861,9 +8912,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult? Function(
             String id,
@@ -8883,9 +8934,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult? Function(
             String id,
@@ -8905,9 +8956,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult? Function(
             String id,
@@ -8927,7 +8978,6 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -8938,7 +8988,8 @@ class _$TriangleElementImpl extends TriangleElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult? Function(
             String id,
@@ -8958,8 +9009,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
   }) {
     return triangle?.call(
@@ -8980,8 +9031,8 @@ class _$TriangleElementImpl extends TriangleElement {
         zIndex,
         isDeleted,
         version,
-        versionNonce,
-        updatedAt);
+        updatedAt,
+        customData);
   }
 
   @override
@@ -9005,8 +9056,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         rectangle,
     TResult Function(
             String id,
@@ -9026,8 +9077,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         diamond,
     TResult Function(
             String id,
@@ -9047,8 +9098,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         ellipse,
     TResult Function(
             String id,
@@ -9068,9 +9119,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         line,
     TResult Function(
             String id,
@@ -9090,9 +9141,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         arrow,
     TResult Function(
             String id,
@@ -9112,9 +9163,9 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
-            List<Offset> points)?
+            List<Offset> points,
+            Map<String, dynamic> customData)?
         freeDraw,
     TResult Function(
             String id,
@@ -9134,7 +9185,6 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
             DateTime updatedAt,
             String text,
             String fontFamily,
@@ -9145,7 +9195,8 @@ class _$TriangleElementImpl extends TriangleElement {
             bool isBold,
             bool isItalic,
             bool isUnderlined,
-            bool isStrikethrough)?
+            bool isStrikethrough,
+            Map<String, dynamic> customData)?
         text,
     TResult Function(
             String id,
@@ -9165,8 +9216,8 @@ class _$TriangleElementImpl extends TriangleElement {
             int zIndex,
             bool isDeleted,
             int version,
-            int versionNonce,
-            DateTime updatedAt)?
+            DateTime updatedAt,
+            Map<String, dynamic> customData)?
         triangle,
     required TResult orElse(),
   }) {
@@ -9189,8 +9240,8 @@ class _$TriangleElementImpl extends TriangleElement {
           zIndex,
           isDeleted,
           version,
-          versionNonce,
-          updatedAt);
+          updatedAt,
+          customData);
     }
     return orElse();
   }
@@ -9264,8 +9315,8 @@ abstract class TriangleElement extends CanvasElement {
       final int zIndex,
       final bool isDeleted,
       final int version,
-      final int versionNonce,
-      required final DateTime updatedAt}) = _$TriangleElementImpl;
+      required final DateTime updatedAt,
+      final Map<String, dynamic> customData}) = _$TriangleElementImpl;
   const TriangleElement._() : super._();
 
   @override
@@ -9303,9 +9354,9 @@ abstract class TriangleElement extends CanvasElement {
   @override
   int get version;
   @override
-  int get versionNonce;
-  @override
   DateTime get updatedAt;
+  @override
+  Map<String, dynamic> get customData;
 
   /// Create a copy of CanvasElement
   /// with the given fields replaced by the non-null parameter values.

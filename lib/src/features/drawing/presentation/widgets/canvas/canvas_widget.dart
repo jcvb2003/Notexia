@@ -28,6 +28,8 @@ class _CanvasWidgetState extends State<CanvasWidget> {
   @override
   void initState() {
     super.initState();
+    // Incializamos o router no initState para evitar recriação a cada build,
+    // garantindo performance e preservação de estado transiente do input.
     _router = CanvasInputRouter(canvasCubit: context.read<CanvasCubit>());
     _focusNode = FocusNode();
     _textController = TextEditingController();

@@ -52,7 +52,7 @@ class TextEditingState with _$TextEditingState {
 class InteractionState with _$InteractionState {
   const factory InteractionState({
     @Default(CanvasElementType.rectangle) CanvasElementType selectedTool,
-    @Default([]) List<String> selectedElementIds,
+    @Default({}) Set<String> selectedElementIds,
     @Default(false) bool isDrawing,
     String? activeElementId,
     Offset? gestureStartPosition,
@@ -83,7 +83,7 @@ class CanvasState with _$CanvasState {
   List<CanvasElement> get elements => document.elements;
 
   CanvasElementType get selectedTool => interaction.selectedTool;
-  List<String> get selectedElementIds => interaction.selectedElementIds;
+  Set<String> get selectedElementIds => interaction.selectedElementIds;
   bool get isDrawing => interaction.isDrawing;
   String? get activeElementId => interaction.activeElementId;
   Offset? get gestureStartPosition => interaction.gestureStartPosition;

@@ -87,7 +87,7 @@ class ScaleGestureHandlers {
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
       final worldPoint = router.toWorld(localPosition, uiState);
       SnapshotHitUtils.beginGestureSnapshot(router.canvasCubit, 'Apagar');
-      router.canvasCubit.eraser.startEraser(worldPoint);
+      router.canvasCubit.startEraser(worldPoint);
       eraseAt(router, uiState, worldPoint);
       return;
     }
@@ -204,7 +204,7 @@ class ScaleGestureHandlers {
     }
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
       final worldPoint = router.toWorld(localPosition, uiState);
-      router.canvasCubit.eraser.updateEraserTrail(worldPoint);
+      router.canvasCubit.updateEraserTrail(worldPoint);
       eraseAt(router, uiState, worldPoint);
       return;
     }
@@ -253,7 +253,7 @@ class ScaleGestureHandlers {
       return;
     }
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
-      router.canvasCubit.eraser.endEraser();
+      router.canvasCubit.endEraser();
       SnapshotHitUtils.endGestureSnapshot(router.canvasCubit);
       return;
     }
@@ -308,7 +308,7 @@ class ScaleGestureHandlers {
       return;
     }
     if (mode == EraserMode.stroke) {
-      router.canvasCubit.eraser.eraseElementsAtPoint(worldPoint, radius);
+      router.canvasCubit.eraseElementsAtPoint(worldPoint, radius);
     }
   }
 

@@ -118,7 +118,7 @@ void main() {
         document: initialDoc,
         interaction: const InteractionState(
           selectedTool: CanvasElementType.selection,
-          selectedElementIds: ['el1'],
+          selectedElementIds: {'el1'},
         ),
       ),
       act: (cubit) => cubit.selectTool(CanvasElementType.rectangle),
@@ -246,7 +246,7 @@ void main() {
         );
         return CanvasState(
           document: initialDoc.copyWith(elements: [el]),
-          interaction: const InteractionState(selectedElementIds: ['el1']),
+          interaction: const InteractionState(selectedElementIds: {'el1'}),
         );
       },
       act: (cubit) => cubit.manipulation.updateSelectedElementsProperties(
@@ -366,7 +366,7 @@ void main() {
         return CanvasState(
           document: initialDoc.copyWith(elements: [el1, el2, el3]),
           interaction: const InteractionState(
-            selectedElementIds: ['el1', 'el3'],
+            selectedElementIds: {'el1', 'el3'},
           ),
         );
       },
@@ -442,7 +442,7 @@ void main() {
         return CanvasState(
           document: initialDoc.copyWith(elements: [el1, el2, el3]),
           interaction: const InteractionState(
-            selectedElementIds: ['el1', 'el3'],
+            selectedElementIds: {'el1', 'el3'},
           ),
         );
       },
@@ -472,7 +472,7 @@ void main() {
         );
         return CanvasState(
           document: initialDoc.copyWith(elements: [el1]),
-          interaction: const InteractionState(selectedElementIds: ['el1']),
+          interaction: const InteractionState(selectedElementIds: {'el1'}),
         );
       },
       act: (cubit) => cubit.manipulation
@@ -503,7 +503,7 @@ void main() {
         );
         return CanvasState(
           document: initialDoc.copyWith(elements: [line]),
-          interaction: const InteractionState(selectedElementIds: ['l1']),
+          interaction: const InteractionState(selectedElementIds: {'l1'}),
         );
       },
       act: (cubit) => cubit.manipulation.updateLineEndpoint(
@@ -533,7 +533,7 @@ void main() {
     blocTest<CanvasCubit, CanvasState>(
       'toggleSkeletonMode changes state',
       build: () => cubit,
-      act: (cubit) => cubit.preferences.toggleSkeletonMode(),
+      act: (cubit) => cubit.toggleSkeletonMode(),
       expect: () => [
         isA<CanvasState>().having((s) => s.isSkeletonMode, 'skeleton', true),
       ],
@@ -545,7 +545,7 @@ void main() {
         TestWidgetsFlutterBinding.ensureInitialized();
         return cubit;
       },
-      act: (cubit) => cubit.preferences.toggleFullScreen(),
+      act: (cubit) => cubit.toggleFullScreen(),
       expect: () => [
         isA<CanvasState>().having((s) => s.isFullScreen, 'fullScreen', true),
       ],
@@ -584,7 +584,7 @@ void main() {
           appSettingsRepository: repo,
         );
       },
-      act: (cubit) => cubit.snap.loadAngleSnapSettings(),
+      act: (cubit) => cubit.loadAngleSnapSettings(),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.isAngleSnapEnabled, 'enabled', true)
@@ -619,7 +619,7 @@ void main() {
         );
       },
       act: (cubit) async {
-        await cubit.snap.toggleAngleSnapEnabled();
+        await cubit.toggleAngleSnapEnabled();
       },
       expect: () => [
         isA<CanvasState>().having((s) => s.isAngleSnapEnabled, 'enabled', true),
@@ -656,7 +656,7 @@ void main() {
         );
       },
       act: (cubit) async {
-        await cubit.snap.setAngleSnapStep(3.141592653589793 / 8);
+        await cubit.setAngleSnapStep(3.141592653589793 / 8);
       },
       expect: () => [
         isA<CanvasState>().having(

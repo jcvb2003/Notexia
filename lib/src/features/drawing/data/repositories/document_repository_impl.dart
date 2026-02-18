@@ -5,6 +5,7 @@ import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element_mapper.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document_mapper.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
+import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/core/storage/queries.dart';
@@ -83,7 +84,8 @@ class DocumentRepositoryImpl implements DocumentRepository {
         useIntBools: true,
         useIntColors: true,
       );
-      final elements = docMap.remove('elements') as List;
+      final elements =
+          (docMap.remove('elements') as List).cast<Map<String, dynamic>>();
 
       await db.transaction((txn) async {
         await txn.insert(
@@ -157,17 +159,15 @@ class DocumentRepositoryImpl implements DocumentRepository {
     Map<String, dynamic> sourceMap,
   ) {
     final customData = <String, dynamic>{};
-    // Lista de chaves que não pertencem à tabela base e devem ir para customData
-    const keysToRemove = [
-      'points',
-      'text',
-      'fontFamily',
-      'fontSize',
-      'textAlign',
-      'fileId',
-      'status',
-      'scale',
-    ];
+
+    final typeName = sourceMap['type'] as String;
+    final type = CanvasElementType.values.firstWhere(
+      (e) => e.name == typeName,
+      orElse: () => CanvasElementType.rectangle,
+    );
+
+    // Lista de chaves específicas do tipo que devem ir para customData
+    final keysToRemove = CanvasElementMapper.customDataKeys(type);
 
     for (var key in keysToRemove) {
       if (sourceMap.containsKey(key)) {

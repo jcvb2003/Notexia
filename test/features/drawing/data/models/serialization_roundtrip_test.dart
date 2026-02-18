@@ -26,7 +26,6 @@ void main() {
         zIndex: 10,
         isDeleted: false,
         version: 2,
-        versionNonce: 12345,
         updatedAt: now,
       );
 
@@ -50,7 +49,6 @@ void main() {
       expect(result.zIndex, element.zIndex);
       expect(result.isDeleted, element.isDeleted);
       expect(result.version, element.version);
-      expect(result.versionNonce, element.versionNonce);
       expect(
         result.updatedAt.toIso8601String(),
         element.updatedAt.toIso8601String(),
