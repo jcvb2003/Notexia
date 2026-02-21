@@ -101,7 +101,7 @@ class EraserToolControls extends StatelessWidget {
           options: const {
             EraserMode.stroke: 'Traço',
             EraserMode.all: 'Tudo',
-            EraserMode.area: 'Ãrea',
+            EraserMode.area: 'Área',
           },
           onChanged: uiCubit.setEraserMode,
         ),

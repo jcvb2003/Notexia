@@ -96,18 +96,20 @@ class _SkeletonViewState extends State<SkeletonView> {
             ],
           ),
           Expanded(
-            child: AppTextField(
-              controller: _controller,
-              maxLines: null,
-              showBorder: false,
-              isDense: false,
-              contentPadding: EdgeInsets.zero,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.gray300,
-                    fontFamily: 'Consolas',
-                    fontSize: 13,
-                    height: 1.4,
-                  ),
+            child: ExcludeSemantics(
+              child: AppTextField(
+                controller: _controller,
+                maxLines: null,
+                showBorder: false,
+                isDense: false,
+                contentPadding: EdgeInsets.zero,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.gray300,
+                      fontFamily: 'Consolas',
+                      fontSize: 13,
+                      height: 1.4,
+                    ),
+              ),
             ),
           ),
         ],

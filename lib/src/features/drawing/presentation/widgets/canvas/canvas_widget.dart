@@ -48,86 +48,82 @@ class _CanvasWidgetState extends State<CanvasWidget> {
         final selectedTool = uiState.selectedTool;
         final editingTextId = uiState.editingTextId;
 
-        return ExcludeSemantics(
-          child: CanvasShortcutsWrapper(
-            isTextEditing: editingTextId != null,
-            child: Focus(
-              focusNode: _focusNode,
-              autofocus: true,
-              child: RepaintBoundary(
-                child: Listener(
-                  behavior: HitTestBehavior.opaque,
-                  onPointerDown: (event) {
-                    if (editingTextId == null) {
-                      _focusNode.requestFocus();
-                    }
-                    _router.handlePointerDown(event, uiState);
-                  },
-                  onPointerMove: (event) =>
-                      _router.handlePointerMove(event, uiState),
-                  onPointerUp: (event) =>
-                      _router.handlePointerUp(event, uiState),
-                  onPointerSignal: (signal) => _router.handlePointerSignal(
-                    signal,
-                    uiState,
-                    selectedTool,
-                  ),
-                  child: MouseRegion(
-                    onHover: (event) => _router.handleHover(event, uiState),
-                    child: GestureDetector(
-                      onTapDown: uiState.isZoomMode
-                          ? null
-                          : (details) =>
-                              _router.handleTapDown(details, uiState),
-                      onScaleStart: (details) => _router.handleScaleStart(
-                        details,
-                        uiState,
-                        selectedTool,
-                      ),
-                      onScaleUpdate: (details) => _router.handleScaleUpdate(
-                        details,
-                        uiState,
-                        selectedTool,
-                      ),
-                      onScaleEnd: (details) => _router.handleScaleEnd(
-                        details,
-                        uiState,
-                        selectedTool,
-                      ),
-                      child: Stack(
-                        children: [
-                          RepaintBoundary(
-                            child: CustomPaint(
-                              painter: StaticCanvasPainter(
-                                elements: uiState.document.activeSortedElements,
-                                zoomLevel: uiState.zoomLevel,
-                                panOffset: uiState.panOffset,
-                                editingElementId: editingTextId,
-                              ),
-                              size: Size.infinite,
+        return CanvasShortcutsWrapper(
+          isTextEditing: editingTextId != null,
+          child: Focus(
+            focusNode: _focusNode,
+            autofocus: true,
+            child: RepaintBoundary(
+              child: Listener(
+                behavior: HitTestBehavior.opaque,
+                onPointerDown: (event) {
+                  if (editingTextId == null) {
+                    _focusNode.requestFocus();
+                  }
+                  _router.handlePointerDown(event, uiState);
+                },
+                onPointerMove: (event) =>
+                    _router.handlePointerMove(event, uiState),
+                onPointerUp: (event) => _router.handlePointerUp(event, uiState),
+                onPointerSignal: (signal) => _router.handlePointerSignal(
+                  signal,
+                  uiState,
+                  selectedTool,
+                ),
+                child: MouseRegion(
+                  onHover: (event) => _router.handleHover(event, uiState),
+                  child: GestureDetector(
+                    onTapDown: uiState.isZoomMode
+                        ? null
+                        : (details) => _router.handleTapDown(details, uiState),
+                    onScaleStart: (details) => _router.handleScaleStart(
+                      details,
+                      uiState,
+                      selectedTool,
+                    ),
+                    onScaleUpdate: (details) => _router.handleScaleUpdate(
+                      details,
+                      uiState,
+                      selectedTool,
+                    ),
+                    onScaleEnd: (details) => _router.handleScaleEnd(
+                      details,
+                      uiState,
+                      selectedTool,
+                    ),
+                    child: Stack(
+                      children: [
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: StaticCanvasPainter(
+                              elements: uiState.document.activeSortedElements,
+                              zoomLevel: uiState.zoomLevel,
+                              panOffset: uiState.panOffset,
+                              editingElementId: editingTextId,
                             ),
+                            size: Size.infinite,
                           ),
-                          RepaintBoundary(
-                            child: CustomPaint(
-                              painter: DynamicCanvasPainter(
-                                elements: uiState.document.activeSortedElements,
-                                selectedElementIds: uiState.selectedElementIds,
-                                zoomLevel: uiState.zoomLevel,
-                                panOffset: uiState.panOffset,
-                                selectionBox: uiState.selectionBox,
-                                hoveredElementId: uiState.hoveredElementId,
-                                eraserTrail: uiState.eraserTrail,
-                                isEraserActive: uiState.isEraserActive,
-                                snapGuides: uiState.snapGuides,
-                                activeDrawingElement:
-                                    uiState.activeDrawingElement,
-                              ),
-                              size: Size.infinite,
+                        ),
+                        RepaintBoundary(
+                          child: CustomPaint(
+                            painter: DynamicCanvasPainter(
+                              elements: uiState.document.activeSortedElements,
+                              selectedElementIds: uiState.selectedElementIds,
+                              zoomLevel: uiState.zoomLevel,
+                              panOffset: uiState.panOffset,
+                              selectionBox: uiState.selectionBox,
+                              hoveredElementId: uiState.hoveredElementId,
+                              eraserTrail: uiState.eraserTrail,
+                              isEraserActive: uiState.isEraserActive,
+                              snapGuides: uiState.snapGuides,
+                              activeDrawingElement:
+                                  uiState.activeDrawingElement,
                             ),
+                            size: Size.infinite,
                           ),
-                          const InlineTextEditor(),
-                        ],
-                      ),
+                        ),
+                        const InlineTextEditor(),
+                      ],
                     ),
                   ),
                 ),

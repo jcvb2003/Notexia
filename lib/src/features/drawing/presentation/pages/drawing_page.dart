@@ -44,77 +44,74 @@ class DrawingPage extends StatelessWidget {
         final double? contextualBottom =
             uiState.isToolbarAtTop ? null : (bottomMargin + 52);
 
-        return ExcludeSemantics(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: isSkeleton ? const SkeletonView() : const CanvasWidget(),
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: isSkeleton ? const SkeletonView() : const CanvasWidget(),
+            ),
+            HeaderWidget(
+              onOpenMenu: onOpenMenu,
+              isSidebarOpen: isSidebarOpen,
+            ),
+            if (!isSkeleton) ...[
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.elasticOut,
+                bottom: contextualBottom,
+                top: contextualTop,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: const ContextToolbar(),
+                  ),
+                ),
               ),
-              HeaderWidget(
-                onOpenMenu: onOpenMenu,
-                isSidebarOpen: isSidebarOpen,
+              DraggableToolbar(
+                isToolbarAtTop: uiState.isToolbarAtTop,
+                toolbarTop: toolbarTop,
+                toolbarBottom: toolbarBottom,
+                isMobile: isMobile,
+                onPositionChanged: (atTop) => uiCubit.setToolbarPosition(atTop),
               ),
-              if (!isSkeleton) ...[
-                AnimatedPositioned(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.elasticOut,
-                  bottom: contextualBottom,
-                  top: contextualTop,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const ContextToolbar(),
-                    ),
+              Positioned(
+                bottom: isCompactLayout
+                    ? (uiState.isToolbarAtTop ? bottomMargin : 140)
+                    : bottomMargin,
+                left: isCompactLayout ? null : 16,
+                right: isCompactLayout ? 16 : null,
+                child: SafeArea(
+                  child: SlidableUtilityControl(
+                    isZoomMode: uiState.isZoomMode,
+                    zoomLevel: uiState.zoomLevel,
+                    onToggle: () => uiCubit.toggleZoomUndoRedo(),
+                    onZoomIn: () => uiCubit.zoomIn(),
+                    onZoomOut: () => uiCubit.zoomOut(),
+                    onUndo: () => context.read<UndoRedoCubit>().undo(),
+                    onRedo: () => context.read<UndoRedoCubit>().redo(),
                   ),
                 ),
-                DraggableToolbar(
-                  isToolbarAtTop: uiState.isToolbarAtTop,
-                  toolbarTop: toolbarTop,
-                  toolbarBottom: toolbarBottom,
-                  isMobile: isMobile,
-                  onPositionChanged: (atTop) =>
-                      uiCubit.setToolbarPosition(atTop),
-                ),
-                Positioned(
-                  bottom: isCompactLayout
-                      ? (uiState.isToolbarAtTop ? bottomMargin : 140)
-                      : bottomMargin,
-                  left: isCompactLayout ? null : 16,
-                  right: isCompactLayout ? 16 : null,
-                  child: SafeArea(
-                    child: SlidableUtilityControl(
-                      isZoomMode: uiState.isZoomMode,
-                      zoomLevel: uiState.zoomLevel,
-                      onToggle: () => uiCubit.toggleZoomUndoRedo(),
-                      onZoomIn: () => uiCubit.zoomIn(),
-                      onZoomOut: () => uiCubit.zoomOut(),
-                      onUndo: () => context.read<UndoRedoCubit>().undo(),
-                      onRedo: () => context.read<UndoRedoCubit>().redo(),
-                    ),
-                  ),
-                ),
-              ],
-              if (isFullScreen)
-                Positioned(
-                  top: isMobile ? -15 : 7,
-                  right: 10,
-                  child: SafeArea(
-                    bottom: false,
-                    minimum: const EdgeInsets.only(top: 4),
-                    child: FloatingCard(
-                      child: AppIconButton(
-                        icon: LucideIcons.minimize2,
-                        tooltip: 'Sair da tela cheia',
-                        onTap: () => uiCubit.toggleFullScreen(),
-                      ),
-                    ),
-                  ),
-                ),
+              ),
             ],
-          ),
+            if (isFullScreen)
+              Positioned(
+                top: isMobile ? -15 : 7,
+                right: 10,
+                child: SafeArea(
+                  bottom: false,
+                  minimum: const EdgeInsets.only(top: 4),
+                  child: FloatingCard(
+                    child: AppIconButton(
+                      icon: LucideIcons.minimize2,
+                      tooltip: 'Sair da tela cheia',
+                      onTap: () => uiCubit.toggleFullScreen(),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         );
       },
     );
