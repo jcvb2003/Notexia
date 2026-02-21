@@ -36,13 +36,13 @@ class DrawingScope {
 
   void startDrawing(Offset position) {
     _drawThrottleTimer?.cancel();
-    _delegate.startDrawing(
+    final result = _delegate.startDrawing(
       state: _getState(),
       position: position,
       drawingService: _drawingService,
-      emit: _emit,
       isDisposed: () => isDisposed,
     );
+    if (result.isSuccess) _emit(result.data!);
   }
 
   void updateDrawing(
@@ -74,23 +74,37 @@ class DrawingScope {
     _drawThrottleTimer?.cancel();
     _lastDrawUpdate = now;
 
-    _delegate.updateDrawing(
+    final result = _delegate.updateDrawing(
       state: state,
       currentPosition: currentPosition,
       drawingService: _drawingService,
-      emit: _emit,
       isDisposed: () => isDisposed,
       keepAspect: keepAspect,
       snapAngle: snapAngle,
       snapAngleStep: snapAngleStep,
       createFromCenter: createFromCenter,
     );
+    if (result.isSuccess) _emit(result.data!);
   }
 
-  Future<void> stopDrawing() => _delegate.stopDrawing(
-        state: _getState(),
-        persistenceService: _persistenceService,
-        emit: _emit,
-        isDisposed: () => isDisposed,
-      );
+  Future<void> stopDrawing() async {
+    final result = await _delegate.stopDrawing(
+      state: _getState(),
+      persistenceService: _persistenceService,
+      isDisposed: () => isDisposed,
+    );
+    if (result.isSuccess) {
+      _emit(result.data!);
+    } else {
+      final state = _getState();
+      _emit(state.copyWith(
+        error: result.failure!.message,
+        interaction: state.interaction.copyWith(
+          isDrawing: false,
+          activeElementId: null,
+          activeDrawingElement: null,
+        ),
+      ));
+    }
+  }
 }

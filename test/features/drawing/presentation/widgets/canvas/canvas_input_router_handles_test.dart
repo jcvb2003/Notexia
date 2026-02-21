@@ -110,7 +110,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.viewport.setZoom(2.0);
+      drawingCubit.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
       final uiState = drawingCubit.state;
@@ -205,7 +205,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.viewport.setZoom(2.0);
+      drawingCubit.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -304,7 +304,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.viewport.setZoom(2.0);
+      drawingCubit.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -401,7 +401,7 @@ void main() {
             ),
           ),
         );
-        drawingCubit.viewport.setZoom(2.0);
+        drawingCubit.setZoom(2.0);
 
         final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -509,7 +509,7 @@ void main() {
           ),
         ),
       );
-      drawingCubit.viewport.setZoom(2.0);
+      drawingCubit.setZoom(2.0);
 
       final router = CanvasInputRouter(canvasCubit: drawingCubit);
 
@@ -616,7 +616,7 @@ void main() {
             ),
           ),
         );
-        drawingCubit.viewport.setZoom(2.0);
+        drawingCubit.setZoom(2.0);
 
         final router = CanvasInputRouter(canvasCubit: drawingCubit);
 

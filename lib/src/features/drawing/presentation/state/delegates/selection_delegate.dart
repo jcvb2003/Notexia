@@ -1,16 +1,17 @@
 import 'dart:ui';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
+import 'package:notexia/src/core/errors/result.dart';
 
 class SelectionDelegate {
   const SelectionDelegate();
 
-  CanvasState setSelectionBox(CanvasState state, Rect? rect) {
-    return state.copyWith(
+  Result<CanvasState> setSelectionBox(CanvasState state, Rect? rect) {
+    return Result.success(state.copyWith(
       transform: state.transform.copyWith(selectionBox: rect),
-    );
+    ));
   }
 
-  CanvasState selectElementAt(CanvasState state, Offset localPosition,
+  Result<CanvasState> selectElementAt(CanvasState state, Offset localPosition,
       {bool isMultiSelect = false}) {
     final reversedElements = state.elements.reversed;
     String? foundId;
@@ -29,46 +30,47 @@ class SelectionDelegate {
         } else {
           newSelection.add(foundId);
         }
-        return state.copyWith(
+        return Result.success(state.copyWith(
           interaction: state.interaction.copyWith(
             selectedElementIds: newSelection,
           ),
-        );
+        ));
       } else {
         if (!state.selectedElementIds.contains(foundId)) {
-          return state.copyWith(
+          return Result.success(state.copyWith(
             interaction: state.interaction.copyWith(
               selectedElementIds: {foundId},
             ),
-          );
+          ));
         }
-        return state;
+        return Result.success(state);
       }
     } else {
       if (!isMultiSelect) {
-        return state.copyWith(
+        return Result.success(state.copyWith(
           interaction: state.interaction.copyWith(selectedElementIds: {}),
-        );
+        ));
       }
-      return state;
+      return Result.success(state);
     }
   }
 
-  CanvasState selectElementsInRect(CanvasState state, Rect selectionRect) {
+  Result<CanvasState> selectElementsInRect(
+      CanvasState state, Rect selectionRect) {
     final selected = <String>{};
     for (final element in state.elements) {
       if (selectionRect.overlaps(element.bounds)) {
         selected.add(element.id);
       }
     }
-    return state.copyWith(
+    return Result.success(state.copyWith(
       interaction: state.interaction.copyWith(selectedElementIds: selected),
-    );
+    ));
   }
 
-  CanvasState setHoveredElement(CanvasState state, String? id) {
-    return state.copyWith(
+  Result<CanvasState> setHoveredElement(CanvasState state, String? id) {
+    return Result.success(state.copyWith(
       interaction: state.interaction.copyWith(hoveredElementId: id),
-    );
+    ));
   }
 }

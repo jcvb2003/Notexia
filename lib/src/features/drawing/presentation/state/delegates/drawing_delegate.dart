@@ -4,19 +4,21 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
+import 'package:notexia/src/core/errors/result.dart';
 
 class DrawingDelegate {
   const DrawingDelegate();
 
-  void startDrawing({
+  Result<CanvasState> startDrawing({
     required CanvasState state,
     required Offset position,
     required DrawingService drawingService,
-    required void Function(CanvasState) emit,
     bool Function()? isDisposed,
   }) {
-    if (state.selectedTool == CanvasElementType.selection) return;
-    if (isDisposed != null && isDisposed()) return;
+    if (state.selectedTool == CanvasElementType.selection) {
+      return Result.success(state);
+    }
+    if (isDisposed != null && isDisposed()) return Result.success(state);
 
     final newElement = drawingService.startDrawing(
       type: state.selectedTool,
@@ -24,9 +26,9 @@ class DrawingDelegate {
       style: state.currentStyle,
     );
 
-    if (newElement == null) return;
+    if (newElement == null) return Result.success(state);
 
-    emit(
+    return Result.success(
       state.copyWith(
         interaction: state.interaction.copyWith(
           isDrawing: true,
@@ -38,21 +40,20 @@ class DrawingDelegate {
     );
   }
 
-  void updateDrawing({
+  Result<CanvasState> updateDrawing({
     required CanvasState state,
     required Offset currentPosition,
     required DrawingService drawingService,
-    required void Function(CanvasState) emit,
     bool Function()? isDisposed,
     bool keepAspect = false,
     bool snapAngle = false,
     bool createFromCenter = false,
     double? snapAngleStep,
   }) {
-    if (isDisposed != null && isDisposed()) return;
+    if (isDisposed != null && isDisposed()) return Result.success(state);
     final element = state.activeElement;
 
-    if (element == null) return;
+    if (element == null) return Result.success(state);
 
     final updatedElement = drawingService.updateDrawingElement(
       element: element,
@@ -63,39 +64,38 @@ class DrawingDelegate {
       snapAngleStep: snapAngleStep,
       createFromCenter: createFromCenter,
     );
-    if (updatedElement == null) return;
+    if (updatedElement == null) return Result.success(state);
 
     if (state.activeDrawingElement != null) {
-      emit(
+      return Result.success(
         state.copyWith(
           interaction: state.interaction.copyWith(
             activeDrawingElement: updatedElement,
           ),
         ),
       );
-      return;
     }
 
     final updatedElements = state.elements
         .map((e) => e.id == updatedElement.id ? updatedElement : e)
         .toList();
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(state.copyWith(document: updatedDoc));
+    return Result.success(state.copyWith(document: updatedDoc));
   }
 
-  Future<void> stopDrawing({
+  Future<Result<CanvasState>> stopDrawing({
     required CanvasState state,
     required PersistenceService persistenceService,
-    required void Function(CanvasState) emit,
     bool Function()? isDisposed,
   }) async {
-    if (!state.isDrawing) return;
-    if (isDisposed != null && isDisposed()) return;
+    if (!state.isDrawing) return Result.success(state);
+    if (isDisposed != null && isDisposed()) return Result.success(state);
 
     final elementOfDrawing = state.activeDrawingElement;
     final elementId = state.activeElementId;
 
     DrawingDocument? updatedDoc;
+    CanvasState currentState = state;
 
     if (elementOfDrawing != null) {
       updatedDoc = state.document.copyWith(
@@ -107,9 +107,9 @@ class DrawingDelegate {
         elementOfDrawing,
       );
       if (result.isFailure) {
-        emit(state.copyWith(error: result.failure?.message));
+        currentState = currentState.copyWith(error: result.failure?.message);
       }
-    } else {
+    } else if (elementId != null) {
       final existingElement =
           state.document.elements.where((e) => e.id == elementId).firstOrNull;
 
@@ -119,17 +119,17 @@ class DrawingDelegate {
           existingElement,
         );
         if (result.isFailure) {
-          emit(state.copyWith(error: result.failure?.message));
+          currentState = currentState.copyWith(error: result.failure?.message);
         }
       }
     }
 
-    if (isDisposed != null && isDisposed()) return;
+    if (isDisposed != null && isDisposed()) return Result.success(currentState);
 
-    emit(
-      state.copyWith(
+    return Result.success(
+      currentState.copyWith(
         document: updatedDoc ?? state.document,
-        error: null,
+        error: currentState.error,
         interaction: state.interaction.copyWith(
           isDrawing: false,
           activeElementId: null,

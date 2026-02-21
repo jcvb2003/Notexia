@@ -12,7 +12,7 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
   final AppSettingsRepository _settingsRepository;
 
   FileExplorerCubit(this._fileRepository, this._settingsRepository)
-    : super(const FileExplorerState());
+      : super(const FileExplorerState());
 
   Future<void> initialize() async {
     emit(state.copyWith(isLoading: true, error: null));
@@ -35,8 +35,20 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
         return;
       }
 
-      final rootItems = await _fileRepository.listItems(savedPath);
-      final stats = await _fileRepository.getVaultStats(savedPath);
+      final rootItemsResult = await _fileRepository.listItems(savedPath);
+      final statsResult = await _fileRepository.getVaultStats(savedPath);
+
+      if (rootItemsResult.isFailure || statsResult.isFailure) {
+        emit(state.copyWith(
+          isLoading: false,
+          error:
+              'Erro ao inicializar vault: ${rootItemsResult.failure?.message ?? statsResult.failure?.message}',
+        ));
+        return;
+      }
+
+      final rootItems = rootItemsResult.data!;
+      final stats = statsResult.data!;
 
       emit(
         state.copyWith(
@@ -79,7 +91,15 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
 
     emit(state.copyWith(isLoading: true, error: null));
     try {
-      final items = await _fileRepository.listItems(path);
+      final itemsResult = await _fileRepository.listItems(path);
+      if (itemsResult.isFailure) {
+        emit(state.copyWith(
+            isLoading: false,
+            error: 'Erro ao carregar pasta: ${itemsResult.failure?.message}'));
+        return;
+      }
+
+      final items = itemsResult.data!;
       final updatedCache = Map<String, List<FileItem>>.from(state.treeCache)
         ..[path] = items;
       final updatedExpanded = Set<String>.from(state.expandedPaths)..add(path);
@@ -113,11 +133,17 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
     emit(state.copyWith(isLoading: true, error: null));
 
     try {
-      await _fileRepository.createItem(
+      final createResult = await _fileRepository.createItem(
         name: name,
         parentPath: target,
         type: FileItemType.folder,
       );
+
+      if (createResult.isFailure) {
+        emit(state.copyWith(
+            isLoading: false, error: createResult.failure?.message));
+        return;
+      }
 
       await _reloadDirectory(target);
       await _refreshStats();
@@ -142,11 +168,17 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
     emit(state.copyWith(isLoading: true, error: null));
 
     try {
-      await _fileRepository.createItem(
+      final createResult = await _fileRepository.createItem(
         name: name,
         parentPath: target,
         type: FileItemType.file,
       );
+
+      if (createResult.isFailure) {
+        emit(state.copyWith(
+            isLoading: false, error: createResult.failure?.message));
+        return;
+      }
 
       await _reloadDirectory(target);
       await _refreshStats();
@@ -161,7 +193,14 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
 
   Future<String?> readFile(String path) async {
     try {
-      return await _fileRepository.readFile(path);
+      final result = await _fileRepository.readFile(path);
+      if (result.isSuccess) {
+        return result.data;
+      } else {
+        emit(state.copyWith(
+            error: 'Erro ao ler arquivo: ${result.failure?.message}'));
+        return null;
+      }
     } catch (e) {
       emit(state.copyWith(error: 'Erro ao ler arquivo: $e'));
       return null;
@@ -171,7 +210,14 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
   Future<void> renameItem(String path, String newName) async {
     emit(state.copyWith(isLoading: true, error: null));
     try {
-      final updatedItem = await _fileRepository.renameItem(path, newName);
+      final updatedItemResult = await _fileRepository.renameItem(path, newName);
+      if (updatedItemResult.isFailure) {
+        emit(state.copyWith(
+            isLoading: false,
+            error: 'Erro ao renomear: ${updatedItemResult.failure?.message}'));
+        return;
+      }
+      final updatedItem = updatedItemResult.data!;
 
       // Migrar metadata se existir
       final metadata = await _loadMetadata();
@@ -192,7 +238,13 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
   Future<void> deleteItem(String path) async {
     emit(state.copyWith(isLoading: true, error: null));
     try {
-      await _fileRepository.deleteItem(path);
+      final deleteResult = await _fileRepository.deleteItem(path);
+      if (deleteResult.isFailure) {
+        emit(state.copyWith(
+            isLoading: false,
+            error: 'Erro ao excluir: ${deleteResult.failure?.message}'));
+        return;
+      }
 
       // Remover metadata
       final metadata = await _loadMetadata();
@@ -251,7 +303,10 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
   }
 
   Future<void> _reloadDirectory(String path) async {
-    final items = await _fileRepository.listItems(path);
+    final itemsResult = await _fileRepository.listItems(path);
+    if (itemsResult.isFailure) return;
+    final items = itemsResult.data!;
+
     final metadata = await _loadMetadata();
 
     final enrichedItems = items.map((item) {
@@ -259,9 +314,8 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
       if (data != null) {
         return item.copyWith(
           customIcon: data['icon'],
-          customColor: data['color'] != null
-              ? int.tryParse(data['color']!)
-              : null,
+          customColor:
+              data['color'] != null ? int.tryParse(data['color']!) : null,
         );
       }
       return item;
@@ -274,7 +328,9 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
 
   Future<void> _refreshStats() async {
     if (state.vaultPath.isEmpty) return;
-    final stats = await _fileRepository.getVaultStats(state.vaultPath);
-    emit(state.copyWith(stats: stats));
+    final statsResult = await _fileRepository.getVaultStats(state.vaultPath);
+    if (statsResult.isSuccess) {
+      emit(state.copyWith(stats: statsResult.data!));
+    }
   }
 }

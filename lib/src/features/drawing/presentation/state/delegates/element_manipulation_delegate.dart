@@ -11,6 +11,8 @@ import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+import 'package:notexia/src/core/errors/result.dart';
+import 'package:notexia/src/core/errors/failure.dart';
 
 class ElementManipulationDelegate {
   final CanvasManipulationService _canvasManipulationService;
@@ -21,12 +23,11 @@ class ElementManipulationDelegate {
     this._transformationService,
   );
 
-  void moveSelectedElements({
+  Result<CanvasState> moveSelectedElements({
     required CanvasState state,
     required Offset delta,
-    required void Function(CanvasState) emit,
   }) {
-    if (state.selectedElementIds.isEmpty) return;
+    if (state.selectedElementIds.isEmpty) return Result.success(state);
 
     final updatedElements = _canvasManipulationService.moveElements(
       state.document.elements,
@@ -35,48 +36,45 @@ class ElementManipulationDelegate {
     );
 
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(state.copyWith(document: updatedDoc));
+    return Result.success(state.copyWith(document: updatedDoc));
   }
 
-  void resizeSelectedElement({
+  Result<CanvasState> resizeSelectedElement({
     required CanvasState state,
     required Rect rect,
-    required void Function(CanvasState) emit,
   }) {
-    if (state.selectedElementIds.length != 1) return;
+    if (state.selectedElementIds.length != 1) return Result.success(state);
     final id = state.selectedElementIds.first;
     final updatedElements = state.document.elements.map((element) {
       if (element.id != id) return element;
       return _transformationService.resizeAndPlace(element, rect);
     }).toList();
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(state.copyWith(document: updatedDoc));
+    return Result.success(state.copyWith(document: updatedDoc));
   }
 
-  void rotateSelectedElement({
+  Result<CanvasState> rotateSelectedElement({
     required CanvasState state,
     required double angle,
-    required void Function(CanvasState) emit,
   }) {
-    if (state.selectedElementIds.length != 1) return;
+    if (state.selectedElementIds.length != 1) return Result.success(state);
     final id = state.selectedElementIds.first;
     final updatedElements = state.document.elements.map((element) {
       if (element.id != id) return element;
       return _transformationService.rotateElement(element, angle);
     }).toList();
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(state.copyWith(document: updatedDoc));
+    return Result.success(state.copyWith(document: updatedDoc));
   }
 
-  void updateLineEndpoint({
+  Result<CanvasState> updateLineEndpoint({
     required CanvasState state,
     required bool isStart,
     required Offset worldPoint,
-    required void Function(CanvasState) emit,
     bool snapAngle = false,
     double? angleStep,
   }) {
-    if (state.selectedElementIds.length != 1) return;
+    if (state.selectedElementIds.length != 1) return Result.success(state);
     final id = state.selectedElementIds.first;
     final updatedElements = state.document.elements.map((element) {
       if (element.id != id) return element;
@@ -89,30 +87,28 @@ class ElementManipulationDelegate {
       );
     }).toList();
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(state.copyWith(document: updatedDoc));
+    return Result.success(state.copyWith(document: updatedDoc));
   }
 
-  Future<void> finalizeManipulation({
+  Future<Result<CanvasState>> finalizeManipulation({
     required CanvasState state,
     required DocumentRepository documentRepository,
-    required void Function(CanvasState) emit,
   }) async {
     try {
       await documentRepository.saveDocument(state.document);
-      emit(state.copyWith(error: null));
+      return Result.success(state.copyWith(error: null));
     } catch (e) {
-      emit(state.copyWith(error: 'Erro ao salvar alterações: $e'));
+      return Result.failure(ServerFailure('Erro ao salvar alterações: $e'));
     }
   }
 
-  void deleteSelectedElements({
+  Result<CanvasState> deleteSelectedElements({
     required CanvasState state,
     required CommandStackService commandStack,
-    required void Function(CanvasState) emit,
     required void Function(List<CanvasElement>) applyCallback,
     required void Function(DrawingDocument) scheduleSave,
   }) {
-    if (state.selectedElementIds.isEmpty) return;
+    if (state.selectedElementIds.isEmpty) return Result.success(state);
 
     final before = List<CanvasElement>.from(state.document.elements);
     final updatedElements = _canvasManipulationService.deleteElements(
@@ -121,13 +117,11 @@ class ElementManipulationDelegate {
     );
 
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(
-      state.copyWith(
-        document: updatedDoc,
-        interaction: state.interaction.copyWith(
-          selectedElementIds: {},
-          activeElementId: null,
-        ),
+    final newState = state.copyWith(
+      document: updatedDoc,
+      interaction: state.interaction.copyWith(
+        selectedElementIds: {},
+        activeElementId: null,
       ),
     );
 
@@ -140,32 +134,31 @@ class ElementManipulationDelegate {
       ),
     );
     scheduleSave(updatedDoc);
+
+    return Result.success(newState);
   }
 
-  void deleteElementById({
+  Result<CanvasState> deleteElementById({
     required CanvasState state,
     required String elementId,
     required CommandStackService commandStack,
-    required void Function(CanvasState) emit,
     required void Function(List<CanvasElement>) applyCallback,
     required void Function(DrawingDocument) scheduleSave,
   }) {
     final before = List<CanvasElement>.from(state.document.elements);
     final updatedElements =
         state.document.elements.where((e) => e.id != elementId).toList();
-    if (updatedElements.length == before.length) return;
+    if (updatedElements.length == before.length) return Result.success(state);
     final updatedDoc = state.document.copyWith(elements: updatedElements);
     final updatedSelection = Set<String>.from(state.selectedElementIds)
       ..remove(elementId);
 
-    emit(
-      state.copyWith(
-        document: updatedDoc,
-        interaction: state.interaction.copyWith(
-          selectedElementIds: updatedSelection,
-          activeElementId:
-              state.activeElementId == elementId ? null : state.activeElementId,
-        ),
+    final newState = state.copyWith(
+      document: updatedDoc,
+      interaction: state.interaction.copyWith(
+        selectedElementIds: updatedSelection,
+        activeElementId:
+            state.activeElementId == elementId ? null : state.activeElementId,
       ),
     );
 
@@ -178,28 +171,28 @@ class ElementManipulationDelegate {
       ),
     );
     scheduleSave(updatedDoc);
+    return Result.success(newState);
   }
 
   // I'll define it later if needed. For now I keep it in Cubit or I implement it here if I see it fits.
   // It fits.
 
-  void updateSelectedElementsProperties({
+  Result<CanvasState> updateSelectedElementsProperties({
     required CanvasState state,
     required CommandStackService commandStack,
-    required void Function(CanvasState) emit,
     required void Function(List<CanvasElement>) applyCallback,
     required void Function(DrawingDocument) scheduleSave,
     required ElementStylePatch patch,
   }) {
     final newStyle = patch.applyTo(state.currentStyle);
 
-    emit(
-      state.copyWith(
-        interaction: state.interaction.copyWith(currentStyle: newStyle),
-      ),
+    final styleUpdatedState = state.copyWith(
+      interaction: state.interaction.copyWith(currentStyle: newStyle),
     );
 
-    if (state.selectedElementIds.isEmpty) return;
+    if (state.selectedElementIds.isEmpty) {
+      return Result.success(styleUpdatedState);
+    }
 
     final before = List<CanvasElement>.from(state.document.elements);
     final updatedElements = _canvasManipulationService.updateElementsProperties(
@@ -209,7 +202,7 @@ class ElementManipulationDelegate {
     );
 
     final updatedDoc = state.document.copyWith(elements: updatedElements);
-    emit(state.copyWith(document: updatedDoc));
+    final finalState = styleUpdatedState.copyWith(document: updatedDoc);
 
     if (!listEquals(before, updatedElements)) {
       commandStack.add(
@@ -222,14 +215,14 @@ class ElementManipulationDelegate {
       );
     }
     scheduleSave(updatedDoc);
+    return Result.success(finalState);
   }
 
-  void updateCurrentStyle({
+  Result<CanvasState> updateCurrentStyle({
     required CanvasState state,
     required ElementStyle style,
-    required void Function(CanvasState) emit,
   }) {
-    emit(
+    return Result.success(
       state.copyWith(
         interaction: state.interaction.copyWith(currentStyle: style),
       ),

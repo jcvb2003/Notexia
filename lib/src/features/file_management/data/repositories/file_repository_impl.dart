@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
+import 'package:notexia/src/core/errors/failure.dart';
+import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 
@@ -10,10 +11,10 @@ class FileRepositoryImpl implements FileRepository {
   final Uuid _uuid = const Uuid();
 
   @override
-  Future<List<FileItem>> listItems(String directoryPath) async {
+  Future<Result<List<FileItem>>> listItems(String directoryPath) async {
     final dir = Directory(directoryPath);
     if (!await dir.exists()) {
-      return [];
+      return Result.success([]);
     }
 
     final items = <FileItem>[];
@@ -39,13 +40,13 @@ class FileRepositoryImpl implements FileRepository {
             ),
           );
         } catch (e) {
-          // Ignora itens individuais que falham (ex: acesso negado em um arquivo específico)
-          debugPrint('Aviso: Falha ao processar item ${entity.path}: $e');
+          return Result.failure(
+              FileSystemFailure('Erro ao ler item ${entity.path}: $e'));
         }
       }
     } catch (e) {
-      // Erro crítico na listagem do diretório em si
-      debugPrint('Erro ao listar diretório $directoryPath: $e');
+      return Result.failure(
+          FileSystemFailure('Erro ao listar diretório $directoryPath: $e'));
     }
 
     // Ordena: pastas primeiro, depois arquivos alfabeticamente
@@ -55,98 +56,144 @@ class FileRepositoryImpl implements FileRepository {
       return a.name.toLowerCase().compareTo(b.name.toLowerCase());
     });
 
-    return items;
+    return Result.success(items);
   }
 
   @override
-  Future<FileItem?> getItem(String path) async {
-    final entity = FileSystemEntity.typeSync(path);
-    if (entity == FileSystemEntityType.notFound) {
-      return null;
+  Future<Result<FileItem?>> getItem(String path) async {
+    try {
+      final entity = FileSystemEntity.typeSync(path);
+      if (entity == FileSystemEntityType.notFound) {
+        return Result.success(null);
+      }
+
+      final stat = await FileStat.stat(path);
+      final name = p.basename(path);
+      final parentPath = p.dirname(path);
+
+      final item = FileItem(
+        id: _uuid.v4(),
+        name: name,
+        path: path,
+        type: entity == FileSystemEntityType.directory
+            ? FileItemType.folder
+            : _getFileType(name),
+        createdAt: stat.changed,
+        updatedAt: stat.modified,
+        sizeBytes: entity == FileSystemEntityType.file ? stat.size : null,
+        parentId: parentPath,
+      );
+
+      return Result.success(item);
+    } catch (e) {
+      return Result.failure(FileSystemFailure('Erro ao obter item $path: $e'));
     }
-
-    final stat = await FileStat.stat(path);
-    final name = p.basename(path);
-    final parentPath = p.dirname(path);
-
-    return FileItem(
-      id: _uuid.v4(),
-      name: name,
-      path: path,
-      type: entity == FileSystemEntityType.directory
-          ? FileItemType.folder
-          : _getFileType(name),
-      createdAt: stat.changed,
-      updatedAt: stat.modified,
-      sizeBytes: entity == FileSystemEntityType.file ? stat.size : null,
-      parentId: parentPath,
-    );
   }
 
   @override
-  Future<FileItem> createItem({
+  Future<Result<FileItem>> createItem({
     required String name,
     required String parentPath,
     required FileItemType type,
   }) async {
     final itemPath = p.join(parentPath, name);
 
-    if (type == FileItemType.folder) {
-      await Directory(itemPath).create(recursive: true);
-    } else {
-      await File(itemPath).create(recursive: true);
-    }
+    try {
+      if (type == FileItemType.folder) {
+        await Directory(itemPath).create(recursive: true);
+      } else {
+        await File(itemPath).create(recursive: true);
+      }
 
-    final stat = await FileStat.stat(itemPath);
-    return FileItem(
-      id: _uuid.v4(),
-      name: name,
-      path: itemPath,
-      type: type,
-      createdAt: stat.changed,
-      updatedAt: stat.modified,
-      parentId: parentPath,
-    );
-  }
-
-  @override
-  Future<FileItem> renameItem(String path, String newName) async {
-    final entity = _getEntity(path);
-    final newPath = p.join(p.dirname(path), newName);
-    await entity.rename(newPath);
-
-    return (await getItem(newPath))!;
-  }
-
-  @override
-  Future<FileItem> moveItem(String sourcePath, String destinationPath) async {
-    final entity = _getEntity(sourcePath);
-    final newPath = p.join(destinationPath, p.basename(sourcePath));
-    await entity.rename(newPath);
-
-    return (await getItem(newPath))!;
-  }
-
-  @override
-  Future<void> deleteItem(String path) async {
-    final entity = _getEntity(path);
-    if (entity is Directory) {
-      await entity.delete(recursive: true);
-    } else {
-      await entity.delete();
+      final stat = await FileStat.stat(itemPath);
+      final item = FileItem(
+        id: _uuid.v4(),
+        name: name,
+        path: itemPath,
+        type: type,
+        createdAt: stat.changed,
+        updatedAt: stat.modified,
+        parentId: parentPath,
+      );
+      return Result.success(item);
+    } catch (e) {
+      return Result.failure(
+          FileSystemFailure('Erro ao criar item $itemPath: $e'));
     }
   }
 
   @override
-  Future<bool> exists(String path) async {
-    return FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound;
+  Future<Result<FileItem>> renameItem(String path, String newName) async {
+    try {
+      final entity = _getEntity(path);
+      final newPath = p.join(p.dirname(path), newName);
+      await entity.rename(newPath);
+
+      final itemResult = await getItem(newPath);
+      if (itemResult is Success<FileItem?> && itemResult.value != null) {
+        return Result.success(itemResult.value!);
+      } else {
+        return Result.failure(FileSystemFailure(
+            'Item renomeado mas falhou ao ler atributos de $newPath'));
+      }
+    } catch (e) {
+      return Result.failure(FileSystemFailure('Erro ao renomear $path: $e'));
+    }
   }
 
   @override
-  Future<VaultStats> getVaultStats(String vaultPath) async {
+  Future<Result<FileItem>> moveItem(
+      String sourcePath, String destinationPath) async {
+    try {
+      final entity = _getEntity(sourcePath);
+      final newPath = p.join(destinationPath, p.basename(sourcePath));
+      await entity.rename(newPath);
+
+      final itemResult = await getItem(newPath);
+      if (itemResult is Success<FileItem?> && itemResult.value != null) {
+        return Result.success(itemResult.value!);
+      } else {
+        return Result.failure(FileSystemFailure(
+            'Item movido mas falhou ao ler atributos de $newPath'));
+      }
+    } catch (e) {
+      return Result.failure(FileSystemFailure('Erro ao mover $sourcePath: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> deleteItem(String path) async {
+    try {
+      final entity = _getEntity(path);
+      if (entity is Directory) {
+        await entity.delete(recursive: true);
+      } else {
+        await entity.delete();
+      }
+      return Result.success(null);
+    } catch (e) {
+      return Result.failure(FileSystemFailure('Erro ao excluir $path: $e'));
+    }
+  }
+
+  @override
+  Future<Result<bool>> exists(String path) async {
+    try {
+      final result =
+          FileSystemEntity.typeSync(path) != FileSystemEntityType.notFound;
+      return Result.success(result);
+    } catch (e) {
+      return Result.failure(
+          FileSystemFailure('Erro ao checar se $path existe: $e'));
+    }
+  }
+
+  @override
+  Future<Result<VaultStats>> getVaultStats(String vaultPath) async {
     final rootDir = Directory(vaultPath);
     if (!await rootDir.exists()) {
-      return const VaultStats(fileCount: 0, folderCount: 0, totalSizeBytes: 0);
+      return Result.success(
+          const VaultStats(fileCount: 0, folderCount: 0, totalSizeBytes: 0));
     }
 
     int fileCount = 0;
@@ -154,43 +201,42 @@ class FileRepositoryImpl implements FileRepository {
     int totalSize = 0;
 
     Future<void> traverse(Directory dir) async {
-      try {
-        await for (final entity in dir.list()) {
-          try {
-            if (entity is File) {
-              fileCount++;
-              totalSize += await entity.length();
-            } else if (entity is Directory) {
-              folderCount++;
-              await traverse(entity);
-            }
-          } catch (e) {
-            // Ignora erros em arquivos/pastas específicos (ex: permissão)
-            debugPrint('Aviso: Falha ao ler estatística de ${entity.path}: $e');
-          }
+      await for (final entity in dir.list()) {
+        if (entity is File) {
+          fileCount++;
+          totalSize += await entity.length();
+        } else if (entity is Directory) {
+          folderCount++;
+          await traverse(entity);
         }
-      } catch (e) {
-        // Erro ao listar o diretório em si (ex: acesso negado ao abrir a pasta)
-        debugPrint('Aviso: Acesso negado ao listar subpasta ${dir.path}: $e');
       }
     }
 
-    await traverse(rootDir);
-
-    return VaultStats(
-      fileCount: fileCount,
-      folderCount: folderCount,
-      totalSizeBytes: totalSize,
-    );
+    try {
+      await traverse(rootDir);
+      return Result.success(VaultStats(
+        fileCount: fileCount,
+        folderCount: folderCount,
+        totalSizeBytes: totalSize,
+      ));
+    } catch (e) {
+      return Result.failure(
+          FileSystemFailure('Erro ao obter estatísticas de $vaultPath: $e'));
+    }
   }
 
   @override
-  Future<String?> readFile(String path) async {
-    final file = File(path);
-    if (await file.exists()) {
-      return await file.readAsString();
+  Future<Result<String?>> readFile(String path) async {
+    try {
+      final file = File(path);
+      if (await file.exists()) {
+        final content = await file.readAsString();
+        return Result.success(content);
+      }
+      return Result.success(null);
+    } catch (e) {
+      return Result.failure(FileSystemFailure('Erro ao ler arquivo $path: $e'));
     }
-    return null;
   }
 
   FileSystemEntity _getEntity(String path) {

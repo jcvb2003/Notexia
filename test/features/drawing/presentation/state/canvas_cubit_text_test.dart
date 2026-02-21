@@ -239,18 +239,17 @@ void main() {
       },
       act: (cubit) => cubit.text.commitTextEditing('text-1', 'Texto final'),
       expect: () => [
-        // updateTextElement emits first
-        isA<CanvasState>().having(
-          (s) => (s.document.elements.first as TextElement).text,
-          'text atualizado',
-          'Texto final',
-        ),
-        // finalizeTextEditing clears editingTextId
-        isA<CanvasState>().having(
-          (s) => s.interaction.textEditing.editingTextId,
-          'editingId limpo',
-          isNull,
-        ),
+        isA<CanvasState>()
+            .having(
+              (s) => (s.document.elements.first as TextElement).text,
+              'text atualizado',
+              'Texto final',
+            )
+            .having(
+              (s) => s.interaction.textEditing.editingTextId,
+              'editingId limpo',
+              isNull,
+            ),
       ],
       verify: (_) {
         verify(() => mockDocumentRepository.saveElement(any(), any()))

@@ -7,19 +7,30 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 
 class MockPersistenceService extends Mock implements PersistenceService {}
+
+class MockCommandStackService extends Mock implements CommandStackService {}
 
 void main() {
   late TextEditingDelegate delegate;
   late CanvasState baseState;
   late MockPersistenceService mockPersistence;
-  late List<CanvasState> emittedStates;
+  late MockCommandStackService mockCommandStack;
 
   setUp(() {
     delegate = const TextEditingDelegate();
     mockPersistence = MockPersistenceService();
-    emittedStates = [];
+    mockCommandStack = MockCommandStackService();
+
+    registerFallbackValue(ElementsCommand(
+      before: const [],
+      after: const [],
+      applyElements: (_) {},
+      label: 'fallback',
+    ));
 
     registerFallbackValue(CanvasElement.rectangle(
       id: 'fallback',
@@ -54,37 +65,34 @@ void main() {
     );
   });
 
-  void emitCapture(CanvasState state) {
-    emittedStates.add(state);
-  }
+  // Removed emitCapture helper as we now use Result data directly
 
   group('TextEditingDelegate', () {
     group('updateTextElement', () {
-      test('updates text content and emits new state', () {
-        delegate.updateTextElement(
+      test('updates text content and returns new state', () {
+        final result = delegate.updateTextElement(
           state: baseState,
           elementId: 'text1',
           text: 'Updated text',
-          emit: emitCapture,
           scheduleSave: (_) {},
         );
 
-        expect(emittedStates, hasLength(1));
+        expect(result.isSuccess, isTrue);
         final updatedElement =
-            emittedStates.first.elements.whereType<TextElement>().first;
+            result.data!.elements.whereType<TextElement>().first;
         expect(updatedElement.text, 'Updated text');
       });
 
       test('schedules save with updated document', () {
         DrawingDocument? savedDoc;
-        delegate.updateTextElement(
+        final result = delegate.updateTextElement(
           state: baseState,
           elementId: 'text1',
           text: 'Saved text',
-          emit: emitCapture,
           scheduleSave: (doc) => savedDoc = doc,
         );
 
+        expect(result.isSuccess, isTrue);
         expect(savedDoc, isNotNull);
         final savedElement = savedDoc!.elements.whereType<TextElement>().first;
         expect(savedElement.text, 'Saved text');
@@ -108,28 +116,26 @@ void main() {
           ),
         );
 
-        delegate.updateTextElement(
+        final result = delegate.updateTextElement(
           state: stateWithTwo,
           elementId: 'text1',
           text: 'Changed',
-          emit: emitCapture,
           scheduleSave: (_) {},
         );
 
-        expect(emittedStates.first.elements.length, 2);
+        expect(result.data!.elements.length, 2);
       });
     });
 
     group('setEditingText', () {
       test('sets editing text id', () {
-        delegate.setEditingText(
+        final result = delegate.setEditingText(
           state: baseState,
           id: 'text1',
-          emit: emitCapture,
         );
 
-        expect(emittedStates, hasLength(1));
-        expect(emittedStates.first.editingTextId, 'text1');
+        expect(result.isSuccess, isTrue);
+        expect(result.data!.editingTextId, 'text1');
       });
 
       test('clears editing text id', () {
@@ -141,13 +147,12 @@ void main() {
           ),
         );
 
-        delegate.setEditingText(
+        final result = delegate.setEditingText(
           state: editing,
           id: null,
-          emit: emitCapture,
         );
 
-        expect(emittedStates.first.editingTextId, isNull);
+        expect(result.data!.editingTextId, isNull);
       });
     });
 
@@ -164,69 +169,67 @@ void main() {
           ),
         );
 
-        await delegate.finalizeTextEditing(
+        final result = await delegate.finalizeTextEditing(
           state: editing,
           elementId: 'text1',
           persistenceService: mockPersistence,
-          emit: emitCapture,
         );
 
         verify(() => mockPersistence.saveElement('doc1', any())).called(1);
-        expect(emittedStates, hasLength(1));
-        expect(emittedStates.first.editingTextId, isNull);
+        expect(result.isSuccess, isTrue);
+        expect(result.data!.editingTextId, isNull);
       });
 
-      test('emits error state on save failure', () async {
+      test('returns failure on save failure', () async {
         when(() => mockPersistence.saveElement(any(), any()))
             .thenThrow(Exception('Save failed'));
 
-        await delegate.finalizeTextEditing(
+        final result = await delegate.finalizeTextEditing(
           state: baseState,
           elementId: 'text1',
           persistenceService: mockPersistence,
-          emit: emitCapture,
         );
 
-        expect(emittedStates, hasLength(1));
-        expect(emittedStates.first.error, contains('Save failed'));
+        expect(result.isFailure, isTrue);
+        expect(result.failure!.message, contains('Save failed'));
       });
     });
 
     group('commitTextEditing', () {
-      test('deletes element when text is empty', () {
-        String? deletedId;
-
-        delegate.commitTextEditing(
+      test('deletes element when text is empty', () async {
+        final result = await delegate.commitTextEditing(
           state: baseState,
           elementId: 'text1',
           text: '   ',
-          emit: emitCapture,
           scheduleSave: (_) {},
           persistenceService: mockPersistence,
-          deleteElementByIdCallback: (id) => deletedId = id,
+          commandStack: mockCommandStack,
+          applyCallback: (_) {},
         );
 
-        expect(deletedId, 'text1');
+        expect(result.isSuccess, isTrue);
+        expect(result.data!.document.elements, isEmpty);
+        expect(result.data!.editingTextId, isNull);
+        verify(() => mockCommandStack.add(any())).called(1);
       });
 
-      test('updates and finalizes when text is not empty', () {
+      test('updates and finalizes when text is not empty', () async {
         when(() => mockPersistence.saveElement(any(), any()))
             .thenAnswer((_) async => Result.success(null));
 
-        delegate.commitTextEditing(
+        final result = await delegate.commitTextEditing(
           state: baseState,
           elementId: 'text1',
           text: 'New content',
-          emit: emitCapture,
           scheduleSave: (_) {},
           persistenceService: mockPersistence,
-          deleteElementByIdCallback: (_) {},
+          commandStack: mockCommandStack,
+          applyCallback: (_) {},
         );
 
-        // Should have emitted: updateTextElement + finalizeTextEditing
-        expect(emittedStates.length, greaterThanOrEqualTo(1));
+        expect(result.isSuccess, isTrue);
         final lastTextElement =
-            emittedStates.first.elements.whereType<TextElement>().first;
+            result.data!.elements.whereType<TextElement>().first;
         expect(lastTextElement.text, 'New content');
       });
     });

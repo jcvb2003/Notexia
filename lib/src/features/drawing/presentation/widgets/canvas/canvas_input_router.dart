@@ -248,7 +248,7 @@ class CanvasInputRouter {
       final snapEnabled =
           _isShiftPressed || canvasCubit.state.isAngleSnapEnabled;
       final step = canvasCubit.state.angleSnapStep;
-      canvasCubit.manipulation.rotateSelectedElement(
+      canvasCubit.rotateSelectedElement(
         CanvasGestureMath.snapAngle(nextAngle, snapEnabled, step),
       );
       return;
@@ -257,7 +257,7 @@ class CanvasInputRouter {
     if (handle == SelectionHandle.lineStart ||
         handle == SelectionHandle.lineEnd) {
       final isStart = handle == SelectionHandle.lineStart;
-      canvasCubit.manipulation.updateLineEndpoint(
+      canvasCubit.updateLineEndpoint(
         isStart: isStart,
         worldPoint: worldPoint,
         snapAngle: _isShiftPressed || canvasCubit.state.isAngleSnapEnabled,
@@ -275,7 +275,7 @@ class CanvasInputRouter {
       localPoint,
       keepAspect: _isShiftPressed,
     );
-    canvasCubit.manipulation.resizeSelectedElement(newRect);
+    canvasCubit.resizeSelectedElement(newRect);
   }
 
   bool get _isShiftPressed {

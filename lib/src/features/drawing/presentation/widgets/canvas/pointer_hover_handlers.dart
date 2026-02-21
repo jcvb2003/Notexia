@@ -39,10 +39,10 @@ class PointerHoverHandlers {
         final focal = signal.localPosition;
         final worldPoint = self.toWorld(focal, uiState);
         final nextPan = focal - (worldPoint * nextZoom);
-        self.canvasCubit.viewport.setZoom(nextZoom);
-        self.canvasCubit.viewport.setPanOffset(nextPan);
+        self.canvasCubit.setZoom(nextZoom);
+        self.canvasCubit.setPanOffset(nextPan);
       } else {
-        self.canvasCubit.viewport.panBy(-signal.scrollDelta);
+        self.canvasCubit.panBy(-signal.scrollDelta);
       }
     }
   }
@@ -64,7 +64,7 @@ class PointerHoverHandlers {
       return;
     }
     if (self.canvasCubit.state.selectedTool == CanvasElementType.selection) {
-      self.canvasCubit.selection.setSelectionBox(null);
+      self.canvasCubit.setSelectionBox(null);
       final worldPoint = self.toWorld(details.localPosition, uiState);
       final selectedElement = self.selectedElement;
       if (selectedElement != null) {
@@ -77,7 +77,7 @@ class PointerHoverHandlers {
           return;
         }
       }
-      self.canvasCubit.selection.selectElementAt(worldPoint);
+      self.canvasCubit.selectElementAt(worldPoint);
     }
   }
 
@@ -88,14 +88,14 @@ class PointerHoverHandlers {
   ) {
     if (self.canvasCubit.state.selectedTool != CanvasElementType.selection) {
       if (uiState.hoveredElementId != null) {
-        self.canvasCubit.selection.setHoveredElement(null);
+        self.canvasCubit.setHoveredElement(null);
       }
       return;
     }
     final worldPoint = self.toWorld(event.localPosition, uiState);
     final hitId = SnapshotHitUtils.hitTest(self.canvasCubit, worldPoint);
     if (hitId != uiState.hoveredElementId) {
-      self.canvasCubit.selection.setHoveredElement(hitId);
+      self.canvasCubit.setHoveredElement(hitId);
     }
   }
 }

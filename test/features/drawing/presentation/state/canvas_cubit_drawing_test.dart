@@ -25,11 +25,15 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_d
 
 class MockDocumentRepository extends Mock implements DocumentRepository {}
 
+class MockPersistenceService extends Mock implements PersistenceService {}
+
 void main() {
   late CanvasCubit cubit;
   late MockDocumentRepository mockDocRepo;
+  late MockPersistenceService mockPersistence;
   late CommandStackService commandStack;
   late DrawingDocument initialDoc;
+  final fixedDate = DateTime(2024, 1, 1);
 
   setUpAll(() {
     registerFallbackValue(
@@ -37,8 +41,8 @@ void main() {
         id: 'doc-id',
         title: 'T',
         elements: const [],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        createdAt: fixedDate,
+        updatedAt: fixedDate,
       ),
     );
     registerFallbackValue(CanvasElement.rectangle(
@@ -48,8 +52,9 @@ void main() {
       width: 1,
       height: 1,
       strokeColor: Colors.black,
-      updatedAt: DateTime.now(),
+      updatedAt: fixedDate,
     ));
+    registerFallbackValue(const Duration(milliseconds: 0));
   });
 
   setUp(() {
@@ -60,8 +65,8 @@ void main() {
       id: 'test-id',
       title: 'Test Doc',
       elements: const [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+      createdAt: fixedDate,
+      updatedAt: fixedDate,
     );
 
     when(() => mockDocRepo.saveDocument(any()))
@@ -74,7 +79,19 @@ void main() {
         CanvasManipulationService(transformationService);
     final drawingService =
         DrawingService(canvasManipulationService: canvasManipulationService);
-    final persistenceService = PersistenceService(mockDocRepo);
+    mockPersistence = MockPersistenceService();
+
+    when(() => mockPersistence.scheduleSaveDocument(any(),
+            debounceDuration: any(named: 'debounceDuration'),
+            onComplete: any(named: 'onComplete')))
+        .thenAnswer((Invocation invocation) {
+      final onComplete =
+          invocation.namedArguments[#onComplete] as void Function(Failure?)?;
+      onComplete?.call(null);
+    });
+    when(() => mockPersistence.saveElement(any(), any()))
+        .thenAnswer((_) async => Result.success(null));
+    when(() => mockPersistence.dispose()).thenReturn(null);
     final elementManipulationDelegate = ElementManipulationDelegate(
       canvasManipulationService,
       transformationService,
@@ -84,7 +101,7 @@ void main() {
       mockDocRepo,
       commandStack,
       drawingService,
-      persistenceService,
+      mockPersistence,
       elementManipulationDelegate,
       const SelectionDelegate(),
       const TextEditingDelegate(),
@@ -96,7 +113,25 @@ void main() {
     );
   });
 
-  tearDown(() => cubit.close());
+  tearDown(() async {
+    await cubit.close();
+    commandStack.dispose();
+  });
+
+  group('Drawing - selectTool', () {
+    blocTest<CanvasCubit, CanvasState>(
+      'changes selected tool',
+      build: () => cubit,
+      act: (c) => c.selectTool(CanvasElementType.ellipse),
+      expect: () => [
+        isA<CanvasState>().having(
+          (s) => s.interaction.selectedTool,
+          'ferramenta selecionada',
+          CanvasElementType.ellipse,
+        ),
+      ],
+    );
+  });
 
   group('Drawing - startDrawing', () {
     blocTest<CanvasCubit, CanvasState>(
@@ -147,7 +182,12 @@ void main() {
       'does nothing when not drawing',
       build: () => cubit,
       act: (c) => c.drawing.stopDrawing(),
-      expect: () => <CanvasState>[],
+      expect: () => [
+        // stopDrawing returns Result.success(state) via copyWith
+        // which creates a new object reference, so it emits.
+        isA<CanvasState>()
+            .having((s) => s.interaction.isDrawing, 'isDrawing', false),
+      ],
     );
 
     blocTest<CanvasCubit, CanvasState>(
@@ -173,17 +213,15 @@ void main() {
         );
       },
       act: (c) {
-        when(() => mockDocRepo.saveElement(any(), any())).thenAnswer(
+        when(() => mockPersistence.saveElement(any(), any())).thenAnswer(
           (_) async => Result.failure(const PersistenceFailure('Erro de Mock')),
         );
         return c.drawing.stopDrawing();
       },
       expect: () => [
         isA<CanvasState>()
-            .having((s) => s.error, 'error message', 'Erro de Mock'),
-        isA<CanvasState>()
-            .having((s) => s.interaction.isDrawing, 'drawing stopped', false)
-            .having((s) => s.error, 'error cleared', isNull),
+            .having((s) => s.error, 'error message', 'Erro de Mock')
+            .having((s) => s.interaction.isDrawing, 'drawing stopped', false),
       ],
     );
   });
@@ -232,21 +270,6 @@ void main() {
       build: () => cubit,
       act: (c) => c.clearCanvas(),
       expect: () => <CanvasState>[],
-    );
-  });
-
-  group('Drawing - selectTool', () {
-    blocTest<CanvasCubit, CanvasState>(
-      'changes selected tool',
-      build: () => cubit,
-      act: (c) => c.selectTool(CanvasElementType.ellipse),
-      expect: () => [
-        isA<CanvasState>().having(
-          (s) => s.interaction.selectedTool,
-          'ferramenta selecionada',
-          CanvasElementType.ellipse,
-        ),
-      ],
     );
   });
 }

@@ -38,5 +38,5 @@ O projeto segue uma arquitetura baseada em Features (Vertical Slices) com Clean 
 Para rodar os testes unitários e de widget:
 
 ```bash
-flutter test
+flutter test; flutter analyze
 ```

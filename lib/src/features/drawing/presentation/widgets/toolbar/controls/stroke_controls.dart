@@ -54,8 +54,7 @@ class StrokeToolControls extends StatelessWidget {
             tooltip: 'Lápis (Normal)',
             isActive:
                 (selectedElement?.roughness ?? currentStyle.roughness) <= 0.5,
-            onTap: () => cubit.manipulation
-                .updateSelectedElementsProperties(roughness: 0.0),
+            onTap: () => cubit.updateSelectedElementsProperties(roughness: 0.0),
           ),
           const SizedBox(width: 4),
           AppIconButton(
@@ -64,8 +63,7 @@ class StrokeToolControls extends StatelessWidget {
             tooltip: 'Caneta (Sketchy)',
             isActive:
                 (selectedElement?.roughness ?? currentStyle.roughness) > 0.5,
-            onTap: () => cubit.manipulation
-                .updateSelectedElementsProperties(roughness: 1.0),
+            onTap: () => cubit.updateSelectedElementsProperties(roughness: 1.0),
           ),
         ],
         if (tool == CanvasElementType.line ||
@@ -76,8 +74,8 @@ class StrokeToolControls extends StatelessWidget {
               StrokeStyle.solid: LucideIcons.minus,
               StrokeStyle.dashed: LucideIcons.moreHorizontal,
             },
-            onChanged: (s) => cubit.manipulation
-                .updateSelectedElementsProperties(strokeStyle: s),
+            onChanged: (s) =>
+                cubit.updateSelectedElementsProperties(strokeStyle: s),
           ),
         ],
         const ToolbarDivider(horizontalPadding: 10),
@@ -94,7 +92,7 @@ class StrokeToolControls extends StatelessWidget {
             size: 36,
             icon: LucideIcons.trash2,
             tooltip: 'Excluir',
-            onTap: () => cubit.manipulation.deleteSelectedElements(),
+            onTap: () => cubit.deleteSelectedElements(),
             activeColor: AppColors.danger,
           ),
         ],
@@ -124,8 +122,8 @@ class StrokeToolControls extends StatelessWidget {
                 ColorGrid(
                   selectedColor:
                       element?.strokeColor ?? currentStyle.strokeColor,
-                  onSelected: (c) => cubit.manipulation
-                      .updateSelectedElementsProperties(strokeColor: c),
+                  onSelected: (c) =>
+                      cubit.updateSelectedElementsProperties(strokeColor: c),
                 ),
                 const Divider(height: 32),
                 PropertySlider(
@@ -133,8 +131,8 @@ class StrokeToolControls extends StatelessWidget {
                   value: element?.strokeWidth ?? currentStyle.strokeWidth,
                   min: 1,
                   max: 10,
-                  onChanged: (v) => cubit.manipulation
-                      .updateSelectedElementsProperties(strokeWidth: v),
+                  onChanged: (v) =>
+                      cubit.updateSelectedElementsProperties(strokeWidth: v),
                 ),
                 const SizedBox(height: 12),
                 PropertySlider(
@@ -142,8 +140,8 @@ class StrokeToolControls extends StatelessWidget {
                   value: element?.roughness ?? currentStyle.roughness,
                   min: 0,
                   max: 5,
-                  onChanged: (v) => cubit.manipulation
-                      .updateSelectedElementsProperties(roughness: v),
+                  onChanged: (v) =>
+                      cubit.updateSelectedElementsProperties(roughness: v),
                 ),
               ],
             );
@@ -175,8 +173,8 @@ class StrokeToolControls extends StatelessWidget {
               value: element?.opacity ?? currentStyle.opacity,
               min: 0,
               max: 1,
-              onChanged: (v) => cubit.manipulation
-                  .updateSelectedElementsProperties(opacity: v),
+              onChanged: (v) =>
+                  cubit.updateSelectedElementsProperties(opacity: v),
             );
           },
         ),

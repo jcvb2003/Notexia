@@ -33,7 +33,7 @@ class CanvasShortcutsWrapper extends StatelessWidget {
           DeleteSelectedElementsIntent:
               CallbackAction<DeleteSelectedElementsIntent>(
             onInvoke: (_) {
-              context.read<CanvasCubit>().manipulation.deleteSelectedElements();
+              context.read<CanvasCubit>().deleteSelectedElements();
               return null;
             },
           ),

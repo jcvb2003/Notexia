@@ -10,16 +10,17 @@ import 'package:notexia/src/features/undo_redo/domain/services/command_stack_ser
 import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/core/errors/result.dart';
+import 'package:notexia/src/core/errors/failure.dart';
 
 class TextEditingDelegate {
   const TextEditingDelegate();
 
-  String? createTextElement({
+  Result<(String, CanvasState)> createTextElement({
     required CanvasState state,
     required Offset position,
     required Uuid uuid,
     required CommandStackService commandStack,
-    required void Function(CanvasState) emit,
     required void Function(List<CanvasElement>) applyCallback,
   }) {
     final newId = uuid.v4();
@@ -31,20 +32,21 @@ class TextEditingDelegate {
       opacity: state.currentStyle.opacity,
     );
 
-    if (newElement == null) return null;
+    if (newElement == null) {
+      return Result.failure(
+          const ServerFailure('Falha ao criar elemento de texto'));
+    }
 
     final before = List<CanvasElement>.from(state.document.elements);
     final updatedDoc = state.document.copyWith(
       elements: [...state.document.elements, newElement],
     );
 
-    emit(
-      state.copyWith(
-        document: updatedDoc,
-        interaction: state.interaction.copyWith(
-          selectedElementIds: {newId},
-          activeElementId: newId,
-        ),
+    final newState = state.copyWith(
+      document: updatedDoc,
+      interaction: state.interaction.copyWith(
+        selectedElementIds: {newId},
+        activeElementId: newId,
       ),
     );
 
@@ -57,14 +59,13 @@ class TextEditingDelegate {
       ),
     );
 
-    return newId;
+    return Result.success((newId, newState));
   }
 
-  CanvasState updateTextElement({
+  Result<CanvasState> updateTextElement({
     required CanvasState state,
     required String elementId,
     required String text,
-    required void Function(CanvasState) emit,
     required void Function(DrawingDocument) scheduleSave,
   }) {
     final updatedElements = state.document.elements.map((element) {
@@ -81,22 +82,23 @@ class TextEditingDelegate {
 
     final updatedDoc = state.document.copyWith(elements: updatedElements);
     final newState = state.copyWith(document: updatedDoc);
-    emit(newState);
     scheduleSave(updatedDoc);
-    return newState;
+    return Result.success(newState);
   }
 
-  Future<void> finalizeTextEditing({
+  Future<Result<CanvasState>> finalizeTextEditing({
     required CanvasState state,
     required String elementId,
     required PersistenceService persistenceService,
-    required void Function(CanvasState) emit,
   }) async {
     final element = state.elements.where((e) => e.id == elementId).firstOrNull;
-    if (element == null) return;
+    if (element == null) {
+      return Result.success(
+          state); // Or failure if preferred, but success with no change is safe
+    }
     try {
       await persistenceService.saveElement(state.document.id, element);
-      emit(
+      return Result.success(
         state.copyWith(
           error: null,
           interaction: state.interaction.copyWith(
@@ -107,45 +109,73 @@ class TextEditingDelegate {
         ),
       );
     } catch (e) {
-      emit(state.copyWith(error: 'Erro ao salvar elemento: $e'));
+      return Result.failure(ServerFailure('Erro ao salvar elemento: $e'));
     }
   }
 
-  void commitTextEditing({
+  Future<Result<CanvasState>> commitTextEditing({
     required CanvasState state,
     required String elementId,
     required String text,
-    required void Function(CanvasState) emit,
     required void Function(DrawingDocument) scheduleSave,
     required PersistenceService persistenceService,
-    required void Function(String) deleteElementByIdCallback,
-  }) {
+    required CommandStackService commandStack,
+    required void Function(List<CanvasElement>) applyCallback,
+  }) async {
     if (text.trim().isEmpty) {
-      deleteElementByIdCallback(elementId);
+      final element =
+          state.document.elements.where((e) => e.id == elementId).firstOrNull;
+      if (element == null) return Result.success(state);
+
+      final before = List<CanvasElement>.from(state.document.elements);
+      final updatedElements =
+          state.document.elements.where((e) => e.id != elementId).toList();
+      final updatedDoc = state.document.copyWith(elements: updatedElements);
+
+      final newState = state.copyWith(
+        document: updatedDoc,
+        interaction: state.interaction.copyWith(
+          selectedElementIds:
+              state.selectedElementIds.where((id) => id != elementId).toSet(),
+          textEditing:
+              state.interaction.textEditing.copyWith(editingTextId: null),
+        ),
+      );
+
+      commandStack.add(
+        ElementsCommand(
+          before: before,
+          after: List<CanvasElement>.from(updatedDoc.elements),
+          applyElements: applyCallback,
+          label: 'Excluir elemento',
+        ),
+      );
+
+      scheduleSave(updatedDoc);
+      return Result.success(newState);
     } else {
-      final newState = updateTextElement(
+      final updateResult = updateTextElement(
         state: state,
         elementId: elementId,
         text: text,
-        emit: emit,
         scheduleSave: scheduleSave,
       );
 
-      finalizeTextEditing(
-        state: newState,
+      if (updateResult.isFailure) return updateResult;
+
+      return finalizeTextEditing(
+        state: updateResult.data!,
         elementId: elementId,
         persistenceService: persistenceService,
-        emit: emit,
       );
     }
   }
 
-  void setEditingText({
+  Result<CanvasState> setEditingText({
     required CanvasState state,
     required String? id,
-    required void Function(CanvasState) emit,
   }) {
-    emit(
+    return Result.success(
       state.copyWith(
         interaction: state.interaction.copyWith(
           textEditing: state.interaction.textEditing.copyWith(

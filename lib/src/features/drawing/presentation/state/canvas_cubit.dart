@@ -16,11 +16,9 @@ import 'package:notexia/src/features/drawing/domain/repositories/document_reposi
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
 
+import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/manipulation_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/selection_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/viewport_scope.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
@@ -150,11 +148,31 @@ class CanvasCubit extends Cubit<CanvasState> {
     emit(state.copyWith(document: updatedDoc));
   }
 
-  late final viewport = ViewportScope(
-    () => state,
-    (s) => emit(s),
-    _viewportDelegate,
-  );
+  // Viewport Operations
+  void zoomIn() {
+    final result = _viewportDelegate.zoomIn(state);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void zoomOut() {
+    final result = _viewportDelegate.zoomOut(state);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void setZoom(double value) {
+    final result = _viewportDelegate.setZoom(state, value);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void setPanOffset(Offset offset) {
+    final result = _viewportDelegate.setPanOffset(state, offset);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void panBy(Offset delta) {
+    final result = _viewportDelegate.panBy(state, delta);
+    if (result.isSuccess) emit(result.data!);
+  }
 
   void toggleSkeletonMode() {
     emit(state.copyWith(isSkeletonMode: !state.isSkeletonMode));
@@ -222,52 +240,198 @@ class CanvasCubit extends Cubit<CanvasState> {
     ));
   }
 
-  late final selection = SelectionScope(
-    () => state,
-    (s) => emit(s),
-    _selectionDelegate,
-  );
+  // Selection Operations
+  void setSelectionBox(Rect? rect) {
+    final result = _selectionDelegate.setSelectionBox(state, rect);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void setHoveredElement(String? id) {
+    final result = _selectionDelegate.setHoveredElement(state, id);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void selectElementAt(Offset localPosition, {bool isMultiSelect = false}) {
+    final result = _selectionDelegate.selectElementAt(
+      state,
+      localPosition,
+      isMultiSelect: isMultiSelect,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void selectElementsInRect(Rect selectionRect) {
+    final result =
+        _selectionDelegate.selectElementsInRect(state, selectionRect);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  // Manipulation Operations
+  void moveSelectedElements(Offset delta) {
+    final result = _elementManipulationDelegate.moveSelectedElements(
+      state: state,
+      delta: delta,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void resizeSelectedElement(Rect rect) {
+    final result = _elementManipulationDelegate.resizeSelectedElement(
+      state: state,
+      rect: rect,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void rotateSelectedElement(double angle) {
+    final result = _elementManipulationDelegate.rotateSelectedElement(
+      state: state,
+      angle: angle,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void updateLineEndpoint({
+    required bool isStart,
+    required Offset worldPoint,
+    bool snapAngle = false,
+    double? angleStep,
+  }) {
+    final result = _elementManipulationDelegate.updateLineEndpoint(
+      state: state,
+      isStart: isStart,
+      worldPoint: worldPoint,
+      snapAngle: snapAngle,
+      angleStep: angleStep,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  Future<void> finalizeManipulation() async {
+    final result = await _elementManipulationDelegate.finalizeManipulation(
+      state: state,
+      documentRepository: _documentRepository,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void deleteSelectedElements() {
+    final result = _elementManipulationDelegate.deleteSelectedElements(
+      state: state,
+      commandStack: _commandStack,
+      applyCallback: _applyElementsFromCommand,
+      scheduleSave: _scheduleSaveDocument,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void deleteElementById(String elementId) {
+    final result = _elementManipulationDelegate.deleteElementById(
+      state: state,
+      elementId: elementId,
+      commandStack: _commandStack,
+      applyCallback: _applyElementsFromCommand,
+      scheduleSave: _scheduleSaveDocument,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void updateSelectedElementsProperties({
+    Color? strokeColor,
+    Color? fillColor,
+    double? strokeWidth,
+    StrokeStyle? strokeStyle,
+    FillType? fillType,
+    double? opacity,
+    double? roughness,
+    String? text,
+    String? fontFamily,
+    double? fontSize,
+    TextAlign? textAlign,
+    Color? backgroundColor,
+    double? backgroundRadius,
+    bool? isBold,
+    bool? isItalic,
+    bool? isUnderlined,
+    bool? isStrikethrough,
+  }) {
+    final patch = ElementStylePatch(
+      strokeColor: strokeColor,
+      fillColor: fillColor,
+      strokeWidth: strokeWidth,
+      strokeStyle: strokeStyle,
+      fillType: fillType,
+      opacity: opacity,
+      roughness: roughness,
+      text: text,
+      fontFamily: fontFamily,
+      fontSize: fontSize,
+      textAlign: textAlign,
+      backgroundColor: backgroundColor,
+      backgroundRadius: backgroundRadius,
+      isBold: isBold,
+      isItalic: isItalic,
+      isUnderlined: isUnderlined,
+      isStrikethrough: isStrikethrough,
+    );
+
+    final result =
+        _elementManipulationDelegate.updateSelectedElementsProperties(
+      state: state,
+      commandStack: _commandStack,
+      applyCallback: _applyElementsFromCommand,
+      scheduleSave: _scheduleSaveDocument,
+      patch: patch,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void updateCurrentStyle(ElementStyle style) {
+    final result = _elementManipulationDelegate.updateCurrentStyle(
+      state: state,
+      style: style,
+    );
+    if (result.isSuccess) emit(result.data!);
+  }
 
   // Eraser Operations
-  void setEraserMode(EraserMode mode) => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.setEraserMode(
-            state.interaction,
-            mode,
-          ),
-        ),
-      );
+  void setEraserMode(EraserMode mode) {
+    final result = _eraserDelegate.setEraserMode(state.interaction, mode);
+    if (result.isSuccess) {
+      emit(state.copyWith(interaction: result.data!));
+    }
+  }
 
-  void startEraser(Offset point) => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.startEraser(
-            state.interaction,
-            point,
-          ),
-        ),
-      );
+  void startEraser(Offset point) {
+    final result = _eraserDelegate.startEraser(state.interaction, point);
+    if (result.isSuccess) {
+      emit(state.copyWith(interaction: result.data!));
+    }
+  }
 
-  void updateEraserTrail(Offset point) => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.updateEraserTrail(
-            state.interaction,
-            point,
-          ),
-        ),
-      );
+  void updateEraserTrail(Offset point) {
+    final result = _eraserDelegate.updateEraserTrail(state.interaction, point);
+    if (result.isSuccess) {
+      emit(state.copyWith(interaction: result.data!));
+    }
+  }
 
-  void endEraser() => emit(
-        state.copyWith(
-          interaction: _eraserDelegate.endEraser(state.interaction),
-        ),
-      );
+  void endEraser() {
+    final result = _eraserDelegate.endEraser(state.interaction);
+    if (result.isSuccess) {
+      emit(state.copyWith(interaction: result.data!));
+    }
+  }
 
   void eraseElementsAtPoint(Offset worldPoint, double radius) {
-    final updatedElements = _eraserDelegate.eraseElements(
+    final result = _eraserDelegate.eraseElements(
       state.document.elements,
       worldPoint,
       radius,
     );
+
+    if (result.isFailure) return;
+    final updatedElements = result.data!;
 
     if (updatedElements.length == state.document.elements.length) return;
 
@@ -294,22 +458,11 @@ class CanvasCubit extends Cubit<CanvasState> {
     () => state,
     (s) => emit(s),
     _scheduleSaveDocument,
-    deleteElementById,
     _applyElementsFromCommand,
     _commandStack,
     _persistenceService,
     _uuid,
     _textEditingDelegate,
-  );
-
-  late final manipulation = ManipulationScope(
-    () => state,
-    (s) => emit(s),
-    _scheduleSaveDocument,
-    _applyElementsFromCommand,
-    _elementManipulationDelegate,
-    _commandStack,
-    _documentRepository,
   );
 
   void selectTool(CanvasElementType tool) {
@@ -360,36 +513,6 @@ class CanvasCubit extends Cubit<CanvasState> {
           selectedElementIds: {},
           activeElementId: null,
         ),
-      ),
-    );
-  }
-
-  void deleteElementById(String id) {
-    if (isClosed) return;
-    final element =
-        state.document.elements.where((e) => e.id == id).firstOrNull;
-    if (element == null) return;
-
-    final updatedElements = List<CanvasElement>.from(state.document.elements)
-      ..removeWhere((e) => e.id == id);
-
-    // Se o elemento deletado estava selecionado, remove da seleção
-    final updatedSelection =
-        Set<String>.from(state.interaction.selectedElementIds)..remove(id);
-
-    emit(state.copyWith(
-      document: state.document.copyWith(elements: updatedElements),
-      interaction: state.interaction.copyWith(
-        selectedElementIds: updatedSelection,
-      ),
-    ));
-
-    _commandStack.add(
-      ElementsCommand(
-        before: [element],
-        after: const [],
-        applyElements: _applyElementsFromCommand,
-        label: 'Excluir elemento',
       ),
     );
   }

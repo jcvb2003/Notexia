@@ -258,20 +258,22 @@ void main() {
           interaction: const InteractionState(selectedElementIds: {'el1'}),
         );
       },
-      act: (cubit) => cubit.manipulation.updateSelectedElementsProperties(
+      act: (cubit) => cubit.updateSelectedElementsProperties(
         strokeColor: const Color(0xffff0000),
       ),
       expect: () => [
-        isA<CanvasState>().having(
-          (s) => s.currentStyle.strokeColor,
-          'currentStyle.color',
-          const Color(0xffff0000),
-        ),
-        isA<CanvasState>().having(
-          (s) => s.document.elements.first.strokeColor,
-          'element.color',
-          const Color(0xffff0000),
-        ),
+        // Style + element update emitted as a single combined state
+        isA<CanvasState>()
+            .having(
+              (s) => s.currentStyle.strokeColor,
+              'currentStyle.color',
+              const Color(0xffff0000),
+            )
+            .having(
+              (s) => s.document.elements.first.strokeColor,
+              'element.color',
+              const Color(0xffff0000),
+            ),
       ],
     );
 
@@ -382,8 +384,7 @@ void main() {
           ),
         );
       },
-      act: (cubit) =>
-          cubit.manipulation.moveSelectedElements(const Offset(5, -3)),
+      act: (cubit) => cubit.moveSelectedElements(const Offset(5, -3)),
       expect: () => [
         isA<CanvasState>()
             .having(
@@ -458,7 +459,7 @@ void main() {
           ),
         );
       },
-      act: (cubit) => cubit.manipulation.deleteSelectedElements(),
+      act: (cubit) => cubit.deleteSelectedElements(),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements.length, 'remaining', 1)
@@ -487,8 +488,8 @@ void main() {
           interaction: const InteractionState(selectedElementIds: {'el1'}),
         );
       },
-      act: (cubit) => cubit.manipulation
-          .resizeSelectedElement(const Rect.fromLTWH(0, 0, 100, 50)),
+      act: (cubit) =>
+          cubit.resizeSelectedElement(const Rect.fromLTWH(0, 0, 100, 50)),
       expect: () => [
         isA<CanvasState>()
             .having((s) => s.document.elements.first.x, 'x', 0)
@@ -518,7 +519,7 @@ void main() {
           interaction: const InteractionState(selectedElementIds: {'l1'}),
         );
       },
-      act: (cubit) => cubit.manipulation.updateLineEndpoint(
+      act: (cubit) => cubit.updateLineEndpoint(
         isStart: false,
         worldPoint: const Offset(80, 80), // force a 45-degree inclination
         snapAngle: true,

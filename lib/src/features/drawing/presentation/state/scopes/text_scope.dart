@@ -13,7 +13,6 @@ class TextScope {
   final CanvasState Function() _getState;
   final void Function(CanvasState) _emit;
   final void Function(DrawingDocument) _saveDocument;
-  final void Function(String) _deleteElementById;
   final void Function(List<CanvasElement>) _applyCommand;
   final CommandStackService _commandStack;
   final PersistenceService _persistenceService;
@@ -25,7 +24,6 @@ class TextScope {
     this._getState,
     this._emit,
     this._saveDocument,
-    this._deleteElementById,
     this._applyCommand,
     this._commandStack,
     this._persistenceService,
@@ -33,45 +31,59 @@ class TextScope {
     this._delegate,
   );
 
-  String? createTextElement(Offset position) => _delegate.createTextElement(
-        state: _getState(),
-        position: position,
-        uuid: _uuid,
-        commandStack: _commandStack,
-        emit: _emit,
-        applyCallback: _applyCommand,
-      );
+  String? createTextElement(Offset position) {
+    final result = _delegate.createTextElement(
+      state: _getState(),
+      position: position,
+      uuid: _uuid,
+      commandStack: _commandStack,
+      applyCallback: _applyCommand,
+    );
 
-  void updateTextElement(String elementId, String text) =>
-      _delegate.updateTextElement(
-        state: _getState(),
-        elementId: elementId,
-        text: text,
-        emit: _emit,
-        scheduleSave: _saveDocument,
-      );
+    if (result.isSuccess) {
+      final (id, state) = result.data!;
+      _emit(state);
+      return id;
+    }
+    return null;
+  }
 
-  void commitTextEditing(String elementId, String text) =>
-      _delegate.commitTextEditing(
-        state: _getState(),
-        elementId: elementId,
-        text: text,
-        emit: _emit,
-        scheduleSave: _saveDocument,
-        persistenceService: _persistenceService,
-        deleteElementByIdCallback: _deleteElementById,
-      );
+  void updateTextElement(String elementId, String text) {
+    final result = _delegate.updateTextElement(
+      state: _getState(),
+      elementId: elementId,
+      text: text,
+      scheduleSave: _saveDocument,
+    );
+    if (result.isSuccess) _emit(result.data!);
+  }
 
-  Future<void> finalizeTextEditing(String elementId) =>
-      _delegate.finalizeTextEditing(
-        state: _getState(),
-        elementId: elementId,
-        persistenceService: _persistenceService,
-        emit: _emit,
-      );
+  Future<void> commitTextEditing(String elementId, String text) async {
+    final result = await _delegate.commitTextEditing(
+      state: _getState(),
+      elementId: elementId,
+      text: text,
+      scheduleSave: _saveDocument,
+      persistenceService: _persistenceService,
+      commandStack: _commandStack,
+      applyCallback: _applyCommand,
+    );
+    if (result.isSuccess) _emit(result.data!);
+  }
 
-  void setEditingText(String? id) =>
-      _delegate.setEditingText(state: _getState(), id: id, emit: _emit);
+  Future<void> finalizeTextEditing(String elementId) async {
+    final result = await _delegate.finalizeTextEditing(
+      state: _getState(),
+      elementId: elementId,
+      persistenceService: _persistenceService,
+    );
+    if (result.isSuccess) _emit(result.data!);
+  }
+
+  void setEditingText(String? id) {
+    final result = _delegate.setEditingText(state: _getState(), id: id);
+    if (result.isSuccess) _emit(result.data!);
+  }
 
   void handleTextToolTap(Offset worldPosition,
       void Function(CanvasElementType) selectToolCallback) {

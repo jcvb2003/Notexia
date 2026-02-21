@@ -5,6 +5,7 @@ import 'package:notexia/src/features/file_management/domain/repositories/file_re
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/core/errors/result.dart';
 
 class MockFileRepository extends Mock implements FileRepository {}
 
@@ -49,9 +50,9 @@ void main() {
       when(() => mockSettingsRepository.getSetting('vault_path'))
           .thenAnswer((_) async => vaultPath);
       when(() => mockFileRepository.listItems(vaultPath))
-          .thenAnswer((_) async => items);
+          .thenAnswer((_) async => Result.success(items));
       when(() => mockFileRepository.getVaultStats(vaultPath))
-          .thenAnswer((_) async => stats);
+          .thenAnswer((_) async => Result.success(stats));
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
           .thenAnswer((_) async => null);
 
@@ -79,7 +80,7 @@ void main() {
       final items = [testFile.copyWith(path: '$folderPath/file.ntx')];
 
       when(() => mockFileRepository.listItems(folderPath))
-          .thenAnswer((_) async => items);
+          .thenAnswer((_) async => Result.success(items));
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
           .thenAnswer((_) async => null);
 
@@ -101,10 +102,10 @@ void main() {
       when(() => mockSettingsRepository.getSetting('vault_path'))
           .thenAnswer((_) async => vaultPath);
       when(() => mockFileRepository.listItems(any()))
-          .thenAnswer((_) async => []);
+          .thenAnswer((_) async => Result.success([]));
       when(() => mockFileRepository.getVaultStats(any())).thenAnswer(
-          (_) async => const VaultStats(
-              fileCount: 0, folderCount: 0, totalSizeBytes: 0));
+          (_) async => Result.success(const VaultStats(
+              fileCount: 0, folderCount: 0, totalSizeBytes: 0)));
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
           .thenAnswer((_) async => null);
       await cubit.initialize();
@@ -114,8 +115,8 @@ void main() {
                 parentPath: vaultPath,
                 type: FileItemType.file,
               ))
-          .thenAnswer((_) async =>
-              testFile.copyWith(name: fileName, path: '$vaultPath/$fileName'));
+          .thenAnswer((_) async => Result.success(
+              testFile.copyWith(name: fileName, path: '$vaultPath/$fileName')));
 
       await cubit.createFile(fileName);
 
@@ -131,12 +132,12 @@ void main() {
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
           .thenAnswer((_) async => null);
       when(() => mockFileRepository.deleteItem(filePath))
-          .thenAnswer((_) async {});
+          .thenAnswer((_) async => Result.success(null));
       when(() => mockFileRepository.listItems(any()))
-          .thenAnswer((_) async => []);
+          .thenAnswer((_) async => Result.success([]));
       when(() => mockFileRepository.getVaultStats(any())).thenAnswer(
-          (_) async => const VaultStats(
-              fileCount: 0, folderCount: 0, totalSizeBytes: 0));
+          (_) async => Result.success(const VaultStats(
+              fileCount: 0, folderCount: 0, totalSizeBytes: 0)));
 
       await cubit.deleteItem(filePath);
 

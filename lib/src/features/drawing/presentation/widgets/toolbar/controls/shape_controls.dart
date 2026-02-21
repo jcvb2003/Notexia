@@ -96,7 +96,7 @@ class ShapeToolControls extends StatelessWidget {
             size: 36,
             icon: LucideIcons.trash2,
             tooltip: 'Excluir',
-            onTap: () => cubit.manipulation.deleteSelectedElements(),
+            onTap: () => cubit.deleteSelectedElements(),
             activeColor: AppColors.danger,
           ),
         ],
@@ -129,7 +129,7 @@ class ShapeToolControls extends StatelessWidget {
                     ColorPickerPanel(
                       selectedColor:
                           element?.strokeColor ?? currentStyle.strokeColor,
-                      onColorSelected: (c) => cubit.manipulation
+                      onColorSelected: (c) => cubit
                           .updateSelectedElementsProperties(strokeColor: c),
                     ),
                     const Divider(height: 32),
@@ -138,8 +138,7 @@ class ShapeToolControls extends StatelessWidget {
                       value: element?.strokeWidth ?? currentStyle.strokeWidth,
                       min: 1,
                       max: 10,
-                      onChanged: (v) =>
-                          cubit.manipulation.updateSelectedElementsProperties(
+                      onChanged: (v) => cubit.updateSelectedElementsProperties(
                         strokeWidth: v,
                       ),
                     ),
@@ -149,8 +148,8 @@ class ShapeToolControls extends StatelessWidget {
                       value: element?.roughness ?? currentStyle.roughness,
                       min: 0,
                       max: 5,
-                      onChanged: (v) => cubit.manipulation
-                          .updateSelectedElementsProperties(roughness: v),
+                      onChanged: (v) =>
+                          cubit.updateSelectedElementsProperties(roughness: v),
                     ),
                     const SizedBox(height: 16),
                     SegmentedToggle<StrokeStyle>(
@@ -161,8 +160,7 @@ class ShapeToolControls extends StatelessWidget {
                         StrokeStyle.dashed: LucideIcons.moreHorizontal,
                         StrokeStyle.dotted: LucideIcons.moreHorizontal,
                       },
-                      onChanged: (s) =>
-                          cubit.manipulation.updateSelectedElementsProperties(
+                      onChanged: (s) => cubit.updateSelectedElementsProperties(
                         strokeStyle: s,
                       ),
                     ),
@@ -191,7 +189,7 @@ class ShapeToolControls extends StatelessWidget {
                       allowTransparent: true,
                       onColorSelected: (c) {
                         if (c == OpenColorPalette.transparent) {
-                          cubit.manipulation.updateSelectedElementsProperties(
+                          cubit.updateSelectedElementsProperties(
                             fillColor: null,
                             fillType: FillType.transparent,
                           );
@@ -203,7 +201,7 @@ class ShapeToolControls extends StatelessWidget {
                             currentFillType == FillType.transparent
                                 ? FillType.solid
                                 : currentFillType;
-                        cubit.manipulation.updateSelectedElementsProperties(
+                        cubit.updateSelectedElementsProperties(
                           fillColor: c,
                           fillType: nextFillType,
                         );
@@ -221,14 +219,13 @@ class ShapeToolControls extends StatelessWidget {
                       },
                       onChanged: (t) {
                         if (t == FillType.transparent) {
-                          cubit.manipulation.updateSelectedElementsProperties(
+                          cubit.updateSelectedElementsProperties(
                             fillType: t,
                             fillColor: null,
                           );
                           return;
                         }
-                        cubit.manipulation
-                            .updateSelectedElementsProperties(fillType: t);
+                        cubit.updateSelectedElementsProperties(fillType: t);
                       },
                     ),
                   ],
@@ -263,8 +260,8 @@ class ShapeToolControls extends StatelessWidget {
               value: element?.opacity ?? currentStyle.opacity,
               min: 0,
               max: 1,
-              onChanged: (v) => cubit.manipulation
-                  .updateSelectedElementsProperties(opacity: v),
+              onChanged: (v) =>
+                  cubit.updateSelectedElementsProperties(opacity: v),
             );
           },
         ),

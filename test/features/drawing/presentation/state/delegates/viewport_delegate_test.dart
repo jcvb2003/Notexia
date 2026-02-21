@@ -26,7 +26,7 @@ void main() {
       test('increases zoom by step', () {
         final result = delegate.zoomIn(baseState);
         expect(
-          result.zoomLevel,
+          result.data!.zoomLevel,
           closeTo(1.0 + AppConstants.zoomStep, 0.001),
         );
       });
@@ -38,7 +38,7 @@ void main() {
           ),
         );
         final result = delegate.zoomIn(state);
-        expect(result.zoomLevel, AppConstants.maxZoom);
+        expect(result.data!.zoomLevel, AppConstants.maxZoom);
       });
     });
 
@@ -46,7 +46,7 @@ void main() {
       test('decreases zoom by step', () {
         final result = delegate.zoomOut(baseState);
         expect(
-          result.zoomLevel,
+          result.data!.zoomLevel,
           closeTo(1.0 - AppConstants.zoomStep, 0.001),
         );
       });
@@ -58,49 +58,50 @@ void main() {
           ),
         );
         final result = delegate.zoomOut(state);
-        expect(result.zoomLevel, AppConstants.minZoom);
+        expect(result.data!.zoomLevel, AppConstants.minZoom);
       });
     });
 
     group('setZoom', () {
       test('sets explicit zoom level', () {
         final result = delegate.setZoom(baseState, 2.0);
-        expect(result.zoomLevel, 2.0);
+        expect(result.data!.zoomLevel, 2.0);
       });
 
       test('clamps zoom to max', () {
         final result = delegate.setZoom(baseState, 100.0);
-        expect(result.zoomLevel, AppConstants.maxZoom);
+        expect(result.data!.zoomLevel, AppConstants.maxZoom);
       });
 
       test('clamps zoom to min', () {
         final result = delegate.setZoom(baseState, 0.001);
-        expect(result.zoomLevel, AppConstants.minZoom);
+        expect(result.data!.zoomLevel, AppConstants.minZoom);
       });
     });
 
     group('setPanOffset', () {
       test('sets pan offset', () {
         final result = delegate.setPanOffset(baseState, const Offset(100, 200));
-        expect(result.panOffset, const Offset(100, 200));
+        expect(result.data!.panOffset, const Offset(100, 200));
       });
 
       test('allows negative pan offset', () {
         final result = delegate.setPanOffset(baseState, const Offset(-50, -75));
-        expect(result.panOffset, const Offset(-50, -75));
+        expect(result.data!.panOffset, const Offset(-50, -75));
       });
     });
 
     group('panBy', () {
       test('adds delta to current pan offset', () {
-        final panned = delegate.setPanOffset(baseState, const Offset(100, 100));
+        final panned =
+            delegate.setPanOffset(baseState, const Offset(100, 100)).data!;
         final result = delegate.panBy(panned, const Offset(50, -30));
-        expect(result.panOffset, const Offset(150, 70));
+        expect(result.data!.panOffset, const Offset(150, 70));
       });
 
       test('works from zero offset', () {
         final result = delegate.panBy(baseState, const Offset(25, 75));
-        expect(result.panOffset, const Offset(25, 75));
+        expect(result.data!.panOffset, const Offset(25, 75));
       });
     });
   });

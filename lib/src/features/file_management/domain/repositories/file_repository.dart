@@ -1,3 +1,4 @@
+import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 
 /// Interface abstrata para operações de gerenciamento de arquivos.
@@ -6,35 +7,35 @@ import 'package:notexia/src/features/file_management/domain/entities/file_item.d
 /// e a implementação concreta fica no data layer.
 abstract class FileRepository {
   /// Lista todos os itens em um diretório.
-  Future<List<FileItem>> listItems(String directoryPath);
+  Future<Result<List<FileItem>>> listItems(String directoryPath);
 
   /// Obtém um item específico pelo caminho.
-  Future<FileItem?> getItem(String path);
+  Future<Result<FileItem?>> getItem(String path);
 
   /// Cria um novo arquivo ou pasta.
-  Future<FileItem> createItem({
+  Future<Result<FileItem>> createItem({
     required String name,
     required String parentPath,
     required FileItemType type,
   });
 
   /// Renomeia um item.
-  Future<FileItem> renameItem(String path, String newName);
+  Future<Result<FileItem>> renameItem(String path, String newName);
 
   /// Move um item para outro local.
-  Future<FileItem> moveItem(String sourcePath, String destinationPath);
+  Future<Result<FileItem>> moveItem(String sourcePath, String destinationPath);
 
   /// Deleta um item (arquivo ou pasta).
-  Future<void> deleteItem(String path);
+  Future<Result<void>> deleteItem(String path);
 
   /// Verifica se um caminho existe.
-  Future<bool> exists(String path);
+  Future<Result<bool>> exists(String path);
 
   /// Obtém estatísticas do cofre (vault).
-  Future<VaultStats> getVaultStats(String vaultPath);
+  Future<Result<VaultStats>> getVaultStats(String vaultPath);
 
   /// Lê o conteúdo de um arquivo em texto puro.
-  Future<String?> readFile(String path);
+  Future<Result<String?>> readFile(String path);
 }
 
 /// Estatísticas de um cofre (vault) de arquivos.

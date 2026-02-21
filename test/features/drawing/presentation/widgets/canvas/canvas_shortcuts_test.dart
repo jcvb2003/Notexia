@@ -11,34 +11,18 @@ import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dar
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_widget.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';
 
-import 'package:notexia/src/features/drawing/presentation/state/scopes/manipulation_scope.dart';
-
-import 'package:notexia/src/features/drawing/presentation/state/scopes/selection_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/viewport_scope.dart';
-
-class MockManipulationScope extends Mock implements ManipulationScope {}
-
-class MockSelectionScope extends Mock implements SelectionScope {}
 
 class MockDrawingScope extends Mock implements DrawingScope {}
 
 class MockTextScope extends Mock implements TextScope {}
 
-class MockViewportScope extends Mock implements ViewportScope {}
-
 class MockCanvasCubit extends MockCubit<CanvasState> implements CanvasCubit {
-  @override
-  late final ManipulationScope manipulation = MockManipulationScope();
-  @override
-  late final SelectionScope selection = MockSelectionScope();
   @override
   late final DrawingScope drawing = MockDrawingScope();
   @override
   late final TextScope text = MockTextScope();
-  @override
-  late final ViewportScope viewport = MockViewportScope();
 }
 
 class MockUndoRedoCubit extends MockCubit<UndoRedoState>
@@ -93,7 +77,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.delete);
     await tester.pump();
 
-    verify(() => drawingCubit.manipulation.deleteSelectedElements()).called(1);
+    verify(() => drawingCubit.deleteSelectedElements()).called(1);
   });
 
   testWidgets('Backspace key triggers deleteSelectedElements', (tester) async {
@@ -108,7 +92,7 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
     await tester.pump();
 
-    verify(() => drawingCubit.manipulation.deleteSelectedElements()).called(1);
+    verify(() => drawingCubit.deleteSelectedElements()).called(1);
   });
 
   testWidgets('Tool shortcuts select correct tools', (tester) async {
