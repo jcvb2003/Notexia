@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
@@ -32,17 +33,11 @@ class DrawingPage extends StatelessWidget {
         final isCompactLayout = screenWidth < 500;
         final uiCubit = context.read<CanvasCubit>();
 
-        final double bottomMargin = 10.0;
-        final double? toolbarTop =
-            uiState.isToolbarAtTop ? (isMobile ? 12 : 80) : null;
-        final double? toolbarBottom =
-            uiState.isToolbarAtTop ? null : bottomMargin;
-
-        final double? contextualTop = uiState.isToolbarAtTop
-            ? (toolbarTop != null ? toolbarTop + 60 : null)
-            : null;
-        final double? contextualBottom =
-            uiState.isToolbarAtTop ? null : (bottomMargin + 52);
+        final metrics = _LayoutMetrics.calculate(
+          state: uiState,
+          isMobile: isMobile,
+          isCompact: isCompactLayout,
+        );
 
         return Stack(
           children: [
@@ -52,13 +47,14 @@ class DrawingPage extends StatelessWidget {
             HeaderWidget(
               onOpenMenu: onOpenMenu,
               isSidebarOpen: isSidebarOpen,
+              top: metrics.headerTop,
             ),
             if (!isSkeleton) ...[
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.elasticOut,
-                bottom: contextualBottom,
-                top: contextualTop,
+                bottom: metrics.contextBottom,
+                top: metrics.contextTop,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -71,16 +67,14 @@ class DrawingPage extends StatelessWidget {
               ),
               DraggableToolbar(
                 isToolbarAtTop: uiState.isToolbarAtTop,
-                toolbarTop: toolbarTop,
-                toolbarBottom: toolbarBottom,
+                toolbarTop: metrics.toolbarTop,
+                toolbarBottom: metrics.toolbarBottom,
                 isMobile: isMobile,
                 isCompact: isCompactLayout,
                 onPositionChanged: (atTop) => uiCubit.setToolbarPosition(atTop),
               ),
               Positioned(
-                bottom: isCompactLayout
-                    ? (uiState.isToolbarAtTop ? bottomMargin : 140)
-                    : bottomMargin,
+                bottom: metrics.utilityBottom,
                 left: isCompactLayout ? null : 16,
                 right: isCompactLayout ? 16 : null,
                 child: SafeArea(
@@ -98,7 +92,7 @@ class DrawingPage extends StatelessWidget {
             ],
             if (isFullScreen)
               Positioned(
-                top: isMobile ? -15 : 7,
+                top: metrics.fullscreenButtonTop,
                 right: 10,
                 child: SafeArea(
                   bottom: false,
@@ -115,6 +109,73 @@ class DrawingPage extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _LayoutMetrics {
+  final double headerTop;
+  final double? toolbarTop;
+  final double? toolbarBottom;
+  final double? contextTop;
+  final double? contextBottom;
+  final double utilityBottom;
+  final double fullscreenButtonTop;
+
+  _LayoutMetrics({
+    required this.headerTop,
+    this.toolbarTop,
+    this.toolbarBottom,
+    this.contextTop,
+    this.contextBottom,
+    required this.utilityBottom,
+    required this.fullscreenButtonTop,
+  });
+
+  factory _LayoutMetrics.calculate({
+    required CanvasState state,
+    required bool isMobile,
+    required bool isCompact,
+  }) {
+    // 1. Header: Oculto se em fullscreen
+    final double headerTop = state.isFullScreen ? -100 : 0;
+
+    // 2. Toolbar principal
+    const double bottomMargin = 10.0;
+    final double? toolbarTop =
+        state.isToolbarAtTop ? (isMobile ? 12 : 80) : null;
+    final double? toolbarBottom = state.isToolbarAtTop ? null : bottomMargin;
+
+    // 3. Toolbar contextual (sempre adjacente à principal)
+    final double? contextTop = state.isToolbarAtTop
+        ? (toolbarTop != null ? toolbarTop + AppSizes.headerHeight : null)
+        : null;
+    final double? contextBottom =
+        state.isToolbarAtTop ? null : (bottomMargin + 52);
+
+    // 4. Utility Control (Zoom/History)
+    double utilityBottom;
+    if (state.isFullScreen && state.isToolbarAtTop) {
+      // Branch explicitamente protegido conforme solicitado
+      utilityBottom = bottomMargin;
+    } else if (isCompact && !state.isToolbarAtTop) {
+      // Evita colisão com as toolbars empilhadas no bottom
+      utilityBottom = 140;
+    } else {
+      utilityBottom = bottomMargin;
+    }
+
+    // 5. Botão de reduzir fullscreen
+    final double fullscreenButtonTop = isMobile ? 8 : 7;
+
+    return _LayoutMetrics(
+      headerTop: headerTop,
+      toolbarTop: toolbarTop,
+      toolbarBottom: toolbarBottom,
+      contextTop: contextTop,
+      contextBottom: contextBottom,
+      utilityBottom: utilityBottom,
+      fullscreenButtonTop: fullscreenButtonTop,
     );
   }
 }

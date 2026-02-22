@@ -5,8 +5,7 @@ import 'package:notexia/src/core/widgets/common/app_text_field.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 
 class FileNameInput extends StatefulWidget {
-  final double height;
-  const FileNameInput({super.key, this.height = 40.0});
+  const FileNameInput({super.key});
 
   @override
   State<FileNameInput> createState() => _FileNameInputState();
@@ -42,50 +41,42 @@ class _FileNameInputState extends State<FileNameInput> {
     setState(() {
       _isEditing = false;
     });
-    // Atualizar título no cubit aqui
     context.read<CanvasCubit>().updateTitle(_controller.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Acessa o título do documento via BlocSelector ou select do provider
     final title = context.select<CanvasCubit, String>(
       (cubit) => cubit.state.document.title,
     );
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      height: widget.height,
-      constraints: const BoxConstraints(maxWidth: 300),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-        border: Border.all(color: AppColors.border, width: 1),
-        boxShadow: AppShadows.subtle,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 300,
+        minHeight: AppSizes.buttonSmall,
       ),
-      alignment: Alignment.center,
       child: _isEditing
-          ? IntrinsicWidth(
-              child: AppTextField(
-                controller: _controller,
-                focusNode: _focusNode,
-                autofocus: true,
-                textAlign: TextAlign.center,
-                showBorder: false,
-                contentPadding: EdgeInsets.zero,
-                onSubmitted: (_) => _submit(),
-                onEditingComplete: _submit,
-              ),
+          ? AppTextField(
+              controller: _controller,
+              focusNode: _focusNode,
+              autofocus: true,
+              textAlign: TextAlign.center,
+              showBorder: false,
+              contentPadding: EdgeInsets.zero,
+              onSubmitted: (_) => _submit(),
+              onEditingComplete: _submit,
             )
           : InkWell(
               onTap: () => _startEditing(title),
-              borderRadius: BorderRadius.circular(8),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: textTheme.bodyLarge,
-                overflow: TextOverflow.ellipsis,
+              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+              child: Center(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyLarge,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
     );

@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
@@ -24,6 +25,7 @@ class MainToolbar extends StatelessWidget {
       builder: (context, state) {
         final selectedTool = state.selectedTool;
         final uiState = context.watch<CanvasCubit>().state;
+        final size = isCompact ? AppSizes.buttonSmall : 36.0;
 
         return BaseToolbar(
           actions: [
@@ -34,7 +36,7 @@ class MainToolbar extends StatelessWidget {
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.selection,
                   ),
-              size: 36,
+              size: size,
               isCompact: isCompact,
             ),
             AppIconButton(
@@ -44,43 +46,59 @@ class MainToolbar extends StatelessWidget {
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.navigation,
                   ),
-              size: 36,
+              size: size,
               isCompact: isCompact,
             ),
             const ToolbarDivider(),
-            AppIconButton(
-              icon: LucideIcons.shapes,
-              tooltip: 'Formas (R, 3)',
-              isActive: selectedTool == CanvasElementType.rectangle ||
-                  selectedTool == CanvasElementType.ellipse ||
-                  selectedTool == CanvasElementType.diamond ||
-                  selectedTool == CanvasElementType.triangle,
-              onTap: () => context.read<CanvasCubit>().selectTool(
-                    CanvasElementType.rectangle,
-                  ),
-              size: 36,
-              isCompact: isCompact,
-            ),
-            AppIconButton(
-              icon: LucideIcons.arrowUpRight,
-              tooltip: 'Seta (A, 5)',
-              isActive: selectedTool == CanvasElementType.arrow,
-              onTap: () => context.read<CanvasCubit>().selectTool(
-                    CanvasElementType.arrow,
-                  ),
-              size: 36,
-              isCompact: isCompact,
-            ),
-            AppIconButton(
-              icon: LucideIcons.minus,
-              tooltip: 'Linha (L, 6)',
-              isActive: selectedTool == CanvasElementType.line,
-              onTap: () => context.read<CanvasCubit>().selectTool(
-                    CanvasElementType.line,
-                  ),
-              size: 36,
-              isCompact: isCompact,
-            ),
+
+            // Shapes: collapsed to 1 button in compact mode
+            if (isCompact)
+              _CompactShapeButton(
+                selectedTool: selectedTool,
+                size: size,
+              )
+            else ...[
+              AppIconButton(
+                icon: LucideIcons.shapes,
+                tooltip: 'Formas (R, 3)',
+                isActive: _isShapeTool(selectedTool),
+                onTap: () => context.read<CanvasCubit>().selectTool(
+                      CanvasElementType.rectangle,
+                    ),
+                size: size,
+                isCompact: isCompact,
+              ),
+            ],
+
+            // Lines: collapsed to 1 button in compact mode
+            if (isCompact)
+              _CompactLineButton(
+                selectedTool: selectedTool,
+                size: size,
+              )
+            else ...[
+              AppIconButton(
+                icon: LucideIcons.arrowUpRight,
+                tooltip: 'Seta (A, 5)',
+                isActive: selectedTool == CanvasElementType.arrow,
+                onTap: () => context.read<CanvasCubit>().selectTool(
+                      CanvasElementType.arrow,
+                    ),
+                size: size,
+                isCompact: isCompact,
+              ),
+              AppIconButton(
+                icon: LucideIcons.minus,
+                tooltip: 'Linha (L, 6)',
+                isActive: selectedTool == CanvasElementType.line,
+                onTap: () => context.read<CanvasCubit>().selectTool(
+                      CanvasElementType.line,
+                    ),
+                size: size,
+                isCompact: isCompact,
+              ),
+            ],
+
             const ToolbarDivider(),
             AppIconButton(
               icon: LucideIcons.pencil,
@@ -89,7 +107,7 @@ class MainToolbar extends StatelessWidget {
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.freeDraw,
                   ),
-              size: 36,
+              size: size,
               isCompact: isCompact,
             ),
             AppIconButton(
@@ -99,19 +117,20 @@ class MainToolbar extends StatelessWidget {
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.text,
                   ),
-              size: 36,
+              size: size,
               isCompact: isCompact,
             ),
-            AppIconButton(
-              icon: LucideIcons.image,
-              tooltip: 'Imagem (9)',
-              isActive: selectedTool == CanvasElementType.image,
-              onTap: () => context.read<CanvasCubit>().selectTool(
-                    CanvasElementType.image,
-                  ),
-              size: 36,
-              isCompact: isCompact,
-            ),
+            if (!isCompact)
+              AppIconButton(
+                icon: LucideIcons.image,
+                tooltip: 'Imagem (9)',
+                isActive: selectedTool == CanvasElementType.image,
+                onTap: () => context.read<CanvasCubit>().selectTool(
+                      CanvasElementType.image,
+                    ),
+                size: size,
+                isCompact: isCompact,
+              ),
             AppIconButton(
               icon: LucideIcons.eraser,
               tooltip: 'Borracha (E, 0)',
@@ -119,7 +138,7 @@ class MainToolbar extends StatelessWidget {
               onTap: () => context.read<CanvasCubit>().selectTool(
                     CanvasElementType.eraser,
                   ),
-              size: 36,
+              size: size,
               isCompact: isCompact,
             ),
             const ToolbarDivider(),
@@ -148,10 +167,10 @@ class MainToolbar extends StatelessWidget {
                     value: currentValue,
                     options: {
                       0.0: 'Off',
-                      pi / 24: '7.5Â°',
-                      pi / 12: '15Â°',
-                      pi / 8: '22.5Â°',
-                      pi / 6: '30Â°',
+                      pi / 24: '7.5°',
+                      pi / 12: '15°',
+                      pi / 8: '22.5°',
+                      pi / 6: '30°',
                     },
                     onChanged: (val) {
                       final cubit = context.read<CanvasCubit>();
@@ -166,12 +185,95 @@ class MainToolbar extends StatelessWidget {
                   ),
                 );
               },
-              size: 36,
+              size: size,
               isCompact: isCompact,
             ),
           ],
         );
       },
+    );
+  }
+
+  static bool _isShapeTool(CanvasElementType tool) =>
+      tool == CanvasElementType.rectangle ||
+      tool == CanvasElementType.ellipse ||
+      tool == CanvasElementType.diamond ||
+      tool == CanvasElementType.triangle;
+
+  static bool _isLineTool(CanvasElementType tool) =>
+      tool == CanvasElementType.arrow || tool == CanvasElementType.line;
+}
+
+/// Compact shape button — shows one icon, cycles through shapes on tap.
+class _CompactShapeButton extends StatelessWidget {
+  final CanvasElementType selectedTool;
+  final double size;
+
+  const _CompactShapeButton({
+    required this.selectedTool,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = MainToolbar._isShapeTool(selectedTool);
+    return AppIconButton(
+      icon: LucideIcons.shapes,
+      tooltip: 'Formas (R)',
+      isActive: isActive,
+      onTap: () {
+        if (isActive) {
+          final next = switch (selectedTool) {
+            CanvasElementType.rectangle => CanvasElementType.ellipse,
+            CanvasElementType.ellipse => CanvasElementType.diamond,
+            CanvasElementType.diamond => CanvasElementType.triangle,
+            CanvasElementType.triangle => CanvasElementType.rectangle,
+            _ => CanvasElementType.rectangle,
+          };
+          context.read<CanvasCubit>().selectTool(next);
+        } else {
+          // Select default shape if none selected
+          context.read<CanvasCubit>().selectTool(CanvasElementType.rectangle);
+        }
+      },
+      size: size,
+      isCompact: true,
+    );
+  }
+}
+
+/// Compact line button — shows arrow icon, active for line or arrow.
+class _CompactLineButton extends StatelessWidget {
+  final CanvasElementType selectedTool;
+  final double size;
+
+  const _CompactLineButton({
+    required this.selectedTool,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = MainToolbar._isLineTool(selectedTool);
+    return AppIconButton(
+      icon: isActive && selectedTool == CanvasElementType.line
+          ? LucideIcons.minus
+          : LucideIcons.arrowUpRight,
+      tooltip: 'Linhas (L/A)',
+      isActive: isActive,
+      onTap: () {
+        // Toggle between arrow and line when already active
+        if (isActive) {
+          final next = selectedTool == CanvasElementType.arrow
+              ? CanvasElementType.line
+              : CanvasElementType.arrow;
+          context.read<CanvasCubit>().selectTool(next);
+        } else {
+          context.read<CanvasCubit>().selectTool(CanvasElementType.arrow);
+        }
+      },
+      size: size,
+      isCompact: true,
     );
   }
 }

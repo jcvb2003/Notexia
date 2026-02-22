@@ -40,6 +40,13 @@ class HeaderDropdownMenu extends StatelessWidget {
                 label: 'Fechar',
                 onTap: onClose,
               ),
+              DropdownItem(
+                icon: LucideIcons.save,
+                label: 'Salvar',
+                onTap: () {
+                  onClose();
+                },
+              ),
               const DropdownItem(icon: LucideIcons.search, label: 'Pesquisar'),
               DropdownItem(
                 icon: LucideIcons.maximize2,
