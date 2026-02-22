@@ -12,7 +12,7 @@ part 'canvas_state.freezed.dart';
 enum EraserMode { all, stroke, area }
 
 @freezed
-class CanvasTransform with _$CanvasTransform {
+abstract class CanvasTransform with _$CanvasTransform {
   const factory CanvasTransform({
     @Default(1.0) double zoomLevel,
     @Default(Offset.zero) Offset panOffset,
@@ -21,7 +21,7 @@ class CanvasTransform with _$CanvasTransform {
 }
 
 @freezed
-class EraserState with _$EraserState {
+abstract class EraserState with _$EraserState {
   const factory EraserState({
     @Default(EraserMode.stroke) EraserMode mode,
     @Default([]) List<Offset> trail,
@@ -30,7 +30,7 @@ class EraserState with _$EraserState {
 }
 
 @freezed
-class SnapState with _$SnapState {
+abstract class SnapState with _$SnapState {
   const SnapState._();
   const factory SnapState({
     @Default(SnapMode.none) SnapMode mode,
@@ -42,14 +42,14 @@ class SnapState with _$SnapState {
 }
 
 @freezed
-class TextEditingState with _$TextEditingState {
+abstract class TextEditingState with _$TextEditingState {
   const factory TextEditingState({
     String? editingTextId,
   }) = _TextEditingState;
 }
 
 @freezed
-class InteractionState with _$InteractionState {
+abstract class InteractionState with _$InteractionState {
   const factory InteractionState({
     @Default(CanvasElementType.rectangle) CanvasElementType selectedTool,
     @Default({}) Set<String> selectedElementIds,
@@ -66,7 +66,7 @@ class InteractionState with _$InteractionState {
 }
 
 @freezed
-class CanvasState with _$CanvasState {
+abstract class CanvasState with _$CanvasState {
   const CanvasState._();
   const factory CanvasState({
     required DrawingDocument document,
@@ -76,6 +76,8 @@ class CanvasState with _$CanvasState {
     @Default(false) bool isFullScreen,
     @Default(false) bool isToolbarAtTop,
     @Default(false) bool isZoomMode,
+    @Default(true) bool isDrawWithFingerEnabled,
+    @Default(false) bool hasShownStylusPrompt,
     String? error,
     Failure? lastFailure,
   }) = _CanvasState;

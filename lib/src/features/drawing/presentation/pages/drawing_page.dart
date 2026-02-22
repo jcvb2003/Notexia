@@ -65,7 +65,7 @@ class DrawingPage extends StatelessWidget {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: const ContextToolbar(),
+                    child: ContextToolbar(isCompact: isCompactLayout),
                   ),
                 ),
               ),
@@ -74,6 +74,7 @@ class DrawingPage extends StatelessWidget {
                 toolbarTop: toolbarTop,
                 toolbarBottom: toolbarBottom,
                 isMobile: isMobile,
+                isCompact: isCompactLayout,
                 onPositionChanged: (atTop) => uiCubit.setToolbarPosition(atTop),
               ),
               Positioned(

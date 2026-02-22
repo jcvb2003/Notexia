@@ -43,21 +43,12 @@ class CanvasInputRouter {
       } else if (event is PointerHoverInputEvent) {
         PointerHoverHandlers.handleHover(this, event.details, event.state);
       } else if (event is TapDownInputEvent) {
-        PointerHoverHandlers.handleTapDown(this, event.details, event.state);
+        PointerHoverHandlers.handleTapDown(
+            this, event.details, event.state, event.kind);
       } else if (event is ScaleStartInputEvent) {
-        ScaleGestureHandlers.handleScaleStart(
-          this,
-          event.details,
-          event.state,
-          event.selectedTool,
-        );
+        ScaleGestureHandlers.handleScaleStart(this, event);
       } else if (event is ScaleEndInputEvent) {
-        ScaleGestureHandlers.handleScaleEnd(
-          this,
-          event.details,
-          event.state,
-          event.selectedTool,
-        );
+        ScaleGestureHandlers.handleScaleEnd(this, event);
       } else if (event is PointerSignalInputEvent) {
         PointerHoverHandlers.handlePointerSignal(
           this,
@@ -83,12 +74,14 @@ class CanvasInputRouter {
     _pipeline.process(event);
   }
 
-  void handleTapDown(TapDownDetails details, CanvasState uiState) {
-    // Se estiver editando texto, finaliza ao clicar fora (ou deixa o foco cuidar, mas aqui garantimos)
-    if (uiState.editingTextId != null) {
-      canvasCubit.text.setEditingText(uiState.editingTextId!);
+  void handleTapDown(
+      TapDownDetails details, CanvasState uiState, PointerDeviceKind kind) {
+    if (uiState.hoveredElementId != null) {
+      canvasCubit.text.setEditingText(uiState.hoveredElementId!);
       return;
     }
+
+    if (canvasCubit.state.editingTextId != null) return;
 
     final worldPosition = toWorld(details.localPosition, uiState);
 
@@ -100,6 +93,7 @@ class CanvasInputRouter {
 
     final event = TapDownInputEvent(
       details: details,
+      kind: kind,
       state: uiState,
       selectedTool: canvasCubit.state.selectedTool,
       worldPosition: worldPosition,
@@ -124,14 +118,24 @@ class CanvasInputRouter {
   void handlePointerDown(PointerDownEvent event, CanvasState uiState) {
     if (!isRawPointerMode(uiState.selectedTool)) return;
 
+    if (!uiState.isDrawWithFingerEnabled) {
+      if (event.kind != PointerDeviceKind.stylus) {
+        return; // não é stylus e desenhar com o dedo tá desativado
+      }
+    }
+
     final worldPosition = toWorld(event.localPosition, uiState);
     canvasCubit.drawing.startDrawing(worldPosition);
   }
 
   void handlePointerMove(PointerMoveEvent event, CanvasState uiState) {
     if (!isRawPointerMode(uiState.selectedTool)) return;
-    // Only update if we are actually drawing (to avoid hover moves triggering drawing logic unexpectedly)
-    // However, startDrawing sets the state.
+
+    if (!uiState.isDrawWithFingerEnabled) {
+      if (event.kind != PointerDeviceKind.stylus) {
+        return; // não é stylus e desenhar com o dedo tá desativado
+      }
+    }
 
     final worldPosition = toWorld(event.localPosition, uiState);
     canvasCubit.drawing.updateDrawing(worldPosition);
@@ -140,6 +144,12 @@ class CanvasInputRouter {
   void handlePointerUp(PointerUpEvent event, CanvasState uiState) {
     if (!isRawPointerMode(uiState.selectedTool)) return;
 
+    if (!uiState.isDrawWithFingerEnabled) {
+      if (event.kind != PointerDeviceKind.stylus) {
+        return;
+      }
+    }
+
     canvasCubit.drawing.stopDrawing();
   }
 
@@ -147,11 +157,11 @@ class CanvasInputRouter {
     ScaleStartDetails details,
     CanvasState uiState,
     CanvasElementType selectedTool,
+    PointerDeviceKind kind,
   ) {
-    if (isRawPointerMode(selectedTool)) return;
-
     final event = ScaleStartInputEvent(
       details: details,
+      kind: kind,
       state: uiState,
       selectedTool: selectedTool,
       worldFocal: toWorld(details.localFocalPoint, uiState),
@@ -163,15 +173,15 @@ class CanvasInputRouter {
     ScaleUpdateDetails details,
     CanvasState uiState,
     CanvasElementType selectedTool,
+    PointerDeviceKind kind,
   ) {
-    if (isRawPointerMode(selectedTool)) return;
-
     // Cria o evento e passa pelo pipeline
     final worldFocal = toWorld(details.localFocalPoint, uiState);
     final worldFocalDelta = toWorldDelta(details.focalPointDelta, uiState);
 
     final event = ScaleUpdateInputEvent(
       details: details,
+      kind: kind,
       state: uiState,
       selectedTool: selectedTool,
       worldFocal: worldFocal,
@@ -186,11 +196,11 @@ class CanvasInputRouter {
     ScaleEndDetails details,
     CanvasState uiState,
     CanvasElementType selectedTool,
+    PointerDeviceKind kind,
   ) {
-    if (isRawPointerMode(selectedTool)) return;
-
     final event = ScaleEndInputEvent(
       details: details,
+      kind: kind,
       state: uiState,
       selectedTool: selectedTool,
     );

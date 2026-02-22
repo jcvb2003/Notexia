@@ -1,6 +1,6 @@
 ﻿import 'dart:math' as math;
+import 'dart:ui';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:notexia/src/app/config/constants/app_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/utils/resize_math_utils.dart';
@@ -13,12 +13,12 @@ import 'package:notexia/src/features/drawing/presentation/widgets/canvas/snapsho
 class ScaleGestureHandlers {
   static void handleScaleStart(
     CanvasInputRouter router,
-    ScaleStartDetails details,
-    CanvasState uiState,
-    CanvasElementType selectedTool,
+    ScaleStartInputEvent event,
   ) {
+    final details = event.details;
+    final uiState = event.state;
     if (details.pointerCount == 1) {
-      _handlePanStart(router, details.localFocalPoint, uiState);
+      _handlePanStart(router, details.localFocalPoint, uiState, event.kind);
     } else {
       router.setScaleStart(
         uiState.zoomLevel,
@@ -41,11 +41,15 @@ class ScaleGestureHandlers {
         details.localFocalPoint,
         event.worldFocalDelta, // Usa o delta processado pelo middleware
         uiState,
+        event.kind,
       );
     } else {
       final isNavOrSelection = selectedTool == CanvasElementType.selection ||
           selectedTool == CanvasElementType.navigation;
-      final zoomEnabled = uiState.isZoomMode || isNavOrSelection;
+      // Sempre permite zoom com dois dedos se for toque ou modo zoom estiver on
+      final zoomEnabled = uiState.isZoomMode ||
+          isNavOrSelection ||
+          event.kind == PointerDeviceKind.touch;
       if (!zoomEnabled) return;
       if (details.scale != 1.0 &&
           router.scaleStartZoom != null &&
@@ -66,11 +70,9 @@ class ScaleGestureHandlers {
 
   static void handleScaleEnd(
     CanvasInputRouter router,
-    ScaleEndDetails details,
-    CanvasState uiState,
-    CanvasElementType selectedTool,
+    ScaleEndInputEvent event,
   ) {
-    _handlePanEnd(router, uiState);
+    _handlePanEnd(router, event.state);
     router.clearScaleStart();
   }
 
@@ -78,14 +80,36 @@ class ScaleGestureHandlers {
     CanvasInputRouter router,
     Offset localPosition,
     CanvasState uiState,
+    PointerDeviceKind kind,
   ) {
+    final worldPoint = router.toWorld(localPosition, uiState);
+    final hitId = SnapshotHitUtils.hitTest(router.canvasCubit, worldPoint);
+
+    // MODO CANETA: Se for toque e não habilitado desenho com dedo,
+    // forçar comportamento de navegação ou seleção.
+    if (kind == PointerDeviceKind.touch && !uiState.isDrawWithFingerEnabled) {
+      if (hitId != null) {
+        // Se acertou algo, selecionar/mover
+        if (!router.canvasCubit.state.selectedElementIds.contains(hitId)) {
+          router.canvasCubit.selectElementAt(worldPoint);
+        }
+        SnapshotHitUtils.beginGestureSnapshot(router.canvasCubit, 'Mover');
+        router.isDraggingSelection = true;
+      } else {
+        // Se fundo, Panning (Navigation)
+        router.canvasCubit.setSelectionBox(null);
+        router.isDraggingSelection = false;
+        // O Panning real acontece no _handlePanUpdate via NavigationTool logic
+      }
+      return;
+    }
+
     if (router.canvasCubit.state.selectedTool == CanvasElementType.navigation) {
       router.canvasCubit.setSelectionBox(null);
       router.isDraggingSelection = false;
       return;
     }
     if (router.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
-      final worldPoint = router.toWorld(localPosition, uiState);
       SnapshotHitUtils.beginGestureSnapshot(router.canvasCubit, 'Apagar');
       router.canvasCubit.startEraser(worldPoint);
       eraseAt(router, uiState, worldPoint);
@@ -94,7 +118,6 @@ class ScaleGestureHandlers {
     if (router.canvasCubit.state.selectedTool == CanvasElementType.text) {
       return;
     }
-    final worldPoint = router.toWorld(localPosition, uiState);
     final element = router.selectedElement;
     final handle = element == null
         ? null
@@ -124,7 +147,7 @@ class ScaleGestureHandlers {
       router.canvasCubit.setSelectionBox(null);
       return;
     }
-    final hitId = SnapshotHitUtils.hitTest(router.canvasCubit, worldPoint);
+
     if (router.canvasCubit.state.selectedTool != CanvasElementType.selection) {
       if (hitId != null &&
           router.canvasCubit.state.selectedElementIds.contains(hitId)) {
@@ -156,49 +179,20 @@ class ScaleGestureHandlers {
     Offset localPosition,
     Offset deltaWorld, // Agora recebe deltaWorld diretamente
     CanvasState uiState,
+    PointerDeviceKind kind,
   ) {
+    // MODO CANETA: Se toque e não habilitado desenho com dedo,
+    // se não estiver arrastando seleção, fazer Panning.
+    if (kind == PointerDeviceKind.touch && !uiState.isDrawWithFingerEnabled) {
+      if (!router.isDraggingSelection && router.activeHandle == null) {
+        router.canvasCubit.panBy(deltaWorld * uiState.zoomLevel);
+        return;
+      }
+    }
+
     if (router.canvasCubit.state.selectedTool == CanvasElementType.navigation) {
-      // PanBy expects screen delta usually? Or world?
-      // panBy implementation usually shifts panOffset. panOffset is in screen pixels?
-      // Wait, panOffset is used in `toWorld` as `(screen - pan) / zoom`.
-      // So panOffset is in screen coordinates (scaled?).
-      // Let's check panBy. Assuming it takes screen delta.
-      // But we passed processed delta.
-      // If snapping modified deltaWorld, we should use it.
-      // But panBy is for navigation. Snapping doesn't apply to navigation.
-      // So we can fallback to original details for navigation if needed, or convert back.
-      // However, SnappingMiddleware only touches delta if isDraggingSelection.
-      // So for navigation, deltaWorld is just converted screen delta.
-      // We need screen delta for panBy if panBy expects screen delta.
-
-      // Let's assume panBy expects screen delta.
-      // router.canvasCubit.panBy(deltaWorld * uiState.zoomLevel); // Revert?
-
-      // Actually, let's look at `CanvasCubit.panBy`.
-      // It likely updates `panOffset`.
-      // If I use `deltaWorld`, it's `screenDelta / zoom`.
-      // `panOffset += delta`.
-      // If I pass `deltaWorld`, `panOffset += screenDelta / zoom`.
-      // This means panning speed depends on zoom. Usually we want 1:1 screen movement.
-      // So we should probably use `details.focalPointDelta` for panning, ignoring middleware.
-      // But `_handlePanUpdate` is generic.
-
-      // I will keep `delta` parameter as `deltaWorld` but maybe I need `screenDelta` too?
-      // Or I can just use `router.toWorldDelta` reverse.
-
-      // For now, let's check `_handlePanUpdate` usage.
-
-      // Original code:
-      // router.canvasCubit.panBy(delta); // delta was details.focalPointDelta (screen)
-
-      // So I should pass screen delta for navigation.
-      // But `handleScaleUpdate` calls `_handlePanUpdate`.
-
-      // I will modify `_handlePanUpdate` to accept `screenDelta` as well or just use `deltaWorld` for drawing/moving.
-
-      // Let's pass both?
-      // Or just revert `deltaWorld` for `panBy`.
-
+      // Navigation uses screen delta for 1:1 panning.
+      // deltaWorld = screenDelta/zoom, so multiply back to restore screen-space.
       router.canvasCubit.panBy(deltaWorld * uiState.zoomLevel);
       return;
     }

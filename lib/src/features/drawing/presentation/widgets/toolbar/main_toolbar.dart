@@ -11,7 +11,12 @@ import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/compon
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/segmented_toggle.dart';
 
 class MainToolbar extends StatelessWidget {
-  const MainToolbar({super.key});
+  final bool isCompact;
+
+  const MainToolbar({
+    super.key,
+    this.isCompact = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.selection,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.compass,
@@ -39,6 +45,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.navigation,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             const ToolbarDivider(),
             AppIconButton(
@@ -52,6 +59,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.rectangle,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.arrowUpRight,
@@ -61,6 +69,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.arrow,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.minus,
@@ -70,6 +79,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.line,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             const ToolbarDivider(),
             AppIconButton(
@@ -80,6 +90,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.freeDraw,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.type,
@@ -89,6 +100,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.text,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.image,
@@ -98,6 +110,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.image,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.eraser,
@@ -107,6 +120,7 @@ class MainToolbar extends StatelessWidget {
                     CanvasElementType.eraser,
                   ),
               size: 36,
+              isCompact: isCompact,
             ),
             const ToolbarDivider(),
             AppIconButton(
@@ -153,6 +167,7 @@ class MainToolbar extends StatelessWidget {
                 );
               },
               size: 36,
+              isCompact: isCompact,
             ),
           ],
         );

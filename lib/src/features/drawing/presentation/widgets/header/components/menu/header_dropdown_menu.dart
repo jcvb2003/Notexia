@@ -58,7 +58,16 @@ class HeaderDropdownMenu extends StatelessWidget {
               DropdownItemWithTrailing(
                 icon: LucideIcons.fingerprint,
                 label: 'Desenhar com dedo',
-                trailing: CompactSwitch(value: false, onChanged: (_) {}),
+                trailing: BlocBuilder<CanvasCubit, CanvasState>(
+                  builder: (context, state) {
+                    return CompactSwitch(
+                      value: state.isDrawWithFingerEnabled,
+                      onChanged: (_) {
+                        canvasCubit.toggleDrawWithFinger();
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),

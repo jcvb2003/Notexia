@@ -1,4 +1,5 @@
 ﻿import 'dart:math' as math;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
@@ -129,6 +130,7 @@ void main() {
         ScaleStartDetails(localFocalPoint: localFocalPoint, pointerCount: 1),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       final delta = math.pi / 10;
@@ -144,6 +146,7 @@ void main() {
         ),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       final updated =
@@ -222,6 +225,7 @@ void main() {
         ScaleStartDetails(localFocalPoint: localFocalPoint, pointerCount: 1),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       final move = const Offset(10, -5);
@@ -237,6 +241,7 @@ void main() {
         ),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       final updated =
@@ -321,6 +326,7 @@ void main() {
         ScaleStartDetails(localFocalPoint: localFocalPoint, pointerCount: 1),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       final move = const Offset(0, -12);
@@ -336,6 +342,7 @@ void main() {
         ),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       final updated =
@@ -418,6 +425,7 @@ void main() {
           ScaleStartDetails(localFocalPoint: localFocalPoint, pointerCount: 1),
           uiState,
           CanvasElementType.selection,
+          PointerDeviceKind.mouse,
         );
 
         await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
@@ -436,6 +444,7 @@ void main() {
           ),
           uiState,
           CanvasElementType.selection,
+          PointerDeviceKind.mouse,
         );
 
         await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
@@ -529,6 +538,7 @@ void main() {
         ScaleStartDetails(localFocalPoint: localFocalPoint, pointerCount: 1),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
@@ -546,6 +556,7 @@ void main() {
         ),
         uiState,
         CanvasElementType.selection,
+        PointerDeviceKind.mouse,
       );
 
       await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
@@ -636,6 +647,7 @@ void main() {
           ScaleStartDetails(localFocalPoint: localFocalPoint, pointerCount: 1),
           uiState,
           CanvasElementType.selection,
+          PointerDeviceKind.mouse,
         );
 
         // Sem pressionar Shift, snap deve aplicar por estar habilitado no UI
@@ -653,6 +665,7 @@ void main() {
           ),
           uiState,
           CanvasElementType.selection,
+          PointerDeviceKind.mouse,
         );
 
         final updated =

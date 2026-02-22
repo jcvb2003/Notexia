@@ -13,8 +13,10 @@ import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/contro
 
 class StrokeToolControls extends StatelessWidget {
   final CanvasElementType tool;
+  final bool isCompact;
 
-  const StrokeToolControls({super.key, required this.tool});
+  const StrokeToolControls(
+      {super.key, required this.tool, this.isCompact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class StrokeToolControls extends StatelessWidget {
             isActive:
                 (selectedElement?.roughness ?? currentStyle.roughness) <= 0.5,
             onTap: () => cubit.updateSelectedElementsProperties(roughness: 0.0),
+            isCompact: isCompact,
           ),
           const SizedBox(width: 4),
           AppIconButton(
@@ -64,6 +67,7 @@ class StrokeToolControls extends StatelessWidget {
             isActive:
                 (selectedElement?.roughness ?? currentStyle.roughness) > 0.5,
             onTap: () => cubit.updateSelectedElementsProperties(roughness: 1.0),
+            isCompact: isCompact,
           ),
         ],
         if (tool == CanvasElementType.line ||
@@ -85,6 +89,7 @@ class StrokeToolControls extends StatelessWidget {
           tooltip:
               'Opacidade: ${((selectedElement?.opacity ?? currentStyle.opacity) * 100).toInt()}%',
           onTap: () => _showOpacityPopover(context, cubit),
+          isCompact: isCompact,
         ),
         if (selectedElement != null) ...[
           const SizedBox(width: 4),
@@ -94,6 +99,7 @@ class StrokeToolControls extends StatelessWidget {
             tooltip: 'Excluir',
             onTap: () => cubit.deleteSelectedElements(),
             activeColor: AppColors.danger,
+            isCompact: isCompact,
           ),
         ],
       ],

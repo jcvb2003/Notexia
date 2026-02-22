@@ -11,7 +11,9 @@ import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/contro
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/controls/text_controls.dart';
 
 class ContextToolbar extends StatelessWidget {
-  const ContextToolbar({super.key});
+  final bool isCompact;
+
+  const ContextToolbar({super.key, this.isCompact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class ContextToolbar extends StatelessWidget {
 
     return BaseToolbar(
       backgroundColor: AppColors.background,
-      center: ToolSpecificControls(tool: displayTool),
+      center: ToolSpecificControls(tool: displayTool, isCompact: isCompact),
     );
   }
 
@@ -62,8 +64,10 @@ class ContextToolbar extends StatelessWidget {
 
 class ToolSpecificControls extends StatelessWidget {
   final CanvasElementType tool;
+  final bool isCompact;
 
-  const ToolSpecificControls({super.key, required this.tool});
+  const ToolSpecificControls(
+      {super.key, required this.tool, this.isCompact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +76,11 @@ class ToolSpecificControls extends StatelessWidget {
       CanvasElementType.ellipse ||
       CanvasElementType.diamond ||
       CanvasElementType.triangle =>
-        ShapeToolControls(tool: tool),
+        ShapeToolControls(tool: tool, isCompact: isCompact),
       CanvasElementType.line ||
       CanvasElementType.arrow ||
       CanvasElementType.freeDraw =>
-        StrokeToolControls(tool: tool),
+        StrokeToolControls(tool: tool, isCompact: isCompact),
       CanvasElementType.text => const TextToolControls(),
       CanvasElementType.eraser => const EraserToolControls(),
       _ => const SizedBox.shrink(),

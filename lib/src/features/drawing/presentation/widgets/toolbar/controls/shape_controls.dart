@@ -15,8 +15,10 @@ import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/contro
 
 class ShapeToolControls extends StatelessWidget {
   final CanvasElementType tool;
+  final bool isCompact;
 
-  const ShapeToolControls({super.key, required this.tool});
+  const ShapeToolControls(
+      {super.key, required this.tool, this.isCompact = false});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class ShapeToolControls extends StatelessWidget {
               isActive: tool == CanvasElementType.rectangle,
               onTap: () => cubit.selectTool(CanvasElementType.rectangle),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.circle,
@@ -55,6 +58,7 @@ class ShapeToolControls extends StatelessWidget {
               isActive: tool == CanvasElementType.ellipse,
               onTap: () => cubit.selectTool(CanvasElementType.ellipse),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.diamond,
@@ -62,6 +66,7 @@ class ShapeToolControls extends StatelessWidget {
               isActive: tool == CanvasElementType.diamond,
               onTap: () => cubit.selectTool(CanvasElementType.diamond),
               size: 36,
+              isCompact: isCompact,
             ),
             AppIconButton(
               icon: LucideIcons.triangle,
@@ -69,6 +74,7 @@ class ShapeToolControls extends StatelessWidget {
               isActive: tool == CanvasElementType.triangle,
               onTap: () => cubit.selectTool(CanvasElementType.triangle),
               size: 36,
+              isCompact: isCompact,
             ),
           ],
         ),
@@ -89,6 +95,7 @@ class ShapeToolControls extends StatelessWidget {
           tooltip:
               'Opacidade: ${((selectedElement?.opacity ?? currentStyle.opacity) * 100).toInt()}%',
           onTap: () => _showOpacityPopover(context, cubit),
+          isCompact: isCompact,
         ),
         if (selectedElement != null) ...[
           const SizedBox(width: 4),
@@ -98,6 +105,7 @@ class ShapeToolControls extends StatelessWidget {
             tooltip: 'Excluir',
             onTap: () => cubit.deleteSelectedElements(),
             activeColor: AppColors.danger,
+            isCompact: isCompact,
           ),
         ],
       ],

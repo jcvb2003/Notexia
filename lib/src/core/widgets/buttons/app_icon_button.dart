@@ -82,6 +82,7 @@ class AppIconButton extends StatelessWidget {
   final Color? hoverBackgroundColor;
   final Color? disabledBackgroundColor;
   final String? semanticsLabel;
+  final bool isCompact;
 
   const AppIconButton({
     super.key,
@@ -99,6 +100,7 @@ class AppIconButton extends StatelessWidget {
     this.hoverBackgroundColor,
     this.disabledBackgroundColor,
     this.semanticsLabel,
+    this.isCompact = false,
   });
 
   @override
@@ -127,16 +129,19 @@ class AppIconButton extends StatelessWidget {
           final bgColor = !isEnabled
               ? disabledBg
               : (isActive
-                    ? activeBg
-                    : (isHovering ? hoverBg : AppColors.transparent));
+                  ? activeBg
+                  : (isHovering ? hoverBg : AppColors.transparent));
 
           final iconColor = !isEnabled
               ? disabledColor
               : (isActive ? activeColor : inactiveColor);
 
+          final resolvedSize = isCompact ? 40.0 : size;
+          final iconRatio = isCompact ? 0.5 : 0.5625;
+
           return Container(
-            width: size,
-            height: size,
+            width: resolvedSize,
+            height: resolvedSize,
             decoration: BoxDecoration(
               color: bgColor,
               borderRadius: BorderRadius.circular(8),
@@ -154,7 +159,7 @@ class AppIconButton extends StatelessWidget {
                     ]
                   : null,
             ),
-            child: Icon(icon, color: iconColor, size: size * 0.5625),
+            child: Icon(icon, color: iconColor, size: resolvedSize * iconRatio),
           );
         },
       ),

@@ -28,10 +28,12 @@ class PointerHoverInputEvent extends InputEvent {
 
 class TapDownInputEvent extends InputEvent {
   final TapDownDetails details;
+  final PointerDeviceKind kind;
   Offset worldPosition;
 
   TapDownInputEvent({
     required this.details,
+    required this.kind,
     required super.state,
     required super.selectedTool,
     required this.worldPosition,
@@ -40,10 +42,12 @@ class TapDownInputEvent extends InputEvent {
 
 class ScaleStartInputEvent extends InputEvent {
   final ScaleStartDetails details;
+  final PointerDeviceKind kind;
   Offset worldFocal;
 
   ScaleStartInputEvent({
     required this.details,
+    required this.kind,
     required super.state,
     required super.selectedTool,
     required this.worldFocal,
@@ -52,12 +56,14 @@ class ScaleStartInputEvent extends InputEvent {
 
 class ScaleUpdateInputEvent extends InputEvent {
   final ScaleUpdateDetails details;
+  final PointerDeviceKind kind;
   Offset worldFocal;
   Offset worldFocalDelta;
   final bool isDraggingSelection;
 
   ScaleUpdateInputEvent({
     required this.details,
+    required this.kind,
     required super.state,
     required super.selectedTool,
     required this.worldFocal,
@@ -68,9 +74,11 @@ class ScaleUpdateInputEvent extends InputEvent {
 
 class ScaleEndInputEvent extends InputEvent {
   final ScaleEndDetails details;
+  final PointerDeviceKind kind;
 
   ScaleEndInputEvent({
     required this.details,
+    required this.kind,
     required super.state,
     required super.selectedTool,
   });
@@ -87,4 +95,3 @@ class PointerSignalInputEvent extends InputEvent {
     required this.worldPosition,
   });
 }
-

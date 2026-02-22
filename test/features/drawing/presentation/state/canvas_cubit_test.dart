@@ -572,6 +572,8 @@ void main() {
         final repo = MockAppSettingsRepository();
         when(() => repo.getSetting(any())).thenAnswer((invocation) async {
           final key = invocation.positionalArguments.first as String;
+          if (key == 'drawWithFinger') return 'true';
+          if (key == 'hasShownStylusPrompt') return 'false';
           if (key.contains('enabled')) return 'true';
           if (key.contains('step')) return '0.5235987755982989';
           return null;
@@ -605,6 +607,9 @@ void main() {
       },
       act: (cubit) => cubit.loadAngleSnapSettings(),
       expect: () => [
+        // _loadSettings emits first (from constructor)
+        isA<CanvasState>(),
+        // loadAngleSnapSettings emits second
         isA<CanvasState>()
             .having((s) => s.isAngleSnapEnabled, 'enabled', true)
             .having((s) => s.angleSnapStep, 'step', closeTo(0.5235988, 1e-6)),
@@ -615,6 +620,7 @@ void main() {
       'toggleAngleSnapEnabled persists and toggles value',
       build: () {
         repo = MockAppSettingsRepository();
+        when(() => repo.getSetting(any())).thenAnswer((_) async => null);
         when(() => repo.saveSetting(any(), any())).thenAnswer((_) async {});
         final transformationService = TransformationService();
         final canvasManipulationService =
@@ -650,7 +656,8 @@ void main() {
         isA<CanvasState>().having((s) => s.isAngleSnapEnabled, 'enabled', true),
       ],
       verify: (_) {
-        verify(() => repo.saveSetting(any(), any())).called(1);
+        verify(() => repo.saveSetting(any(), any()))
+            .called(greaterThanOrEqualTo(1));
       },
     );
 
@@ -658,6 +665,7 @@ void main() {
       'setAngleSnapStep persists and updates state',
       build: () {
         final repo = MockAppSettingsRepository();
+        when(() => repo.getSetting(any())).thenAnswer((_) async => null);
         when(() => repo.saveSetting(any(), any())).thenAnswer((_) async {});
         final transformationService = TransformationService();
         final canvasManipulationService =

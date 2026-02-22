@@ -7,6 +7,7 @@ class DraggableToolbar extends StatefulWidget {
   final double? toolbarTop;
   final double? toolbarBottom;
   final bool isMobile;
+  final bool isCompact;
   final Function(bool) onPositionChanged;
 
   const DraggableToolbar({
@@ -15,6 +16,7 @@ class DraggableToolbar extends StatefulWidget {
     required this.toolbarTop,
     required this.toolbarBottom,
     required this.isMobile,
+    required this.isCompact,
     required this.onPositionChanged,
   });
 
@@ -72,7 +74,7 @@ class _DraggableToolbarState extends State<DraggableToolbar> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 physics: const ClampingScrollPhysics(),
-                child: const MainToolbar(),
+                child: MainToolbar(isCompact: widget.isCompact),
               ),
             ),
           ),

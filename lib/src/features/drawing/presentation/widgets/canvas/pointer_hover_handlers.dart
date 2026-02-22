@@ -51,8 +51,16 @@ class PointerHoverHandlers {
     CanvasInputRouter self,
     TapDownDetails details,
     CanvasState uiState,
+    PointerDeviceKind kind,
   ) {
     if (self.canvasCubit.state.selectedTool == CanvasElementType.eraser) {
+      if (!uiState.isDrawWithFingerEnabled) {
+        if (kind != PointerDeviceKind.stylus &&
+            kind != PointerDeviceKind.mouse) {
+          return;
+        }
+      }
+
       final worldPoint = self.toWorld(details.localPosition, uiState);
       SnapshotHitUtils.beginGestureSnapshot(self.canvasCubit, 'Apagar');
       self.canvasCubit.startEraser(worldPoint);

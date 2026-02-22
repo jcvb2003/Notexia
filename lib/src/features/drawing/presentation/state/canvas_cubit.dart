@@ -72,6 +72,41 @@ class CanvasCubit extends Cubit<CanvasState> {
   })  : _settingsRepository = appSettingsRepository,
         super(CanvasState(document: initialDocument)) {
     _commandStack.clear();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    if (_settingsRepository == null) return;
+    final drawWithFingerStr =
+        await _settingsRepository.getSetting('drawWithFinger');
+    final hasShownPromptStr =
+        await _settingsRepository.getSetting('hasShownStylusPrompt');
+
+    // Default é true para novatos desenharem com dedo
+    final drawWithFinger =
+        drawWithFingerStr == null || drawWithFingerStr == 'true';
+    final hasShownPrompt = hasShownPromptStr == 'true';
+
+    if (!isClosed) {
+      emit(state.copyWith(
+        isDrawWithFingerEnabled: drawWithFinger,
+        hasShownStylusPrompt: hasShownPrompt,
+      ));
+    }
+  }
+
+  Future<void> handleStylusPromptResult(bool enableStylusMode) async {
+    final drawWithFinger = !enableStylusMode;
+    emit(state.copyWith(
+      isDrawWithFingerEnabled: drawWithFinger,
+      hasShownStylusPrompt: true,
+    ));
+
+    if (_settingsRepository != null) {
+      await _settingsRepository.saveSetting(
+          'drawWithFinger', drawWithFinger.toString());
+      await _settingsRepository.saveSetting('hasShownStylusPrompt', 'true');
+    }
   }
 
   @override
@@ -198,6 +233,15 @@ class CanvasCubit extends Cubit<CanvasState> {
 
   void toggleZoomUndoRedo() {
     emit(state.copyWith(isZoomMode: !state.isZoomMode));
+  }
+
+  Future<void> toggleDrawWithFinger() async {
+    final newValue = !state.isDrawWithFingerEnabled;
+    emit(state.copyWith(isDrawWithFingerEnabled: newValue));
+    if (_settingsRepository != null) {
+      await _settingsRepository.saveSetting(
+          'drawWithFinger', newValue.toString());
+    }
   }
 
   // Snap Operations
