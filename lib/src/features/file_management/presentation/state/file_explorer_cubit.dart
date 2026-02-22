@@ -6,6 +6,7 @@ import 'package:notexia/src/features/file_management/domain/repositories/file_re
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
 import 'package:path/path.dart' as p;
+import 'package:url_launcher/url_launcher.dart';
 
 class FileExplorerCubit extends Cubit<FileExplorerState> {
   final FileRepository _fileRepository;
@@ -19,6 +20,19 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
 
     try {
       final savedPath = await _settingsRepository.getSetting('vault_path');
+      final savedSortModeRaw =
+          await _settingsRepository.getSetting('explorer_sort_mode');
+      final savedSortDirRaw =
+          await _settingsRepository.getSetting('explorer_sort_dir');
+
+      final initSortMode = SortMode.values.firstWhere(
+        (e) => e.name == savedSortModeRaw,
+        orElse: () => SortMode.name,
+      );
+      final initSortDir = SortDirection.values.firstWhere(
+        (e) => e.name == savedSortDirRaw,
+        orElse: () => SortDirection.ascending,
+      );
 
       if (savedPath == null || savedPath.isEmpty) {
         emit(
@@ -30,6 +44,8 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
             stats: null,
             isLoading: false,
             error: null,
+            sortMode: initSortMode,
+            sortDir: initSortDir,
           ),
         );
         return;
@@ -43,11 +59,14 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
           isLoading: false,
           error:
               'Erro ao inicializar vault: ${rootItemsResult.failure?.message ?? statsResult.failure?.message}',
+          sortMode: initSortMode,
+          sortDir: initSortDir,
         ));
         return;
       }
 
-      final rootItems = rootItemsResult.data!;
+      final rootItems =
+          _sorted(rootItemsResult.data!, mode: initSortMode, dir: initSortDir);
       final stats = statsResult.data!;
 
       emit(
@@ -59,11 +78,52 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
           stats: stats,
           isLoading: false,
           error: null,
+          sortMode: initSortMode,
+          sortDir: initSortDir,
         ),
       );
     } catch (e) {
       emit(state.copyWith(isLoading: false, error: 'Erro ao inicializar: $e'));
     }
+  }
+
+  Future<void> setSortMode(SortMode mode) async {
+    final newDir =
+        (state.sortMode == mode && state.sortDir == SortDirection.ascending)
+            ? SortDirection.descending
+            : SortDirection.ascending;
+
+    emit(state.copyWith(sortMode: mode, sortDir: newDir));
+
+    await _settingsRepository.saveSetting('explorer_sort_mode', mode.name);
+    await _settingsRepository.saveSetting('explorer_sort_dir', newDir.name);
+
+    final updatedCache = <String, List<FileItem>>{};
+    for (final entry in state.treeCache.entries) {
+      updatedCache[entry.key] = _sorted(entry.value);
+    }
+
+    emit(state.copyWith(treeCache: updatedCache));
+  }
+
+  List<FileItem> _sorted(List<FileItem> items,
+      {SortMode? mode, SortDirection? dir}) {
+    final m = mode ?? state.sortMode;
+    final d = dir ?? state.sortDir;
+
+    final sorted = [...items];
+    sorted.sort((a, b) {
+      if (a.isFolder && !b.isFolder) return -1;
+      if (!a.isFolder && b.isFolder) return 1;
+
+      final cmp = switch (m) {
+        SortMode.name => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        SortMode.createdAt => a.createdAt.compareTo(b.createdAt),
+        SortMode.updatedAt => a.updatedAt.compareTo(b.updatedAt),
+      };
+      return d == SortDirection.ascending ? cmp : -cmp;
+    });
+    return sorted;
   }
 
   Future<void> pickVaultDirectory() async {
@@ -99,7 +159,7 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
         return;
       }
 
-      final items = itemsResult.data!;
+      final items = _sorted(itemsResult.data!);
       final updatedCache = Map<String, List<FileItem>>.from(state.treeCache)
         ..[path] = items;
       final updatedExpanded = Set<String>.from(state.expandedPaths)..add(path);
@@ -282,6 +342,27 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
     }
   }
 
+  Future<void> showInFolder(String path) async {
+    try {
+      final parentDir = p.dirname(path);
+      final uri = Uri.directory(parentDir);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        emit(state.copyWith(
+            error: 'Não foi possível abrir a localização do arquivo'));
+      }
+    } catch (e) {
+      emit(state.copyWith(error: 'Erro ao abrir no sistema: $e'));
+    }
+  }
+
+  Future<void> searchInFolder(String path) async {
+    // Placeholder para futura feature de busca
+    // Idealmente, emitiria um estado para focar o file explorer
+    // e configurar o escopo de busca.
+  }
+
   Future<Map<String, Map<String, String>>> _loadMetadata() async {
     final raw = await _settingsRepository.getSetting('explorer_metadata');
     if (raw == null || raw.isEmpty) return {};
@@ -322,7 +403,7 @@ class FileExplorerCubit extends Cubit<FileExplorerState> {
     }).toList();
 
     final updatedCache = Map<String, List<FileItem>>.from(state.treeCache)
-      ..[path] = enrichedItems;
+      ..[path] = _sorted(enrichedItems);
     emit(state.copyWith(treeCache: updatedCache));
   }
 

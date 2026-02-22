@@ -1,4 +1,5 @@
-﻿import 'package:flutter/gestures.dart';
+﻿import 'dart:math' as math;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:notexia/src/app/config/constants/app_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
@@ -29,18 +30,37 @@ class PointerHoverHandlers {
                 LogicalKeyboardKey.controlRight,
               );
       if (isCtrlPressed) {
-        final direction = signal.scrollDelta.dy.sign;
-        if (direction == 0) return;
-        final factor = direction > 0 ? 0.95 : 1.05;
-        final nextZoom = (uiState.zoomLevel * factor).clamp(
+        if (signal.scrollDelta.dy == 0) return;
+
+        final currentState = self.canvasCubit.state;
+        final now = DateTime.now();
+
+        // Verifica se temos uma sessão de scroll ativa e fresca (últimos 200ms)
+        // Se a posição local do sinal mudou muito, resetamos a âncora para ser reativo ao mouse
+        final bool isSessionValid = self.scrollStartFocalWorld != null &&
+            self.lastScrollTime != null &&
+            now.difference(self.lastScrollTime!).inMilliseconds < 200;
+
+        if (!isSessionValid) {
+          self.setScrollStart(self.toWorld(signal.localPosition, currentState));
+        } else {
+          // Atualiza o timestamp para manter a sessão viva
+          self.lastScrollTime = now;
+        }
+
+        final factor = math.exp(-signal.scrollDelta.dy / 1000.0);
+        final nextZoom = (currentState.zoomLevel * factor).clamp(
           AppConstants.minZoom,
           AppConstants.maxZoom,
         );
+
+        // Usamos a âncora mundo original, mas a posição LOCAL atual do sinal
+        // Isso permite que o centro do zoom "persiga" o mouse se ele se mover levemente,
+        // mas sem o drift acumulado de re-projetar o ponto mundo a cada frame.
         final focal = signal.localPosition;
-        final worldPoint = self.toWorld(focal, uiState);
-        final nextPan = focal - (worldPoint * nextZoom);
-        self.canvasCubit.setZoom(nextZoom);
-        self.canvasCubit.setPanOffset(nextPan);
+        final nextPan = focal - (self.scrollStartFocalWorld! * nextZoom);
+
+        self.canvasCubit.setZoomAtPoint(nextZoom, nextPan);
       } else {
         self.canvasCubit.panBy(-signal.scrollDelta);
       }

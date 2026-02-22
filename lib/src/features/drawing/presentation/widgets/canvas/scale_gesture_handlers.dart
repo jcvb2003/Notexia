@@ -20,9 +20,10 @@ class ScaleGestureHandlers {
     if (details.pointerCount == 1) {
       _handlePanStart(router, details.localFocalPoint, uiState, event.kind);
     } else {
+      final currentState = router.canvasCubit.state;
       router.setScaleStart(
-        uiState.zoomLevel,
-        router.toWorld(details.localFocalPoint, uiState),
+        currentState.zoomLevel,
+        router.toWorld(details.localFocalPoint, currentState),
       );
     }
   }
@@ -58,10 +59,12 @@ class ScaleGestureHandlers {
           AppConstants.minZoom,
           AppConstants.maxZoom,
         );
-        final nextPan =
+        // Ao invés de usar o currentState.panOffset contínuo que sofre com a interferência
+        // do pan simultâneo, ancoramos O ZOOM na posição mundo original de onde o pinch começou!
+        final nextAnchorPan =
             details.localFocalPoint - (router.scaleStartFocalWorld! * nextZoom);
-        router.canvasCubit.setZoom(nextZoom);
-        router.canvasCubit.setPanOffset(nextPan);
+
+        router.canvasCubit.setZoomAtPoint(nextZoom, nextAnchorPan);
       } else if (details.focalPointDelta != Offset.zero) {
         router.canvasCubit.panBy(details.focalPointDelta);
       }

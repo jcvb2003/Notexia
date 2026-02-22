@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
-import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_color_picker.dart';
+import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_icon_color_picker.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_delete_dialog.dart';
-import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_icon_picker.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_rename_dialog.dart';
 
 class ExplorerContextMenu {
@@ -14,8 +13,9 @@ class ExplorerContextMenu {
     required FileItem item,
     required Function(String) onRename,
     required VoidCallback onDelete,
-    required Function(String) onSetIcon,
-    required Function(Color) onSetColor,
+    required VoidCallback onShowInFolder,
+    required VoidCallback onSearchInFolder,
+    required Function(String? icon, Color? color) onApplyAppearance,
   }) async {
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -41,15 +41,22 @@ class ExplorerContextMenu {
         ),
         _buildItem(
           context: context,
-          value: 'icon',
-          icon: LucideIcons.hash,
-          label: 'Alterar ícone',
+          value: 'search',
+          icon: LucideIcons.search,
+          label: 'Pesquisar na pasta',
         ),
         _buildItem(
           context: context,
-          value: 'color',
+          value: 'show',
+          icon: LucideIcons.externalLink,
+          label: 'Mostrar na pasta',
+        ),
+        const PopupMenuDivider(),
+        _buildItem(
+          context: context,
+          value: 'appearance',
           icon: LucideIcons.palette,
-          label: 'Alterar cor',
+          label: 'Aparência',
         ),
         const PopupMenuDivider(),
         _buildItem(
@@ -72,11 +79,20 @@ class ExplorerContextMenu {
       case 'delete':
         await FileDeleteDialog.show(context, item: item, onDelete: onDelete);
         break;
-      case 'icon':
-        await FileIconPicker.show(context, onSetIcon: onSetIcon);
+      case 'search':
+        onSearchInFolder();
         break;
-      case 'color':
-        await FileColorPicker.show(context, onSetColor: onSetColor);
+      case 'show':
+        onShowInFolder();
+        break;
+      case 'appearance':
+        await FileIconColorPicker.show(
+          context,
+          initialIcon: item.customIcon,
+          initialColor:
+              item.customColor != null ? Color(item.customColor!) : null,
+          onApply: onApplyAppearance,
+        );
         break;
     }
   }

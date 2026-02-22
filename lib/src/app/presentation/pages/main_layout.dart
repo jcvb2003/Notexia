@@ -2,6 +2,7 @@
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/sidebar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/presentation/pages/drawing_page.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
@@ -88,7 +89,9 @@ class _MainLayoutState extends State<MainLayout> {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOutCubic,
                     padding: EdgeInsets.only(
-                      left: isDesktop && _isSidebarVisible ? 280 : 0,
+                      left: isDesktop && _isSidebarVisible
+                          ? AppSizes.sidebarWidth
+                          : 0,
                     ),
                     child: DrawingPage(
                       onOpenMenu: isDesktop
@@ -104,8 +107,8 @@ class _MainLayoutState extends State<MainLayout> {
                     curve: Curves.easeInOutCubic,
                     top: 0,
                     bottom: 0,
-                    left: _isSidebarVisible ? 0 : -280,
-                    width: 280,
+                    left: _isSidebarVisible ? 0 : -AppSizes.sidebarWidth,
+                    width: AppSizes.sidebarWidth,
                     child: const SidebarWidget(),
                   ),
               ],

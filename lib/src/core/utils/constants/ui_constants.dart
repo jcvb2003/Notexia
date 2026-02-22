@@ -171,6 +171,14 @@ class AppSizes {
   static const double buttonMedium = 40;
   static const double buttonLarge = 44;
 
+  // Toolbars
+  static const double toolbarHeight = 44.0;
+  static const double toolbarGap = 6.0;
+
+  // Sidebar
+  static const double sidebarWidth = 320.0;
+  static const double sidebarWidthMobile = 305.0;
+
   // Ícones
   static const double iconSmall = 16;
   static const double iconMedium = 18;

@@ -32,27 +32,26 @@ class SidebarFooter extends StatelessWidget {
                 icon: LucideIcons.filePlus,
                 tooltip: 'Novo documento',
                 onPressed: () => context.read<FileExplorerCubit>().createFile(
-                  'Novo Desenho.notexia',
-                ),
+                      'Novo Documento.md',
+                    ),
               ),
               const ActionButton(
                 icon: LucideIcons.fileInput,
                 tooltip: 'Abrir arquivo',
               ),
-              const ActionButton(
+              ActionButton(
                 icon: LucideIcons.pencil,
                 tooltip: 'Novo desenho',
+                onPressed: () => context.read<FileExplorerCubit>().createFile(
+                      'Novo Desenho.notexia',
+                    ),
               ),
               ActionButton(
                 icon: LucideIcons.folderPlus,
                 tooltip: 'Nova pasta',
                 onPressed: () => context.read<FileExplorerCubit>().createFolder(
-                  'Nova Pasta',
-                ),
-              ),
-              const ActionButton(
-                icon: LucideIcons.arrowUpDown,
-                tooltip: 'Ordenar',
+                      'Nova Pasta',
+                    ),
               ),
             ],
           ),
@@ -77,20 +76,19 @@ class SidebarFooter extends StatelessWidget {
                       opaque: false,
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {
-                            return SlideTransition(
-                              position:
-                                  Tween<Offset>(
-                                    begin: const Offset(0, 1),
-                                    end: Offset.zero,
-                                  ).animate(
-                                    CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.easeOutCubic,
-                                    ),
-                                  ),
-                              child: child,
-                            );
-                          },
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, 1),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeOutCubic,
+                            ),
+                          ),
+                          child: child,
+                        );
+                      },
                     ),
                   );
                 },

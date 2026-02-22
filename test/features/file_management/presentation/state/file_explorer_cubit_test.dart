@@ -55,6 +55,10 @@ void main() {
           .thenAnswer((_) async => Result.success(stats));
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
           .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_mode'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_dir'))
+          .thenAnswer((_) async => null);
 
       await cubit.initialize();
 
@@ -68,6 +72,10 @@ void main() {
     test('initialize handles empty vault path', () async {
       when(() => mockSettingsRepository.getSetting('vault_path'))
           .thenAnswer((_) async => '');
+      when(() => mockSettingsRepository.getSetting('explorer_sort_mode'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_dir'))
+          .thenAnswer((_) async => null);
 
       await cubit.initialize();
 
@@ -82,6 +90,10 @@ void main() {
       when(() => mockFileRepository.listItems(folderPath))
           .thenAnswer((_) async => Result.success(items));
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_mode'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_dir'))
           .thenAnswer((_) async => null);
 
       // Expand
@@ -108,6 +120,10 @@ void main() {
               fileCount: 0, folderCount: 0, totalSizeBytes: 0)));
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
           .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_mode'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_dir'))
+          .thenAnswer((_) async => null);
       await cubit.initialize();
 
       when(() => mockFileRepository.createItem(
@@ -130,6 +146,10 @@ void main() {
     test('deleteItem calls repository and updates state', () async {
       const filePath = '/path/to/vault/file.ntx';
       when(() => mockSettingsRepository.getSetting('explorer_metadata'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_mode'))
+          .thenAnswer((_) async => null);
+      when(() => mockSettingsRepository.getSetting('explorer_sort_dir'))
           .thenAnswer((_) async => null);
       when(() => mockFileRepository.deleteItem(filePath))
           .thenAnswer((_) async => Result.success(null));

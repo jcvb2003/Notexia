@@ -57,11 +57,15 @@ class DrawingPage extends StatelessWidget {
                 top: metrics.contextTop,
                 left: 0,
                 right: 0,
-                child: Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ContextToolbar(isCompact: isCompactLayout),
+                child: SafeArea(
+                  top: uiState.isToolbarAtTop,
+                  bottom: !uiState.isToolbarAtTop,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ContextToolbar(isCompact: isCompactLayout),
+                    ),
                   ),
                 ),
               ),
@@ -82,8 +86,14 @@ class DrawingPage extends StatelessWidget {
                     isZoomMode: uiState.isZoomMode,
                     zoomLevel: uiState.zoomLevel,
                     onToggle: () => uiCubit.toggleZoomUndoRedo(),
-                    onZoomIn: () => uiCubit.zoomIn(),
-                    onZoomOut: () => uiCubit.zoomOut(),
+                    onZoomIn: () {
+                      final size = MediaQuery.of(context).size;
+                      uiCubit.zoomIn(Offset(size.width / 2, size.height / 2));
+                    },
+                    onZoomOut: () {
+                      final size = MediaQuery.of(context).size;
+                      uiCubit.zoomOut(Offset(size.width / 2, size.height / 2));
+                    },
                     onUndo: () => context.read<UndoRedoCubit>().undo(),
                     onRedo: () => context.read<UndoRedoCubit>().redo(),
                   ),
@@ -137,21 +147,36 @@ class _LayoutMetrics {
     required bool isMobile,
     required bool isCompact,
   }) {
+    const double bottomMargin = 10.0;
+    const double toolbarH = AppSizes.toolbarHeight;
+    const double gap = AppSizes.toolbarGap;
+
     // 1. Header: Oculto se em fullscreen
     final double headerTop = state.isFullScreen ? -100 : 0;
 
     // 2. Toolbar principal
-    const double bottomMargin = 10.0;
-    final double? toolbarTop =
-        state.isToolbarAtTop ? (isMobile ? 12 : 80) : null;
-    final double? toolbarBottom = state.isToolbarAtTop ? null : bottomMargin;
+    final double? toolbarTop;
+    final double? toolbarBottom;
+
+    if (!state.isToolbarAtTop) {
+      toolbarTop = null;
+      toolbarBottom = bottomMargin;
+    } else if (state.isFullScreen) {
+      // Fullscreen + topo: toolbar começa abaixo do botão fechar
+      toolbarTop = isMobile ? 56.0 : 8.0;
+      toolbarBottom = null;
+    } else {
+      // Normal + topo: toolbar começa abaixo do header
+      toolbarTop = AppSizes.headerHeight + gap;
+      toolbarBottom = null;
+    }
 
     // 3. Toolbar contextual (sempre adjacente à principal)
-    final double? contextTop = state.isToolbarAtTop
-        ? (toolbarTop != null ? toolbarTop + AppSizes.headerHeight : null)
+    final double? contextTop = (state.isToolbarAtTop && toolbarTop != null)
+        ? toolbarTop + toolbarH + gap
         : null;
     final double? contextBottom =
-        state.isToolbarAtTop ? null : (bottomMargin + 52);
+        state.isToolbarAtTop ? null : bottomMargin + toolbarH + gap;
 
     // 4. Utility Control (Zoom/History)
     double utilityBottom;
@@ -166,7 +191,8 @@ class _LayoutMetrics {
     }
 
     // 5. Botão de reduzir fullscreen
-    final double fullscreenButtonTop = isMobile ? 8 : 7;
+    // Mobile: -15 restaura posição rente ao topo (SafeArea ajusta o notch)
+    final double fullscreenButtonTop = isMobile ? -15.0 : 7.0;
 
     return _LayoutMetrics(
       headerTop: headerTop,

@@ -184,18 +184,23 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   // Viewport Operations
-  void zoomIn() {
-    final result = _viewportDelegate.zoomIn(state);
+  void zoomIn([Offset? screenCenter]) {
+    final result = _viewportDelegate.zoomIn(state, screenCenter);
     if (result.isSuccess) emit(result.data!);
   }
 
-  void zoomOut() {
-    final result = _viewportDelegate.zoomOut(state);
+  void zoomOut([Offset? screenCenter]) {
+    final result = _viewportDelegate.zoomOut(state, screenCenter);
     if (result.isSuccess) emit(result.data!);
   }
 
   void setZoom(double value) {
     final result = _viewportDelegate.setZoom(state, value);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void setZoomAtPoint(double zoom, Offset pan) {
+    final result = _viewportDelegate.setZoomAtPoint(state, zoom, pan);
     if (result.isSuccess) emit(result.data!);
   }
 

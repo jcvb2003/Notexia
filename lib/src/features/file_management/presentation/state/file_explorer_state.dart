@@ -2,6 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 
+enum SortMode { name, createdAt, updatedAt }
+
+enum SortDirection { ascending, descending }
+
 class FileExplorerState extends Equatable {
   final Map<String, List<FileItem>> treeCache;
   final Set<String> expandedPaths;
@@ -10,6 +14,8 @@ class FileExplorerState extends Equatable {
   final VaultStats? stats;
   final bool isLoading;
   final String? error;
+  final SortMode sortMode;
+  final SortDirection sortDir;
 
   const FileExplorerState({
     this.treeCache = const {},
@@ -19,6 +25,8 @@ class FileExplorerState extends Equatable {
     this.stats,
     this.isLoading = false,
     this.error,
+    this.sortMode = SortMode.name,
+    this.sortDir = SortDirection.ascending,
   });
 
   List<FileItem> get rootItems => treeCache[vaultPath] ?? const [];
@@ -35,6 +43,8 @@ class FileExplorerState extends Equatable {
     VaultStats? stats,
     bool? isLoading,
     String? error,
+    SortMode? sortMode,
+    SortDirection? sortDir,
   }) {
     return FileExplorerState(
       treeCache: treeCache ?? this.treeCache,
@@ -44,17 +54,21 @@ class FileExplorerState extends Equatable {
       stats: stats ?? this.stats,
       isLoading: isLoading ?? this.isLoading,
       error: error,
+      sortMode: sortMode ?? this.sortMode,
+      sortDir: sortDir ?? this.sortDir,
     );
   }
 
   @override
   List<Object?> get props => [
-    treeCache,
-    expandedPaths,
-    vaultPath,
-    vaultName,
-    stats,
-    isLoading,
-    error,
-  ];
+        treeCache,
+        expandedPaths,
+        vaultPath,
+        vaultName,
+        stats,
+        isLoading,
+        error,
+        sortMode,
+        sortDir,
+      ];
 }

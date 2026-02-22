@@ -38,15 +38,19 @@ class FileDeleteDialog extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancelar'),
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
-          onPressed: () {
-            onDelete();
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Excluir',
-            style: textTheme.labelLarge?.copyWith(color: AppColors.iconActive),
+        Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: AppColors.danger,
+                  onPrimary: AppColors.iconActive,
+                ),
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              onDelete();
+              Navigator.pop(context);
+            },
+            child: const Text('Excluir'),
           ),
         ),
       ],

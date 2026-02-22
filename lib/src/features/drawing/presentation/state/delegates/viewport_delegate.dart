@@ -7,23 +7,54 @@ import 'package:notexia/src/core/errors/result.dart';
 class ViewportDelegate {
   const ViewportDelegate();
 
-  Result<CanvasState> zoomIn(CanvasState state) {
+  Result<CanvasState> zoomIn(CanvasState state, [Offset? screenCenter]) {
     final nextZoom = (state.zoomLevel + AppConstants.zoomStep).clamp(
       AppConstants.minZoom,
       AppConstants.maxZoom,
     );
+    if (screenCenter != null) {
+      final worldPoint = (screenCenter - state.panOffset) / state.zoomLevel;
+      final nextPan = screenCenter - (worldPoint * nextZoom);
+      return Result.success(state.copyWith(
+        transform: state.transform.copyWith(
+          zoomLevel: nextZoom,
+          panOffset: nextPan,
+        ),
+      ));
+    }
     return Result.success(state.copyWith(
       transform: state.transform.copyWith(zoomLevel: nextZoom),
     ));
   }
 
-  Result<CanvasState> zoomOut(CanvasState state) {
+  Result<CanvasState> zoomOut(CanvasState state, [Offset? screenCenter]) {
     final nextZoom = (state.zoomLevel - AppConstants.zoomStep).clamp(
       AppConstants.minZoom,
       AppConstants.maxZoom,
     );
+    if (screenCenter != null) {
+      final worldPoint = (screenCenter - state.panOffset) / state.zoomLevel;
+      final nextPan = screenCenter - (worldPoint * nextZoom);
+      return Result.success(state.copyWith(
+        transform: state.transform.copyWith(
+          zoomLevel: nextZoom,
+          panOffset: nextPan,
+        ),
+      ));
+    }
     return Result.success(state.copyWith(
       transform: state.transform.copyWith(zoomLevel: nextZoom),
+    ));
+  }
+
+  Result<CanvasState> setZoomAtPoint(
+      CanvasState state, double nextZoom, Offset nextPan) {
+    final clamped = nextZoom.clamp(AppConstants.minZoom, AppConstants.maxZoom);
+    return Result.success(state.copyWith(
+      transform: state.transform.copyWith(
+        zoomLevel: clamped,
+        panOffset: nextPan,
+      ),
     ));
   }
 

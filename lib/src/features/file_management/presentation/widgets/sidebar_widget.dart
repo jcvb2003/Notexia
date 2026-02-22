@@ -3,8 +3,10 @@ import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/sidebar_footer.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/file_explorer_tree.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
+import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
 
 class SidebarWidget extends StatelessWidget {
@@ -14,7 +16,8 @@ class SidebarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = isMobile ? 304.0 : 280.0;
+    final width =
+        isMobile ? AppSizes.sidebarWidthMobile : AppSizes.sidebarWidth;
 
     return BlocProvider(
       create: (context) => FileExplorerCubit(
@@ -56,12 +59,74 @@ class _SidebarHeader extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text('Explorer', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            // Espaço reservado para ações futuras (ex: botão de busca, filtros)
-            // Pode adicionar ícones aqui quando necessário
+            Expanded(
+              child: Text(
+                'Explorador de arquivos',
+                style: Theme.of(context).textTheme.titleMedium,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            BlocBuilder<FileExplorerCubit, FileExplorerState>(
+              builder: (context, state) {
+                return PopupMenuButton<SortMode>(
+                  icon: const Icon(LucideIcons.arrowUpDown, size: 18),
+                  tooltip: 'Ordenar',
+                  color: AppColors.background,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+                    side: const BorderSide(color: AppColors.border),
+                  ),
+                  offset: const Offset(0, 40),
+                  onSelected: (mode) {
+                    context.read<FileExplorerCubit>().setSortMode(mode);
+                  },
+                  itemBuilder: (context) => [
+                    _buildSortItem(context, SortMode.name, 'Por nome', state),
+                    _buildSortItem(
+                        context, SortMode.createdAt, 'Data de criação', state),
+                    _buildSortItem(context, SortMode.updatedAt,
+                        'Data de alteração', state),
+                  ],
+                );
+              },
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  PopupMenuItem<SortMode> _buildSortItem(
+    BuildContext context,
+    SortMode mode,
+    String label,
+    FileExplorerState state,
+  ) {
+    final isActive = state.sortMode == mode;
+    final dirIcon = state.sortDir == SortDirection.ascending
+        ? LucideIcons.chevronUp
+        : LucideIcons.chevronDown;
+
+    return PopupMenuItem<SortMode>(
+      value: mode,
+      height: 36,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: isActive ? AppColors.primary : AppColors.textPrimary,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                  ),
+            ),
+          ),
+          if (isActive) ...[
+            const SizedBox(width: 8),
+            Icon(dirIcon, size: 16, color: AppColors.primary),
+          ],
+        ],
       ),
     );
   }

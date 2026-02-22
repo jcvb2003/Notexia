@@ -22,6 +22,8 @@ class CanvasInputRouter {
   // State exposed for handlers
   double? scaleStartZoom;
   Offset? scaleStartFocalWorld;
+  Offset? scrollStartFocalWorld;
+  DateTime? lastScrollTime;
   Offset? selectionStart;
   bool isDraggingSelection = false;
   SelectionHandle? activeHandle;
@@ -233,6 +235,16 @@ class CanvasInputRouter {
   void clearScaleStart() {
     scaleStartZoom = null;
     scaleStartFocalWorld = null;
+  }
+
+  void setScrollStart(Offset focalWorld) {
+    scrollStartFocalWorld = focalWorld;
+    lastScrollTime = DateTime.now();
+  }
+
+  void clearScrollStart() {
+    scrollStartFocalWorld = null;
+    lastScrollTime = null;
   }
 
   void updateHandleDrag(Offset worldPoint) {

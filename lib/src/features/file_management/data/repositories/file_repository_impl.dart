@@ -90,13 +90,27 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
+  String _uniqueName(String parentPath, String name) {
+    final ext = p.extension(name);
+    final base = p.basenameWithoutExtension(name);
+    var candidate = name;
+    var counter = 2;
+    while (File(p.join(parentPath, candidate)).existsSync() ||
+        Directory(p.join(parentPath, candidate)).existsSync()) {
+      candidate = '$base $counter$ext';
+      counter++;
+    }
+    return candidate;
+  }
+
   @override
   Future<Result<FileItem>> createItem({
     required String name,
     required String parentPath,
     required FileItemType type,
   }) async {
-    final itemPath = p.join(parentPath, name);
+    final uniqueName = _uniqueName(parentPath, name);
+    final itemPath = p.join(parentPath, uniqueName);
 
     try {
       if (type == FileItemType.folder) {
@@ -108,7 +122,7 @@ class FileRepositoryImpl implements FileRepository {
       final stat = await FileStat.stat(itemPath);
       final item = FileItem(
         id: _uuid.v4(),
-        name: name,
+        name: uniqueName,
         path: itemPath,
         type: type,
         createdAt: stat.changed,
