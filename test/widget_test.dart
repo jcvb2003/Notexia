@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:notexia/src/app/app.dart';
@@ -48,7 +48,7 @@ void main() {
 
   setUpAll(() async {
     registerFallbackValue(DrawingDocumentFake());
-    registerFallbackValue(CanvasElement.rectangle(
+    registerFallbackValue(RectangleElement(
       id: 'fallback',
       x: 0,
       y: 0,
@@ -144,7 +144,7 @@ void main() {
   testWidgets('Smoke test: NotexiaApp renders MainLayout and DrawingPage', (
     WidgetTester tester,
   ) async {
-    // ForÃ§a um tamanho de tela de desktop para garantir que a sidebar apareÃ§a
+    // Força um tamanho de tela de desktop para garantir que a sidebar apareça
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1.0;
 
@@ -155,15 +155,15 @@ void main() {
         appSettingsRepository: mockSettingsRepo,
       ),
     );
-    await tester.pump(); // Aguarda a renderizaÃ§Ã£o inicial
+    await tester.pump(); // Aguarda a renderização inicial
 
-    // Verifica se a DrawingPage (conteÃºdo) estÃ¡ presente
+    // Verifica se a DrawingPage (conteúdo) está presente
     expect(find.byType(DrawingPage), findsOneWidget);
 
-    // Verifica se a SidebarWidget estÃ¡ presente
+    // Verifica se a SidebarWidget está presente
     expect(find.byType(SidebarWidget), findsOneWidget);
 
-    // Limpa a configuraÃ§Ã£o de tela apÃ³s o teste
+    // Limpa a configuração de tela após o teste
     addTearDown(tester.view.resetPhysicalSize);
   });
 }

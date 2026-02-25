@@ -9,7 +9,7 @@ import 'package:notexia/src/features/drawing/domain/commands/elements_command.da
 void main() {
   group('CanvasHelpers', () {
     // --- Mock Data ---
-    final element1 = CanvasElement.rectangle(
+    final element1 = RectangleElement(
       id: '1',
       x: 10,
       y: 10,
@@ -26,7 +26,7 @@ void main() {
       updatedAt: DateTime.now(),
     );
 
-    final element2 = CanvasElement.rectangle(
+    final element2 = RectangleElement(
       id: '2',
       x: 100,
       y: 100,

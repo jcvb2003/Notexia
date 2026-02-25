@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
@@ -17,7 +17,7 @@ void main() {
 
   group('moveElements', () {
     test('move only selected elements by delta', () {
-      final r1 = CanvasElement.rectangle(
+      final r1 = RectangleElement(
         id: 'r1',
         x: 10,
         y: 20,
@@ -26,7 +26,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final e1 = CanvasElement.ellipse(
+      final e1 = EllipseElement(
         id: 'e1',
         x: 50,
         y: 60,
@@ -35,7 +35,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final t1 = CanvasElement.text(
+      final t1 = TextElement(
         id: 't1',
         x: 0,
         y: 0,
@@ -69,7 +69,7 @@ void main() {
 
   group('deleteElements', () {
     test('remove selected elements from list', () {
-      final r1 = CanvasElement.rectangle(
+      final r1 = RectangleElement(
         id: 'r1',
         x: 0,
         y: 0,
@@ -78,7 +78,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final e1 = CanvasElement.ellipse(
+      final e1 = EllipseElement(
         id: 'e1',
         x: 0,
         y: 0,
@@ -87,7 +87,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final t1 = CanvasElement.text(
+      final t1 = TextElement(
         id: 't1',
         x: 0,
         y: 0,
@@ -111,7 +111,7 @@ void main() {
 
   group('updateElementsProperties', () {
     test('update common style properties on selected elements', () {
-      final r1 = CanvasElement.rectangle(
+      final r1 = RectangleElement(
         id: 'r1',
         x: 0,
         y: 0,
@@ -120,7 +120,7 @@ void main() {
         strokeColor: Colors.black,
         updatedAt: now,
       );
-      final e1 = CanvasElement.ellipse(
+      final e1 = EllipseElement(
         id: 'e1',
         x: 0,
         y: 0,
@@ -162,7 +162,7 @@ void main() {
     });
 
     test('update text-specific properties when element is TextElement', () {
-      final t1 = CanvasElement.text(
+      final t1 = TextElement(
         id: 't1',
         x: 0,
         y: 0,
@@ -205,7 +205,7 @@ void main() {
 
   group('updateDrawingElement (shapes)', () {
     test('basic rectangle from corner', () {
-      final rect = CanvasElement.rectangle(
+      final rect = RectangleElement(
         id: 'r',
         x: 0,
         y: 0,
@@ -230,7 +230,7 @@ void main() {
     });
 
     test('keepAspect true (square)', () {
-      final rect = CanvasElement.rectangle(
+      final rect = RectangleElement(
         id: 'r',
         x: 0,
         y: 0,
@@ -255,7 +255,7 @@ void main() {
     });
 
     test('createFromCenter true', () {
-      final rect = CanvasElement.rectangle(
+      final rect = RectangleElement(
         id: 'r',
         x: 0,
         y: 0,
@@ -280,7 +280,7 @@ void main() {
     });
 
     test('createFromCenter + keepAspect', () {
-      final rect = CanvasElement.rectangle(
+      final rect = RectangleElement(
         id: 'r',
         x: 0,
         y: 0,
@@ -308,7 +308,7 @@ void main() {
 
   group('updateDrawingElement (line/arrow/freeDraw)', () {
     test('line with snapAngle true snaps to nearest angle step', () {
-      final line = CanvasElement.line(
+      final line = LineElement(
         id: 'l1',
         x: 0,
         y: 0,
@@ -340,7 +340,7 @@ void main() {
     });
 
     test('arrow updates points without snapping', () {
-      final arr = CanvasElement.arrow(
+      final arr = ArrowElement(
         id: 'a1',
         x: 0,
         y: 0,
@@ -369,7 +369,7 @@ void main() {
     });
 
     test('freeDraw adds points and normalizes bounding box', () {
-      final fd = CanvasElement.freeDraw(
+      final fd = FreeDrawElement(
         id: 'fd1',
         x: 0,
         y: 0,

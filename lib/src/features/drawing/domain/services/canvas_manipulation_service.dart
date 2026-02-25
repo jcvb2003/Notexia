@@ -1,6 +1,6 @@
 ﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:notexia/src/app/config/constants/app_drawing_constants.dart';
+import 'package:notexia/src/app/config/constants/app_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/services/geometry_service.dart';
@@ -108,7 +108,7 @@ class CanvasManipulationService {
         element is ArrowElement ||
         element is FreeDrawElement) {
       final localOffsetForLines = currentPosition - startPosition;
-      final angleStep = snapAngleStep ?? AppDrawingConstants.angleSnapStep;
+      final angleStep = snapAngleStep ?? AppConstants.angleSnapStep;
 
       if (element is LineElement) {
         final snappedOffset = snapAngle

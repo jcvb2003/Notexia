@@ -24,16 +24,19 @@ class GeometryService {
     }
 
     // 2. Delegate to specific shape hit-test (on the local/un-rotated space)
-    return element.map(
-      rectangle: (e) => e.bounds.contains(point),
-      diamond: (e) => isPointInDiamond(point, e.bounds),
-      ellipse: (e) => isPointInEllipse(point, e.bounds),
-      text: (e) => e.bounds.contains(point),
-      line: (e) => _isPointNearPath(point, e.x, e.y, e.points, 10.0),
-      arrow: (e) => _isPointNearPath(point, e.x, e.y, e.points, 10.0),
-      freeDraw: (e) => _isPointNearPath(point, e.x, e.y, e.points, 10.0),
-      triangle: (e) => _isPointInTriangleElement(point, e.bounds),
-    );
+    return switch (element) {
+      RectangleElement() => element.bounds.contains(point),
+      DiamondElement() => isPointInDiamond(point, element.bounds),
+      EllipseElement() => isPointInEllipse(point, element.bounds),
+      TextElement() => element.bounds.contains(point),
+      LineElement(x: final ex, y: final ey, points: final pts) =>
+        _isPointNearPath(point, ex, ey, pts, 10.0),
+      ArrowElement(x: final ex, y: final ey, points: final pts) =>
+        _isPointNearPath(point, ex, ey, pts, 10.0),
+      FreeDrawElement(x: final ex, y: final ey, points: final pts) =>
+        _isPointNearPath(point, ex, ey, pts, 10.0),
+      TriangleElement() => _isPointInTriangleElement(point, element.bounds),
+    };
   }
 
   /// Verifica se um ponto estÃ¡ dentro do bounding box de um elemento (Axis-Aligned).

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element_mapper.dart';
@@ -9,7 +9,7 @@ void main() {
     final now = DateTime.now();
 
     test('RectangleElement round-trip', () {
-      final element = CanvasElement.rectangle(
+      final element = RectangleElement(
         id: 'rect-1',
         x: 10,
         y: 20,
@@ -56,7 +56,7 @@ void main() {
     });
 
     test('EllipseElement round-trip', () {
-      final element = CanvasElement.ellipse(
+      final element = EllipseElement(
         id: 'ellipse-1',
         x: 50,
         y: 50,
@@ -75,7 +75,7 @@ void main() {
     });
 
     test('DiamondElement round-trip', () {
-      final element = CanvasElement.diamond(
+      final element = DiamondElement(
         id: 'diamond-1',
         x: 100,
         y: 100,
@@ -93,7 +93,7 @@ void main() {
     });
 
     test('TriangleElement round-trip', () {
-      final element = CanvasElement.triangle(
+      final element = TriangleElement(
         id: 'triangle-1',
         x: 30,
         y: 40,
@@ -113,7 +113,7 @@ void main() {
     });
 
     test('LineElement round-trip', () {
-      final element = CanvasElement.line(
+      final element = LineElement(
         id: 'line-1',
         x: 0,
         y: 0,
@@ -134,7 +134,7 @@ void main() {
     });
 
     test('ArrowElement round-trip', () {
-      final element = CanvasElement.arrow(
+      final element = ArrowElement(
         id: 'arrow-1',
         x: 10,
         y: 10,
@@ -154,7 +154,7 @@ void main() {
     });
 
     test('FreeDrawElement round-trip', () {
-      final element = CanvasElement.freeDraw(
+      final element = FreeDrawElement(
         id: 'freedraw-1',
         x: 0,
         y: 0,
@@ -174,7 +174,7 @@ void main() {
     });
 
     test('TextElement round-trip', () {
-      final element = CanvasElement.text(
+      final element = TextElement(
         id: 'text-1',
         x: 50,
         y: 50,

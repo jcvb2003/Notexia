@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
-import 'package:notexia/src/app/config/constants/app_drawing_constants.dart';
+import 'package:notexia/src/app/config/constants/app_constants.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
@@ -56,7 +56,7 @@ Offset _rotate(Offset delta, double angle) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('CanvasInputRouter selection handles', () {
-    test('rotaciona via handle de rotaÃ§Ã£o com elemento rotacionado e zoom',
+    test('rotaciona via handle de rotação com elemento rotacionado e zoom',
         () {
       final doc = DrawingDocument(
         id: 'doc',
@@ -92,7 +92,7 @@ void main() {
         doc,
       );
 
-      final el = CanvasElement.rectangle(
+      final el = RectangleElement(
         id: 'r1',
         x: 100,
         y: 100,
@@ -154,7 +154,7 @@ void main() {
       expect(updated.angle, closeTo(el.angle + delta, 0.001));
     });
 
-    test('redimensiona via canto superior direito sob rotaÃ§Ã£o e zoom', () {
+    test('redimensiona via canto superior direito sob rotação e zoom', () {
       final doc = DrawingDocument(
         id: 'doc',
         title: 'T',
@@ -189,7 +189,7 @@ void main() {
         doc,
       );
 
-      final el = CanvasElement.rectangle(
+      final el = RectangleElement(
         id: 'r2',
         x: 50,
         y: 50,
@@ -253,7 +253,7 @@ void main() {
       expect(updated.y, closeTo(nextLocal.dy, 0.001));
     });
 
-    testWidgets('redimensiona via borda superior sem manter proporÃ§Ã£o', (
+    testWidgets('redimensiona via borda superior sem manter proporção', (
       tester,
     ) async {
       final doc = DrawingDocument(
@@ -290,7 +290,7 @@ void main() {
         doc,
       );
 
-      final el = CanvasElement.rectangle(
+      final el = RectangleElement(
         id: 'r3',
         x: 20,
         y: 20,
@@ -353,7 +353,7 @@ void main() {
     });
 
     testWidgets(
-      'redimensiona via borda superior mantendo proporÃ§Ã£o com Shift',
+      'redimensiona via borda superior mantendo proporção com Shift',
       (tester) async {
         final doc = DrawingDocument(
           id: 'doc',
@@ -389,7 +389,7 @@ void main() {
           doc,
         );
 
-        final el = CanvasElement.rectangle(
+        final el = RectangleElement(
           id: 'r4',
           x: 40,
           y: 40,
@@ -461,7 +461,7 @@ void main() {
       },
     );
 
-    testWidgets('rotaÃ§Ã£o com Shift aplica snapping de Ã¢ngulo (pi/12)', (
+    testWidgets('rotação com Shift aplica snapping de ângulo (pi/12)', (
       tester,
     ) async {
       final doc = DrawingDocument(
@@ -499,7 +499,7 @@ void main() {
       );
 
       final startAngle = math.pi / 5;
-      final el = CanvasElement.rectangle(
+      final el = RectangleElement(
         id: 'r5',
         x: 100,
         y: 100,
@@ -563,13 +563,13 @@ void main() {
 
       final updated =
           drawingCubit.state.document.elements.first as RectangleElement;
-      final step = AppDrawingConstants.angleSnapStep;
+      final step = AppConstants.angleSnapStep;
       final expected = ((startAngle + delta) / step).round() * step;
       expect(updated.angle, closeTo(expected, 0.001));
     });
 
     testWidgets(
-      'rotaÃ§Ã£o com snap global habilitado e passo customizado (pi/6)',
+      'rotação com snap global habilitado e passo customizado (pi/6)',
       (tester) async {
         final doc = DrawingDocument(
           id: 'doc',
@@ -608,7 +608,7 @@ void main() {
         await drawingCubit.setAngleSnapStep(math.pi / 6);
 
         final startAngle = math.pi / 7;
-        final el = CanvasElement.rectangle(
+        final el = RectangleElement(
           id: 'r6',
           x: 120,
           y: 120,

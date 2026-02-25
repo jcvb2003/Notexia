@@ -30,7 +30,7 @@ void main() {
 
   group('saveElement', () {
     test('should save text element with custom data separated', () async {
-      final textElement = CanvasElement.text(
+      final textElement = TextElement(
         id: 't1',
         x: 10,
         y: 20,
@@ -76,7 +76,7 @@ void main() {
     });
 
     test('should save rectangle element with empty custom data', () async {
-      final rectElement = CanvasElement.rectangle(
+      final rectElement = RectangleElement(
         id: 'r1',
         x: 0,
         y: 0,

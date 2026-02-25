@@ -45,7 +45,7 @@ void main() {
         updatedAt: fixedDate,
       ),
     );
-    registerFallbackValue(CanvasElement.rectangle(
+    registerFallbackValue(RectangleElement(
       id: 'fallback',
       x: 0,
       y: 0,
@@ -194,7 +194,7 @@ void main() {
       'emits error state when saving fails',
       build: () => cubit,
       seed: () {
-        final r = CanvasElement.rectangle(
+        final r = RectangleElement(
           id: 'r1',
           x: 0,
           y: 0,

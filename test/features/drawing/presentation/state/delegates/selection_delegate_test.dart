@@ -13,7 +13,7 @@ void main() {
 
   setUp(() {
     delegate = const SelectionDelegate();
-    rect1 = CanvasElement.rectangle(
+    rect1 = RectangleElement(
       id: 'rect1',
       x: 100,
       y: 100,
@@ -22,7 +22,7 @@ void main() {
       strokeColor: Colors.black,
       updatedAt: DateTime.now(),
     );
-    rect2 = CanvasElement.rectangle(
+    rect2 = RectangleElement(
       id: 'rect2',
       x: 300,
       y: 300,
@@ -76,7 +76,7 @@ void main() {
       });
 
       test('selects topmost element when elements overlap', () {
-        final overlapping = CanvasElement.rectangle(
+        final overlapping = RectangleElement(
           id: 'overlap',
           x: 100,
           y: 100,

@@ -12,7 +12,7 @@ void main() {
 
   group('Serialization Roundtrip', () {
     test('RectangleElement', () {
-      final original = CanvasElement.rectangle(
+      final original = RectangleElement(
         id: 'rect-1',
         x: 10,
         y: 20,
@@ -32,7 +32,7 @@ void main() {
     });
 
     test('EllipseElement', () {
-      final original = CanvasElement.ellipse(
+      final original = EllipseElement(
         id: 'ellipse-1',
         x: 5,
         y: 15,
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('DiamondElement', () {
-      final original = CanvasElement.diamond(
+      final original = DiamondElement(
         id: 'diamond-1',
         x: 30,
         y: 40,
@@ -60,7 +60,7 @@ void main() {
     });
 
     test('TriangleElement', () {
-      final original = CanvasElement.triangle(
+      final original = TriangleElement(
         id: 'tri-1',
         x: 0,
         y: 0,
@@ -73,7 +73,7 @@ void main() {
     });
 
     test('LineElement', () {
-      final original = CanvasElement.line(
+      final original = LineElement(
         id: 'line-1',
         x: 0,
         y: 0,
@@ -88,12 +88,12 @@ void main() {
       expect(restored, isA<LineElement>());
       expect(
         (restored as LineElement).points.length,
-        (original as LineElement).points.length,
+        original.points.length,
       );
     });
 
     test('ArrowElement', () {
-      final original = CanvasElement.arrow(
+      final original = ArrowElement(
         id: 'arrow-1',
         x: 10,
         y: 10,
@@ -108,12 +108,12 @@ void main() {
       expect(restored, isA<ArrowElement>());
       expect(
         (restored as ArrowElement).points.length,
-        (original as ArrowElement).points.length,
+        original.points.length,
       );
     });
 
     test('FreeDrawElement', () {
-      final original = CanvasElement.freeDraw(
+      final original = FreeDrawElement(
         id: 'free-1',
         x: 0,
         y: 0,
@@ -133,12 +133,12 @@ void main() {
       expect(restored, isA<FreeDrawElement>());
       expect(
         (restored as FreeDrawElement).points.length,
-        (original as FreeDrawElement).points.length,
+        original.points.length,
       );
     });
 
     test('TextElement', () {
-      final original = CanvasElement.text(
+      final original = TextElement(
         id: 'text-1',
         x: 50,
         y: 50,
@@ -157,7 +157,7 @@ void main() {
       _assertCommonFields(original, restored);
       expect(restored, isA<TextElement>());
       final restoredText = restored as TextElement;
-      final originalText = original as TextElement;
+      final originalText = original;
       expect(restoredText.text, originalText.text);
       expect(restoredText.fontFamily, originalText.fontFamily);
       expect(restoredText.fontSize, originalText.fontSize);
@@ -169,7 +169,7 @@ void main() {
 
   group('Serialization edge cases', () {
     test('toMap with useIntColors=true converts colors to ARGB32', () {
-      final el = CanvasElement.rectangle(
+      final el = RectangleElement(
         id: 'r1',
         x: 0,
         y: 0,
@@ -183,7 +183,7 @@ void main() {
     });
 
     test('toMap with useIntBools=true converts booleans to 0/1', () {
-      final el = CanvasElement.text(
+      final el = TextElement(
         id: 't1',
         x: 0,
         y: 0,

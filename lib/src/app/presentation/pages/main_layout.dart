@@ -24,6 +24,8 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/drawin
 import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 
+enum ContentView { drawing, text, pdf }
+
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
 
@@ -34,10 +36,18 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isSidebarVisible = true;
+  ContentView _currentView = ContentView.drawing;
 
   void _toggleSidebar() {
     setState(() {
       _isSidebarVisible = !_isSidebarVisible;
+    });
+  }
+
+  // ignore: unused_element
+  void _switchView(ContentView view) {
+    setState(() {
+      _currentView = view;
     });
   }
 
@@ -93,12 +103,7 @@ class _MainLayoutState extends State<MainLayout> {
                           ? AppSizes.sidebarWidth
                           : 0,
                     ),
-                    child: DrawingPage(
-                      onOpenMenu: isDesktop
-                          ? _toggleSidebar
-                          : () => _scaffoldKey.currentState?.openDrawer(),
-                      isSidebarOpen: isDesktop ? _isSidebarVisible : false,
-                    ),
+                    child: _buildCurrentView(isDesktop),
                   ),
                 ),
                 if (isDesktop)
@@ -109,7 +114,9 @@ class _MainLayoutState extends State<MainLayout> {
                     bottom: 0,
                     left: _isSidebarVisible ? 0 : -AppSizes.sidebarWidth,
                     width: AppSizes.sidebarWidth,
-                    child: const SidebarWidget(),
+                    child: SidebarWidget(
+                        // Pass view switching callbacks if/when Sidebar is updated
+                        ),
                   ),
               ],
             ),
@@ -117,5 +124,31 @@ class _MainLayoutState extends State<MainLayout> {
         },
       ),
     );
+  }
+
+  Widget _buildCurrentView(bool isDesktop) {
+    switch (_currentView) {
+      case ContentView.drawing:
+        return DrawingPage(
+          onOpenMenu: isDesktop
+              ? _toggleSidebar
+              : () => _scaffoldKey.currentState?.openDrawer(),
+          isSidebarOpen: isDesktop ? _isSidebarVisible : false,
+        );
+      case ContentView.text:
+        return Center(
+          child: Text(
+            'Text Editor (Coming Soon)',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        );
+      case ContentView.pdf:
+        return Center(
+          child: Text(
+            'PDF Reader (Coming Soon)',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        );
+    }
   }
 }

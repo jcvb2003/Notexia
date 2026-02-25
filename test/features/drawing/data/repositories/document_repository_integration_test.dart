@@ -44,7 +44,7 @@ void main() {
       createdAt: now,
       updatedAt: now,
       elements: [
-        CanvasElement.rectangle(
+        RectangleElement(
           id: 'rect-1',
           x: 10,
           y: 10,

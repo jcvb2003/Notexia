@@ -32,7 +32,7 @@ void main() {
       label: 'fallback',
     ));
 
-    registerFallbackValue(CanvasElement.rectangle(
+    registerFallbackValue(RectangleElement(
       id: 'fallback',
       x: 0,
       y: 0,
@@ -47,7 +47,7 @@ void main() {
         id: 'doc1',
         title: 'Test',
         elements: [
-          CanvasElement.text(
+          TextElement(
             id: 'text1',
             x: 100,
             y: 100,
@@ -103,7 +103,7 @@ void main() {
           document: baseState.document.copyWith(
             elements: [
               ...baseState.document.elements,
-              CanvasElement.rectangle(
+              RectangleElement(
                 id: 'rect1',
                 x: 0,
                 y: 0,

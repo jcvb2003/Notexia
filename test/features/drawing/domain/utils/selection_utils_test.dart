@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('lineEndpoints for LineElement returns absolute endpoints', () {
-      final line = CanvasElement.line(
+      final line = LineElement(
         id: 'l1',
         x: 10,
         y: 20,
@@ -71,7 +71,7 @@ void main() {
     });
 
     test('lineEndpoints for ArrowElement returns absolute endpoints', () {
-      final arr = CanvasElement.arrow(
+      final arr = ArrowElement(
         id: 'a1',
         x: 5,
         y: 6,

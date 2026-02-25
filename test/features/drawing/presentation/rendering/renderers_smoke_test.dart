@@ -18,7 +18,7 @@ void main() {
 
   group('Renderer Smoke Tests', () {
     test('RectangleRenderer smoke test (all styles)', () {
-      final rect = CanvasElement.rectangle(
+      final rect = RectangleElement(
         id: 'r1',
         x: 0,
         y: 0,
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('EllipseRenderer smoke test', () {
-      final el = CanvasElement.ellipse(
+      final el = EllipseElement(
         id: 'e1',
         x: 0,
         y: 0,
@@ -50,7 +50,7 @@ void main() {
     });
 
     test('DiamondRenderer smoke test', () {
-      final el = CanvasElement.diamond(
+      final el = DiamondElement(
         id: 'd1',
         x: 0,
         y: 0,
@@ -64,7 +64,7 @@ void main() {
     });
 
     test('TriangleRenderer smoke test', () {
-      final el = CanvasElement.triangle(
+      final el = TriangleElement(
         id: 't1',
         x: 0,
         y: 0,
@@ -78,7 +78,7 @@ void main() {
     });
 
     test('LineRenderer smoke test', () {
-      final el = CanvasElement.line(
+      final el = LineElement(
         id: 'l1',
         x: 0,
         y: 0,
@@ -93,7 +93,7 @@ void main() {
     });
 
     test('ArrowRenderer smoke test', () {
-      final el = CanvasElement.arrow(
+      final el = ArrowElement(
         id: 'a1',
         x: 0,
         y: 0,
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('FreeDrawRenderer smoke test', () {
-      final el = CanvasElement.freeDraw(
+      final el = FreeDrawElement(
         id: 'f1',
         x: 0,
         y: 0,
@@ -123,7 +123,7 @@ void main() {
     });
 
     test('TextRenderer smoke test', () {
-      final el = CanvasElement.text(
+      final el = TextElement(
         id: 'txt1',
         x: 0,
         y: 0,

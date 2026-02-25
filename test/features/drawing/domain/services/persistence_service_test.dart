@@ -17,7 +17,7 @@ class DrawingDocumentFake extends Fake implements DrawingDocument {}
 void main() {
   setUpAll(() {
     registerFallbackValue(DrawingDocumentFake());
-    registerFallbackValue(CanvasElement.rectangle(
+    registerFallbackValue(RectangleElement(
       id: 'fallback',
       x: 0,
       y: 0,
@@ -78,7 +78,7 @@ void main() {
     });
 
     test('saveElement calls repository immediately', () async {
-      final element = CanvasElement.rectangle(
+      final element = RectangleElement(
         id: 'elem-1',
         x: 10,
         y: 20,
