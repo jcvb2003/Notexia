@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notexia/src/core/widgets/common/app_text_field.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 
 /// An inline text editor overlay positioned on top of a [TextElement].
 ///

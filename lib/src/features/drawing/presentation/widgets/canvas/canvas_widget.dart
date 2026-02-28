@@ -1,9 +1,8 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_painter.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_shortcuts_wrapper.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/inline_text_editor.dart';

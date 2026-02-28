@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:notexia/src/features/drawing/presentation/utils/shortcuts/app_intents.dart';
 import 'package:notexia/src/features/drawing/presentation/utils/shortcuts/app_shortcuts.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';

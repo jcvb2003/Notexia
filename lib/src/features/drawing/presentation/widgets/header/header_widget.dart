@@ -5,7 +5,6 @@ import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
 import 'package:notexia/src/core/widgets/common/floating_card.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/header/components/file_name_input.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/header/components/menu/header_dropdown_menu.dart';
 

@@ -7,7 +7,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/base_toolbar.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/main_toolbar.dart';
 

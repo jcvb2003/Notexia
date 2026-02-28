@@ -12,7 +12,6 @@ import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/dragga
 import 'package:notexia/src/features/drawing/presentation/widgets/utility_controls/slidable_utility_control.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';
 
 class DrawingPage extends StatelessWidget {

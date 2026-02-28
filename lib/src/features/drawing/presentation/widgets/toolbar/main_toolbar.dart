@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
@@ -6,7 +6,6 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/base_toolbar.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/modular_sheet_helper.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/segmented_toggle.dart';

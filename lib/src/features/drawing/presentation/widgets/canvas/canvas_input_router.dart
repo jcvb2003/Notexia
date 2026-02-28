@@ -6,14 +6,11 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_gesture_math.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/pointer_hover_handlers.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/scale_gesture_handlers.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/selection_handles.dart';
-import 'package:notexia/src/features/drawing/presentation/inputs/middleware/input_pipeline.dart';
-import 'package:notexia/src/features/drawing/presentation/inputs/middleware/input_event.dart';
-import 'package:notexia/src/features/drawing/presentation/inputs/middleware/snapping_middleware.dart';
+import 'package:notexia/src/features/drawing/presentation/inputs/canvas_input_pipeline.dart';
 
 class CanvasInputRouter {
   final CanvasCubit canvasCubit;

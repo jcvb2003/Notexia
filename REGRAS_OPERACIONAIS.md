@@ -6,8 +6,10 @@ Estas regras substituem os antigos documentos de arquitetura, que foram movidos 
 
 ---
 
-## 1. Arquitetura Plana e Direta (Adeus "Scopes" e Intermediários)
-Evite abstrações redundantes. Não crie classes proxy puras (como os antigos `SelectionScope`, `ViewportScope` ou `ManipulationScope`) cujo único papel é repassar chamadas e emitir estado. O `CanvasCubit` deve gerenciar a lógia de interação com o Canvas diretamente através de métodos próprios bem definidos ou via delegates puros que não mantenham estado do Cubit. 
+## 1. Arquitetura Plana e Direta (Sem Proxies, Scopes com Propósito)
+Evite abstrações redundantes. Não crie classes proxy puras (como os antigos `SelectionScope`, `ViewportScope` ou `ManipulationScope`) cujo único papel é repassar chamadas e emitir estado. O `CanvasCubit` deve gerenciar a lógica de interação com o Canvas diretamente através de métodos próprios bem definidos ou via delegates puros que não mantenham estado do Cubit. 
+
+**Exceção reconhecida:** Scopes que **gerenciam ciclo de vida ou estado próprio** são válidos. Exemplos: `DrawingScope` (throttling de 16ms, dispose de timers) e `TextScope` (pipeline de criação/commit de texto). Estes justificam sua existência por encapsular lógica que não pertence ao Cubit nem a um delegate stateless.
 
 ## 2. Tratamento Consistente de Erros (`Result<T>`)
 Qualquer operação que possa falhar (I/O, parsing de arquivos, operações assíncronas de gravação) DEVE retornar um `Result<T>` ou uma subclassificação de `Result` (como `Success` e `Failure`). 

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:notexia/src/app/config/constants/app_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/utils/resize_math_utils.dart';
-import 'package:notexia/src/features/drawing/presentation/inputs/middleware/input_event.dart';
+import 'package:notexia/src/features/drawing/presentation/inputs/canvas_input_pipeline.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_input_router.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/selection_handles.dart';
