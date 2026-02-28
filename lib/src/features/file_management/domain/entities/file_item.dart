@@ -57,17 +57,17 @@ class FileItem extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    path,
-    type,
-    createdAt,
-    updatedAt,
-    sizeBytes,
-    parentId,
-    customIcon,
-    customColor,
-  ];
+        id,
+        name,
+        path,
+        type,
+        createdAt,
+        updatedAt,
+        sizeBytes,
+        parentId,
+        customIcon,
+        customColor,
+      ];
 }
 
 /// Tipos de itens no sistema de arquivos.

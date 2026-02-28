@@ -5,6 +5,7 @@ import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/tree/components/tree_item.dart';
+import 'package:notexia/src/core/widgets/buttons/app_filled_button.dart';
 
 /// Explorador de arquivos em Árvore Aninhada Recursiva.
 /// Restaura a estética visual premium da Fase 13 com funcionalidade dinâmica.
@@ -44,26 +45,14 @@ class FileExplorerTree extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
+                AppFilledButton(
                   onPressed: () =>
                       context.read<FileExplorerCubit>().initialize(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.sm,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSizes.radiusMedium),
-                    ),
-                    textStyle: context.typography.labelMedium?.copyWith(
-                      color: Colors.white,
-                    ),
+                  label: 'Tentar Novamente',
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.sm,
                   ),
-                  child: const Text('Tentar Novamente'),
                 ),
               ],
             ),

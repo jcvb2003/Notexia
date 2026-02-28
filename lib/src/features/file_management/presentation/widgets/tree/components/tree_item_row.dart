@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
+import 'package:notexia/src/core/widgets/common/floating_card.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/utils/file_icon_utils.dart';
@@ -52,51 +53,55 @@ class _TreeItemRowState extends State<TreeItemRow> {
         isActive: widget.isSelected,
         activeScale: 1.01,
         builder: (context, isHovering) {
-          return Container(
-            height: 32,
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-            padding: const EdgeInsets.only(left: 4.0),
-            decoration: BoxDecoration(
-              color: widget.isSelected
-                  ? selectedBg
-                  : (isHovering ? AppColors.gray50 : AppColors.transparent),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Row(
-              children: [
-                if (widget.item.isFolder)
-                  Icon(
-                    widget.isExpanded
-                        ? LucideIcons.chevronDown
-                        : LucideIcons.chevronRight,
-                    size: 14,
-                    color: AppColors.textMuted,
-                  )
-                else
-                  const SizedBox(width: 14),
-                const SizedBox(width: 6),
-                Icon(
-                  _getIcon(),
-                  size: 16,
-                  color: widget.isSelected ? selectedFg : _getIconColor(),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.item.name.replaceAll('.notexia', ''),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: widget.isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
-                          color: widget.isSelected ? selectedFg : defaultFg,
-                        ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm, vertical: 1),
+            child: SizedBox(
+              height: 32,
+              child: FloatingCard(
+                variant: FloatingCardVariant.subtle,
+                backgroundColor: widget.isSelected
+                    ? selectedBg
+                    : (isHovering ? AppColors.gray50 : AppColors.transparent),
+                borderRadius: 6,
+                padding: const EdgeInsets.only(left: AppSpacing.xs),
+                child: Row(
+                  children: [
+                    if (widget.item.isFolder)
+                      Icon(
+                        widget.isExpanded
+                            ? LucideIcons.chevronDown
+                            : LucideIcons.chevronRight,
+                        size: 14,
+                        color: AppColors.textMuted,
+                      )
+                    else
+                      const SizedBox(width: 14),
+                    const SizedBox(width: 6),
+                    Icon(
+                      _getIcon(),
+                      size: 16,
+                      color: widget.isSelected ? selectedFg : _getIconColor(),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        widget.item.name.replaceAll('.notexia', ''),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: widget.isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
+                              color: widget.isSelected ? selectedFg : defaultFg,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ), // Row
+              ), // FloatingCard
+            ), // SizedBox
+          ); // Padding
         },
       ),
     );

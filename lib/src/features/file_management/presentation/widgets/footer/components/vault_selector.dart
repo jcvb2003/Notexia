@@ -48,10 +48,10 @@ class _VaultSelectorState extends State<VaultSelector> {
                   Text(
                     widget.name,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                      color: AppColors.gray900,
-                    ),
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                          color: AppColors.gray900,
+                        ),
                   ),
                   if (_isHovering) ...[
                     const SizedBox(width: 4),

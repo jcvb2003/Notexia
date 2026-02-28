@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 
@@ -65,23 +65,19 @@ class ResizeMathUtils {
         fixedCorner = startRect.topLeft;
     }
 
-    var left =
-        (handle == ResizeHandleType.topLeft ||
+    var left = (handle == ResizeHandleType.topLeft ||
             handle == ResizeHandleType.bottomLeft)
         ? point.dx
         : fixedCorner.dx;
-    var right =
-        (handle == ResizeHandleType.topLeft ||
+    var right = (handle == ResizeHandleType.topLeft ||
             handle == ResizeHandleType.bottomLeft)
         ? fixedCorner.dx
         : point.dx;
-    var top =
-        (handle == ResizeHandleType.topLeft ||
+    var top = (handle == ResizeHandleType.topLeft ||
             handle == ResizeHandleType.topRight)
         ? point.dy
         : fixedCorner.dy;
-    var bottom =
-        (handle == ResizeHandleType.topLeft ||
+    var bottom = (handle == ResizeHandleType.topLeft ||
             handle == ResizeHandleType.topRight)
         ? fixedCorner.dy
         : point.dy;
@@ -90,11 +86,9 @@ class ResizeMathUtils {
         ? 1.0
         : startRect.width / startRect.height;
 
-    final isLeft =
-        handle == ResizeHandleType.topLeft ||
+    final isLeft = handle == ResizeHandleType.topLeft ||
         handle == ResizeHandleType.bottomLeft;
-    final isTop =
-        handle == ResizeHandleType.topLeft ||
+    final isTop = handle == ResizeHandleType.topLeft ||
         handle == ResizeHandleType.topRight;
 
     if (keepAspect) {
@@ -201,4 +195,3 @@ class ResizeMathUtils {
     );
   }
 }
-

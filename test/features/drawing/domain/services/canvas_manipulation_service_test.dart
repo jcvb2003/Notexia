@@ -68,7 +68,7 @@ void main() {
   });
 
   group('deleteElements', () {
-    test('remove selected elements from list', () {
+    test('marks selected elements as deleted', () {
       final r1 = RectangleElement(
         id: 'r1',
         x: 0,
@@ -104,8 +104,10 @@ void main() {
         't1',
       });
 
-      expect(remaining.length, 1);
-      expect(remaining.first.id, 'e1');
+      expect(remaining.length, 3);
+      expect(remaining.firstWhere((e) => e.id == 'r1').isDeleted, isTrue);
+      expect(remaining.firstWhere((e) => e.id == 't1').isDeleted, isTrue);
+      expect(remaining.firstWhere((e) => e.id == 'e1').isDeleted, isFalse);
     });
   });
 

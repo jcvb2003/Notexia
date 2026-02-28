@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
+import 'package:notexia/src/core/widgets/common/floating_card.dart';
+import 'package:notexia/src/core/widgets/panels/app_section_block.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -133,24 +135,19 @@ class _SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            left: AppSpacing.md,
-            bottom: AppSpacing.sm,
-          ),
-          child: Text(title, style: context.typography.labelMedium),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(AppSizes.radiusRound + 4),
-            border: Border.all(color: AppColors.border),
-            boxShadow: AppShadows.subtle,
-          ),
-          clipBehavior: Clip.antiAlias,
+    return AppSectionBlock(
+      title: title,
+      padding: EdgeInsets.zero,
+      headerPadding: const EdgeInsets.only(
+        left: AppSpacing.md,
+        bottom: AppSpacing.sm,
+      ),
+      child: FloatingCard(
+        variant: FloatingCardVariant.outlined,
+        padding: EdgeInsets.zero,
+        borderRadius: AppSizes.radiusRound + 4,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppSizes.radiusRound + 4),
           child: Column(
             children: items.asMap().entries.map((entry) {
               final index = entry.key;
@@ -168,9 +165,9 @@ class _SettingsSection extends StatelessWidget {
                 child: item,
               );
             }).toList(),
-          ),
-        ),
-      ],
+          ), // Column
+        ), // ClipRRect
+      ), // FloatingCard
     );
   }
 }

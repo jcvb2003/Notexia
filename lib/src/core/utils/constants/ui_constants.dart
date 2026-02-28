@@ -125,6 +125,26 @@ class AppTypography {
       ),
     );
   }
+
+  // Presets customizados fora do padrão TextTheme
+  static const TextStyle labelMuted = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textMuted,
+  );
+
+  static const TextStyle monoInput = TextStyle(
+    fontFamily: 'monospace',
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
+
+  static const TextStyle caption = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textSecondary,
+  );
 }
 
 class AppThemeColors {
@@ -146,6 +166,11 @@ class AppThemeColors {
 extension AppThemeContext on BuildContext {
   AppThemeColors get colors => const AppThemeColors();
   TextTheme get typography => Theme.of(this).textTheme;
+
+  // Atalhos para presets adicionais
+  TextStyle get labelMuted => AppTypography.labelMuted;
+  TextStyle get monoInput => AppTypography.monoInput;
+  TextStyle get caption => AppTypography.caption;
 }
 
 /// Espaçamentos padrão do design system.

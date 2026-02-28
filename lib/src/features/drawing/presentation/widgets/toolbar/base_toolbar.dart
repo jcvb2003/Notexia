@@ -25,8 +25,7 @@ class BaseToolbar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return FloatingCard(
-      backgroundColor:
-          backgroundColor ??
+      backgroundColor: backgroundColor ??
           (highlighted
               ? theme.colorScheme.primaryContainer.withValues(alpha: 0.1)
               : AppColors.background),
@@ -41,15 +40,12 @@ class BaseToolbar extends StatelessWidget {
                 (actions != null && actions!.isNotEmpty))
               const SizedBox(width: 8),
           ],
-
           if (title != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(title!, style: theme.textTheme.titleMedium),
             ),
-
           if (center != null) center!,
-
           if (actions != null && actions!.isNotEmpty) ...[
             if (leading != null || title != null || center != null)
               const ToolbarDivider(),

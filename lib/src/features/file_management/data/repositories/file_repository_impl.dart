@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
 import 'package:notexia/src/core/errors/failure.dart';
@@ -40,8 +41,8 @@ class FileRepositoryImpl implements FileRepository {
             ),
           );
         } catch (e) {
-          return Result.failure(
-              FileSystemFailure('Erro ao ler item ${entity.path}: $e'));
+          // Ignora itens com erro de leitura (ex: permissão negada) para não falhar a listagem completa
+          debugPrint('Erro ao ler item ${entity.path}: $e');
         }
       }
     } catch (e) {

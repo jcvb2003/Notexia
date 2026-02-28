@@ -19,6 +19,22 @@ class FreeDrawRenderer implements ElementRenderer<FreeDrawElement> {
   static final Map<String, _CachedPathData> _cache = {};
   static const int _maxCacheSize = 1000;
 
+  /// Limpa todo o cache estático (ideal ao trocar de documento).
+  static void clearCache() {
+    for (final cached in _cache.values) {
+      cached.dispose();
+    }
+    _cache.clear();
+  }
+
+  /// Remove entradas de cache de elementos específicos (ex: caso de exclusão).
+  static void invalidateCache(Iterable<String> elementIds) {
+    for (final id in elementIds) {
+      _cache[id]?.dispose();
+      _cache.remove(id);
+    }
+  }
+
   @override
   void render(Canvas canvas, FreeDrawElement element) {
     if (element.points.isEmpty) return;

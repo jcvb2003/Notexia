@@ -161,9 +161,8 @@ class SnappingMiddleware implements InputMiddleware {
     if (isShift || isSnapEnabled) {
       final selectedIds = event.state.selectedElementIds;
       final elements = event.state.elements;
-      final selectedElements = elements
-          .where((e) => selectedIds.contains(e.id))
-          .toList();
+      final selectedElements =
+          elements.where((e) => selectedIds.contains(e.id)).toList();
 
       if (selectedElements.isNotEmpty) {
         double minX = double.infinity, minY = double.infinity;

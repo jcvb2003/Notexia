@@ -35,8 +35,7 @@ class ColorSection extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: allColors.map((color) {
-        final isSelected =
-            color == selectedColor ||
+        final isSelected = color == selectedColor ||
             (OpenColorPalette.getTonesForColor(
                   selectedColor,
                 )?.contains(color) ??
@@ -86,8 +85,8 @@ class _ColorSwatch extends StatelessWidget {
             color: isSelected
                 ? AppColors.primary
                 : (color == OpenColorPalette.white || isTransparent)
-                ? AppColors.border
-                : Colors.transparent,
+                    ? AppColors.border
+                    : Colors.transparent,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected

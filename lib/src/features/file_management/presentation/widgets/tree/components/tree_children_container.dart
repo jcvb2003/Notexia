@@ -26,9 +26,9 @@ class TreeChildrenContainer extends StatelessWidget {
         child: Text(
           'Vazio',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AppColors.textMuted,
-            fontStyle: FontStyle.italic,
-          ),
+                color: AppColors.textMuted,
+                fontStyle: FontStyle.italic,
+              ),
         ),
       );
     }

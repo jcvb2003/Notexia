@@ -45,30 +45,26 @@ class AppDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: backgroundColor ?? AppColors.background,
-      shape:
-          shape ??
+      shape: shape ??
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
             side: const BorderSide(color: AppColors.border),
           ),
-      contentPadding:
-          contentPadding ??
+      contentPadding: contentPadding ??
           const EdgeInsets.fromLTRB(
             AppSpacing.lg,
             AppSpacing.md,
             AppSpacing.lg,
             AppSpacing.lg,
           ),
-      actionsPadding:
-          actionsPadding ??
+      actionsPadding: actionsPadding ??
           const EdgeInsets.fromLTRB(
             AppSpacing.lg,
             0,
             AppSpacing.lg,
             AppSpacing.lg,
           ),
-      insetPadding:
-          insetPadding ??
+      insetPadding: insetPadding ??
           const EdgeInsets.symmetric(
             horizontal: AppSpacing.xl,
             vertical: AppSpacing.lg,

@@ -44,6 +44,27 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
   });
 
+  const AppTextField.mono({
+    super.key,
+    this.controller,
+    this.focusNode,
+    this.hintText,
+    this.autofocus = false,
+    this.isDense = true,
+    this.textAlign = TextAlign.start,
+    this.textInputAction,
+    this.keyboardType,
+    this.maxLines = 1,
+    this.minLines,
+    this.expands = false,
+    this.onSubmitted,
+    this.onEditingComplete,
+    this.onChanged,
+    this.showBorder = true,
+    this.contentPadding,
+    this.inputFormatters,
+  }) : style = AppTypography.monoInput;
+
   @override
   Widget build(BuildContext context) {
     return TextField(

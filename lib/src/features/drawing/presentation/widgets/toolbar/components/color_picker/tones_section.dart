@@ -27,7 +27,8 @@ class TonesSection extends StatelessWidget {
             final isSelected = color == selectedColor;
 
             return Padding(
-              padding: EdgeInsets.only(right: index < tones.length - 1 ? 6 : 0),
+              padding: EdgeInsets.only(
+                  right: index < tones.length - 1 ? AppSpacing.xs : 0),
               child: _ToneSwatch(
                 color: color,
                 isSelected: isSelected,
@@ -36,13 +37,13 @@ class TonesSection extends StatelessWidget {
             );
           }).toList(),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.xs),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'claro',
-              style: TextStyle(
+              style: context.caption.copyWith(
                 fontSize: 10,
                 color: AppColors.textMuted.withValues(alpha: 0.7),
               ),
@@ -50,7 +51,7 @@ class TonesSection extends StatelessWidget {
             const SizedBox(width: 80),
             Text(
               'escuro',
-              style: TextStyle(
+              style: context.caption.copyWith(
                 fontSize: 10,
                 color: AppColors.textMuted.withValues(alpha: 0.7),
               ),

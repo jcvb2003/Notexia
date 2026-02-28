@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
@@ -89,4 +89,3 @@ class SelectionHandles {
     return null;
   }
 }
-

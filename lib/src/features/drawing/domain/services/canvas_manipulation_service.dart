@@ -35,7 +35,15 @@ class CanvasManipulationService {
     Set<String> selectedIds,
   ) {
     if (selectedIds.isEmpty) return elements;
-    return elements.where((e) => !selectedIds.contains(e.id)).toList();
+    return elements.map((e) {
+      if (selectedIds.contains(e.id)) {
+        return e.copyWith(
+          isDeleted: true,
+          updatedAt: DateTime.now(),
+        );
+      }
+      return e;
+    }).toList();
   }
 
   /// Atualiza propriedades visuais dos elementos selecionados.

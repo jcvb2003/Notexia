@@ -25,19 +25,19 @@ class MyColorsSection extends StatelessWidget {
     final allColors = <Color>{...colorsInUse, ...userColors}.toList();
 
     if (allColors.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         child: Text(
           'Nenhuma cor salva ainda.\nUse a seção "Personalizado" para adicionar.',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+          style: context.caption,
         ),
       );
     }
 
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       children: allColors.map((color) {
         final isSelected = color == selectedColor;
         final isSaved = userColors.contains(color);

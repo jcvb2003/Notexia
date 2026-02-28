@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/widgets/common/app_text_field.dart';
+import 'package:notexia/src/core/widgets/buttons/app_filled_button.dart';
+import 'package:notexia/src/core/widgets/panels/app_section_block.dart';
 
 /// Seção de cor personalizada com picker HSL e entrada HEX.
 class CustomColorSection extends StatefulWidget {
@@ -107,7 +109,6 @@ class _CustomColorSectionState extends State<CustomColorSection> {
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
             border: Border.all(color: AppColors.border),
-            boxShadow: AppShadows.subtle,
           ),
           child: Row(
             children: [
@@ -137,13 +138,8 @@ class _CustomColorSectionState extends State<CustomColorSection> {
               Expanded(
                 child: SizedBox(
                   height: 40,
-                  child: AppTextField(
+                  child: AppTextField.mono(
                     controller: _hexController,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.w600,
-                    ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.md,
                       vertical: 10,
@@ -167,23 +163,11 @@ class _CustomColorSectionState extends State<CustomColorSection> {
               const SizedBox(width: AppSpacing.sm + 2),
               SizedBox(
                 height: 40,
-                child: ElevatedButton.icon(
+                child: AppFilledButton(
                   onPressed: () => widget.onColorSaved(currentColor),
-                  icon: const Icon(LucideIcons.plus, size: 16),
-                  label: const Text('Salvar'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-                    ),
-                    textStyle: context.typography.labelMedium?.copyWith(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
+                  icon: LucideIcons.plus,
+                  label: 'Salvar',
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                 ),
               ),
             ],
@@ -222,15 +206,10 @@ class _CustomColorSectionState extends State<CustomColorSection> {
   }
 
   Widget _buildLabel(BuildContext context, String text) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: context.typography.labelSmall?.copyWith(
-          fontSize: 11,
-          color: AppColors.textMuted,
-        ),
-      ),
+    return AppSectionHeader(
+      title: text,
+      style: context.caption,
+      padding: EdgeInsets.zero,
     );
   }
 }

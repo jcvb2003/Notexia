@@ -97,7 +97,12 @@ class TextEditingDelegate {
           state); // Or failure if preferred, but success with no change is safe
     }
     try {
-      await persistenceService.saveElement(state.document.id, element);
+      final saveResult =
+          await persistenceService.saveElement(state.document.id, element);
+      if (saveResult.isFailure) {
+        return Result.failure(saveResult.failure!);
+      }
+
       return Result.success(
         state.copyWith(
           error: null,

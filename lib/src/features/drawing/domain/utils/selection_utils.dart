@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_entities.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
@@ -19,7 +19,8 @@ class SelectionUtils {
       CanvasElementType.diamond ||
       CanvasElementType.triangle ||
       CanvasElementType.text ||
-      CanvasElementType.image => true,
+      CanvasElementType.image =>
+        true,
       _ => false,
     };
   }
@@ -48,4 +49,3 @@ class SelectionUtils {
     return rect.topCenter.translate(0, -rotateOffset / zoomLevel);
   }
 }
-

@@ -288,7 +288,7 @@ void main() {
 
   group('Selection - deleteSelectedElements', () {
     blocTest<CanvasCubit, CanvasState>(
-      'removes selected elements from document',
+      'marks selected elements as deleted in document',
       build: () => cubit,
       seed: () {
         final r1 = _makeRect('r1');
@@ -303,13 +303,20 @@ void main() {
         isA<CanvasState>()
             .having(
               (s) => s.document.elements.length,
-              'resta 1 elemento',
-              1,
+              'mantém 2 elementos',
+              2,
             )
             .having(
-              (s) => s.document.elements.first.id,
-              'restou r2',
-              'r2',
+              (s) =>
+                  s.document.elements.firstWhere((e) => e.id == 'r1').isDeleted,
+              'r1 deletado',
+              true,
+            )
+            .having(
+              (s) =>
+                  s.document.elements.firstWhere((e) => e.id == 'r2').isDeleted,
+              'r2 não deletado',
+              false,
             )
             .having(
               (s) => s.selectedElementIds,

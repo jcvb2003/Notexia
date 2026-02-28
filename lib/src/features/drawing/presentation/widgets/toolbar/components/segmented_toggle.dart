@@ -42,9 +42,8 @@ class SegmentedToggle<T> extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.primary
-                        : AppColors.transparent,
+                    color:
+                        isSelected ? AppColors.primary : AppColors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: isSelected
                         ? [
@@ -75,9 +74,9 @@ class SegmentedToggle<T> extends StatelessWidget {
       return Text(
         content,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          fontWeight: FontWeight.w500,
-          color: color,
-        ),
+              fontWeight: FontWeight.w500,
+              color: color,
+            ),
       );
     } else if (content is Widget) {
       return content;

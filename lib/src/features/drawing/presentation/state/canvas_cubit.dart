@@ -10,6 +10,7 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
+import 'package:notexia/src/features/drawing/presentation/rendering/renderers/free_draw_renderer.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
@@ -851,6 +852,7 @@ class CanvasCubit extends Cubit<CanvasState> {
 
   void loadDocument(DrawingDocument document) {
     if (isClosed) return;
+    FreeDrawRenderer.clearCache();
     emit(
       state.copyWith(
         document: document,

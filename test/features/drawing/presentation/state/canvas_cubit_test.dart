@@ -459,7 +459,7 @@ void main() {
     );
 
     blocTest<CanvasCubit, CanvasState>(
-      'deleteSelectedElements removes IDs and clears selection',
+      'deleteSelectedElements marks IDs as deleted and clears selection',
       build: () => cubit,
       seed: () {
         final el1 = RectangleElement(
@@ -500,8 +500,25 @@ void main() {
       act: (cubit) => cubit.deleteSelectedElements(),
       expect: () => [
         isA<CanvasState>()
-            .having((s) => s.document.elements.length, 'remaining', 1)
-            .having((s) => s.document.elements.first.id, 'remaining id', 'el2')
+            .having((s) => s.document.elements.length, 'length remains same', 3)
+            .having(
+                (s) => s.document.elements
+                    .firstWhere((e) => e.id == 'el1')
+                    .isDeleted,
+                'el1 deleted',
+                true)
+            .having(
+                (s) => s.document.elements
+                    .firstWhere((e) => e.id == 'el3')
+                    .isDeleted,
+                'el3 deleted',
+                true)
+            .having(
+                (s) => s.document.elements
+                    .firstWhere((e) => e.id == 'el2')
+                    .isDeleted,
+                'el2 not deleted',
+                false)
             .having((s) => s.selectedElementIds, 'selection', isEmpty)
             .having((s) => s.activeElementId, 'activeId', isNull),
       ],

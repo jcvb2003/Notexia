@@ -10,10 +10,13 @@ class AppSettingsRepositoryImpl implements AppSettingsRepository {
   @override
   Future<void> saveSetting(String key, String value) async {
     final db = await _databaseService.database;
-    await db.insert('app_settings', {
-      'setting_key': key,
-      'setting_value': value,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+        'app_settings',
+        {
+          'setting_key': key,
+          'setting_value': value,
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   @override
