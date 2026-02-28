@@ -19,11 +19,10 @@ import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_s
 import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
@@ -342,8 +341,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   final AppSettingsRepository? _settingsRepository;
   final DrawingService _drawingService;
   final PersistenceService _persistenceService;
-  final ElementManipulationDelegate _elementManipulationDelegate;
-  final SelectionDelegate _selectionDelegate;
+  final CanvasInteractionDelegate _interactionDelegate;
   final TextEditingDelegate _textEditingDelegate;
   final ViewportDelegate _viewportDelegate;
   final DrawingDelegate _drawingDelegate;
@@ -359,8 +357,7 @@ class CanvasCubit extends Cubit<CanvasState> {
     this._commandStack,
     this._drawingService,
     this._persistenceService,
-    this._elementManipulationDelegate,
-    this._selectionDelegate,
+    this._interactionDelegate,
     this._textEditingDelegate,
     this._viewportDelegate,
     this._drawingDelegate,
@@ -590,17 +587,17 @@ class CanvasCubit extends Cubit<CanvasState> {
 
   // Selection Operations
   void setSelectionBox(Rect? rect) {
-    final result = _selectionDelegate.setSelectionBox(state, rect);
+    final result = _interactionDelegate.setSelectionBox(state, rect);
     if (result.isSuccess) emit(result.data!);
   }
 
   void setHoveredElement(String? id) {
-    final result = _selectionDelegate.setHoveredElement(state, id);
+    final result = _interactionDelegate.setHoveredElement(state, id);
     if (result.isSuccess) emit(result.data!);
   }
 
   void selectElementAt(Offset localPosition, {bool isMultiSelect = false}) {
-    final result = _selectionDelegate.selectElementAt(
+    final result = _interactionDelegate.selectElementAt(
       state,
       localPosition,
       isMultiSelect: isMultiSelect,
@@ -610,13 +607,13 @@ class CanvasCubit extends Cubit<CanvasState> {
 
   void selectElementsInRect(Rect selectionRect) {
     final result =
-        _selectionDelegate.selectElementsInRect(state, selectionRect);
+        _interactionDelegate.selectElementsInRect(state, selectionRect);
     if (result.isSuccess) emit(result.data!);
   }
 
   // Manipulation Operations
   void moveSelectedElements(Offset delta) {
-    final result = _elementManipulationDelegate.moveSelectedElements(
+    final result = _interactionDelegate.moveSelectedElements(
       state: state,
       delta: delta,
     );
@@ -624,7 +621,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   void resizeSelectedElement(Rect rect) {
-    final result = _elementManipulationDelegate.resizeSelectedElement(
+    final result = _interactionDelegate.resizeSelectedElement(
       state: state,
       rect: rect,
     );
@@ -632,7 +629,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   void rotateSelectedElement(double angle) {
-    final result = _elementManipulationDelegate.rotateSelectedElement(
+    final result = _interactionDelegate.rotateSelectedElement(
       state: state,
       angle: angle,
     );
@@ -645,7 +642,7 @@ class CanvasCubit extends Cubit<CanvasState> {
     bool snapAngle = false,
     double? angleStep,
   }) {
-    final result = _elementManipulationDelegate.updateLineEndpoint(
+    final result = _interactionDelegate.updateLineEndpoint(
       state: state,
       isStart: isStart,
       worldPoint: worldPoint,
@@ -656,7 +653,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   Future<void> finalizeManipulation() async {
-    final result = await _elementManipulationDelegate.finalizeManipulation(
+    final result = await _interactionDelegate.finalizeManipulation(
       state: state,
       documentRepository: _documentRepository,
     );
@@ -664,7 +661,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   void deleteSelectedElements() {
-    final result = _elementManipulationDelegate.deleteSelectedElements(
+    final result = _interactionDelegate.deleteSelectedElements(
       state: state,
       commandStack: _commandStack,
       applyCallback: _applyElementsFromCommand,
@@ -674,7 +671,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   void deleteElementById(String elementId) {
-    final result = _elementManipulationDelegate.deleteElementById(
+    final result = _interactionDelegate.deleteElementById(
       state: state,
       elementId: elementId,
       commandStack: _commandStack,
@@ -723,8 +720,7 @@ class CanvasCubit extends Cubit<CanvasState> {
       isStrikethrough: isStrikethrough,
     );
 
-    final result =
-        _elementManipulationDelegate.updateSelectedElementsProperties(
+    final result = _interactionDelegate.updateSelectedElementsProperties(
       state: state,
       commandStack: _commandStack,
       applyCallback: _applyElementsFromCommand,
@@ -735,7 +731,7 @@ class CanvasCubit extends Cubit<CanvasState> {
   }
 
   void updateCurrentStyle(ElementStyle style) {
-    final result = _elementManipulationDelegate.updateCurrentStyle(
+    final result = _interactionDelegate.updateCurrentStyle(
       state: state,
       style: style,
     );
@@ -792,6 +788,7 @@ class CanvasCubit extends Cubit<CanvasState> {
     );
     _scheduleSaveDocument(updatedDoc);
   }
+
   late final drawing = DrawingScope(
     () => state,
     (s) => emit(s),

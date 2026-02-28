@@ -15,8 +15,7 @@ import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubi
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
@@ -36,8 +35,8 @@ class MsgDrawingService extends Mock implements DrawingService {}
 
 class MockPersistenceService extends Mock implements PersistenceService {}
 
-class MockElementManipulationDelegate extends Mock
-    implements ElementManipulationDelegate {}
+class MockCanvasInteractionDelegate extends Mock
+    implements CanvasInteractionDelegate {}
 
 final sl = GetIt.instance;
 
@@ -82,14 +81,9 @@ void main() {
       sl.registerLazySingleton<PersistenceService>(
           () => MockPersistenceService());
     }
-    if (!sl.isRegistered<ElementManipulationDelegate>()) {
-      sl.registerLazySingleton<ElementManipulationDelegate>(
-        () => MockElementManipulationDelegate(),
-      );
-    }
-    if (!sl.isRegistered<SelectionDelegate>()) {
-      sl.registerLazySingleton<SelectionDelegate>(
-        () => const SelectionDelegate(),
+    if (!sl.isRegistered<CanvasInteractionDelegate>()) {
+      sl.registerLazySingleton<CanvasInteractionDelegate>(
+        () => MockCanvasInteractionDelegate(),
       );
     }
     if (!sl.isRegistered<TextEditingDelegate>()) {

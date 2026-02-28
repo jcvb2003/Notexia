@@ -4,8 +4,7 @@ import 'package:notexia/src/features/drawing/domain/services/transformation_serv
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
 
@@ -42,13 +41,12 @@ Future<void> initServiceLocator() async {
     () => DrawingService(
         canvasManipulationService: sl<CanvasManipulationService>()),
   );
-  sl.registerLazySingleton<ElementManipulationDelegate>(
-    () => ElementManipulationDelegate(
+  sl.registerLazySingleton<CanvasInteractionDelegate>(
+    () => CanvasInteractionDelegate(
       sl<CanvasManipulationService>(),
       sl<TransformationService>(),
     ),
   );
-  sl.registerLazySingleton<SelectionDelegate>(() => const SelectionDelegate());
   sl.registerLazySingleton<TextEditingDelegate>(
       () => const TextEditingDelegate());
   sl.registerLazySingleton<ViewportDelegate>(() => const ViewportDelegate());

@@ -16,8 +16,7 @@ import 'package:notexia/src/app/di/service_locator/service_locator.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
 
-import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
@@ -69,8 +68,7 @@ class _MainLayoutState extends State<MainLayout> {
               sl<CommandStackService>(),
               sl<DrawingService>(),
               sl<PersistenceService>(),
-              sl<ElementManipulationDelegate>(),
-              sl<SelectionDelegate>(),
+              sl<CanvasInteractionDelegate>(),
               sl<TextEditingDelegate>(),
               sl<ViewportDelegate>(),
               sl<DrawingDelegate>(),

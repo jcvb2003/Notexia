@@ -12,9 +12,8 @@ import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dar
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/element_manipulation_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/selection_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
@@ -73,7 +72,7 @@ void main() {
     final drawingService =
         DrawingService(canvasManipulationService: canvasManipulationService);
     final persistenceService = PersistenceService(mockDocumentRepository);
-    final elementManipulationDelegate = ElementManipulationDelegate(
+    final canvasInteractionDelegate = CanvasInteractionDelegate(
       canvasManipulationService,
       transformationService,
     );
@@ -83,8 +82,7 @@ void main() {
       commandStackService,
       drawingService,
       persistenceService,
-      elementManipulationDelegate,
-      const SelectionDelegate(),
+      canvasInteractionDelegate,
       const TextEditingDelegate(),
       const ViewportDelegate(),
       const DrawingDelegate(),
