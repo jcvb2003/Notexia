@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 
 class AppTextField extends StatelessWidget {
@@ -19,6 +20,7 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool showBorder;
   final EdgeInsetsGeometry? contentPadding;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
     super.key,
@@ -39,6 +41,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.showBorder = true,
     this.contentPadding,
+    this.inputFormatters,
   });
 
   @override
@@ -48,6 +51,7 @@ class AppTextField extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autofocus,
       textAlign: textAlign,
+      inputFormatters: inputFormatters,
       textInputAction: textInputAction,
       keyboardType: keyboardType,
       maxLines: maxLines,
@@ -57,8 +61,7 @@ class AppTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         isDense: isDense,
-        contentPadding:
-            contentPadding ??
+        contentPadding: contentPadding ??
             const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         border: showBorder
             ? OutlineInputBorder(

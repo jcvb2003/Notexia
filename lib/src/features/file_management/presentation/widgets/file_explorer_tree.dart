@@ -47,6 +47,22 @@ class FileExplorerTree extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () =>
                       context.read<FileExplorerCubit>().initialize(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.sm,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(AppSizes.radiusMedium),
+                    ),
+                    textStyle: context.typography.labelMedium?.copyWith(
+                      color: Colors.white,
+                    ),
+                  ),
                   child: const Text('Tentar Novamente'),
                 ),
               ],

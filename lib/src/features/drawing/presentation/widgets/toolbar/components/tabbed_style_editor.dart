@@ -45,10 +45,12 @@ class _TabbedStyleEditorState extends State<TabbedStyleEditor>
           unselectedLabelColor: AppColors.textMuted,
           indicatorColor: AppColors.primary,
           dividerColor: AppColors.border,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+          labelStyle: context.typography.labelMedium,
+          unselectedLabelStyle: context.typography.labelMedium?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.xl),
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           child: widget.tabs.values.elementAt(_tabController.index),

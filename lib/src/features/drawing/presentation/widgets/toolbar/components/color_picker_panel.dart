@@ -168,14 +168,16 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.sm,
+        horizontal: AppSpacing.xs,
+      ),
       child: Row(
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: context.typography.labelMedium?.copyWith(
               fontSize: 13,
-              fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
             ),
           ),

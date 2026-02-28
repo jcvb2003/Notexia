@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
+import 'package:notexia/src/core/widgets/common/app_text_field.dart';
 
 /// Seção de cor personalizada com picker HSL e entrada HEX.
 class CustomColorSection extends StatefulWidget {
@@ -101,10 +102,10 @@ class _CustomColorSectionState extends State<CustomColorSection> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
             color: AppColors.surface,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
             border: Border.all(color: AppColors.border),
             boxShadow: AppShadows.subtle,
           ),
@@ -132,37 +133,22 @@ class _CustomColorSectionState extends State<CustomColorSection> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: SizedBox(
                   height: 40,
-                  child: TextField(
+                  child: AppTextField(
                     controller: _hexController,
                     style: const TextStyle(
                       fontSize: 13,
                       fontFamily: 'monospace',
                       fontWeight: FontWeight.w600,
                     ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      fillColor: AppColors.background,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: AppColors.border),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: AppColors.border),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: AppColors.primary),
-                      ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: 10,
                     ),
+                    keyboardType: TextInputType.text,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
                         RegExp(r'[#0-9A-Fa-f]'),
@@ -178,7 +164,7 @@ class _CustomColorSectionState extends State<CustomColorSection> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSpacing.sm + 2),
               SizedBox(
                 height: 40,
                 child: ElevatedButton.icon(
@@ -191,11 +177,11 @@ class _CustomColorSectionState extends State<CustomColorSection> {
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
                     ),
-                    textStyle: const TextStyle(
+                    textStyle: context.typography.labelMedium?.copyWith(
+                      color: Colors.white,
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -204,25 +190,25 @@ class _CustomColorSectionState extends State<CustomColorSection> {
           ),
         ),
         if (_showSliders) ...[
-          const SizedBox(height: 16),
-          _buildLabel('Matiz'),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.lg),
+          _buildLabel(context, 'Matiz'),
+          const SizedBox(height: AppSpacing.xs),
           _HueSlider(
             hue: _hslColor.hue,
             onChanged: (hue) => _updateColor(_hslColor.withHue(hue)),
           ),
-          const SizedBox(height: 12),
-          _buildLabel('Saturação'),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.md),
+          _buildLabel(context, 'Saturação'),
+          const SizedBox(height: AppSpacing.xs),
           _GradientSlider(
             value: _hslColor.saturation,
             startColor: _hslColor.withSaturation(0).toColor(),
             endColor: _hslColor.withSaturation(1).toColor(),
             onChanged: (s) => _updateColor(_hslColor.withSaturation(s)),
           ),
-          const SizedBox(height: 12),
-          _buildLabel('Luminosidade'),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.md),
+          _buildLabel(context, 'Luminosidade'),
+          const SizedBox(height: AppSpacing.xs),
           _GradientSlider(
             value: _hslColor.lightness,
             startColor: Colors.black,
@@ -235,15 +221,14 @@ class _CustomColorSectionState extends State<CustomColorSection> {
     );
   }
 
-  Widget _buildLabel(String text) {
+  Widget _buildLabel(BuildContext context, String text) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: const TextStyle(
+        style: context.typography.labelSmall?.copyWith(
           fontSize: 11,
           color: AppColors.textMuted,
-          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -267,17 +252,17 @@ class _HueSlider extends StatelessWidget {
           onHorizontalDragUpdate: (details) {
             final newHue =
                 (details.localPosition.dx / constraints.maxWidth * 360).clamp(
-                  0.0,
-                  360.0,
-                );
+              0.0,
+              360.0,
+            );
             onChanged(newHue);
           },
           onTapDown: (details) {
             final newHue =
                 (details.localPosition.dx / constraints.maxWidth * 360).clamp(
-                  0.0,
-                  360.0,
-                );
+              0.0,
+              360.0,
+            );
             onChanged(newHue);
           },
           child: Container(

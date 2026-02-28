@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
+import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -18,9 +19,9 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           // Header Sticky
           Container(
-            height: 60,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
+            height: AppSizes.headerHeight,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            decoration: const BoxDecoration(
               color: AppColors.gray50,
               border: Border(
                 bottom: BorderSide(color: AppColors.border, width: 1),
@@ -34,31 +35,18 @@ class _SettingsPageState extends State<SettingsPage> {
                     alignment: Alignment.center,
                     child: Text(
                       'Configurações',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: context.typography.titleLarge,
                     ),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: AppColors.background,
-                        shape: BoxShape.circle,
-                        boxShadow: AppShadows.subtle,
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          LucideIcons.x,
-                          size: 18,
-                          color: AppColors.textSecondary,
-                        ),
-                        // Usando Navigator.maybePop para segurança
-                        onPressed: () => Navigator.of(context).maybePop(),
-                        padding: EdgeInsets.zero,
-                        constraints:
-                            const BoxConstraints(), // Minimiza constraints padrão
-                      ),
+                    child: AppIconButton(
+                      icon: LucideIcons.x,
+                      tooltip: 'Fechar',
+                      onTap: () => Navigator.of(context).maybePop(),
+                      activeBackgroundColor: AppColors.background,
+                      inactiveColor: AppColors.textSecondary,
+                      size: AppSizes.buttonSmall,
                     ),
                   ),
                 ],
@@ -69,9 +57,9 @@ class _SettingsPageState extends State<SettingsPage> {
           // Conteúdo Rolável
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSpacing.xl - 4),
               children: [
-                _buildSection(
+                _SettingsSection(
                   title: 'Configurações',
                   items: [
                     _SettingsItem(icon: LucideIcons.user, label: 'Sobre'),
@@ -100,8 +88,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                _buildSection(
+                const SizedBox(height: AppSpacing.xl),
+                _SettingsSection(
                   title: 'Plugins nativos',
                   items: [
                     _SettingsItem(icon: LucideIcons.link, label: 'Backlinks'),
@@ -127,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 40), // Espaço extra no final
+                const SizedBox(height: AppSpacing.xxl + 8),
               ],
             ),
           ),
@@ -135,19 +123,30 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+}
 
-  Widget _buildSection({required String title, required List<Widget> items}) {
+class _SettingsSection extends StatelessWidget {
+  final String title;
+  final List<Widget> items;
+
+  const _SettingsSection({required this.title, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 12, bottom: 8),
-          child: Text(title, style: Theme.of(context).textTheme.labelMedium),
+          padding: const EdgeInsets.only(
+            left: AppSpacing.md,
+            bottom: AppSpacing.sm,
+          ),
+          child: Text(title, style: context.typography.labelMedium),
         ),
         Container(
           decoration: BoxDecoration(
             color: AppColors.background,
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(AppSizes.radiusRound + 4),
             border: Border.all(color: AppColors.border),
             boxShadow: AppShadows.subtle,
           ),
@@ -160,7 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
               return Container(
                 decoration: !isLast
-                    ? BoxDecoration(
+                    ? const BoxDecoration(
                         border: Border(
                           bottom: BorderSide(color: AppColors.border, width: 1),
                         ),
@@ -189,20 +188,21 @@ class _SettingsItem extends StatelessWidget {
       child: InkWell(
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl - 4,
+            vertical: AppSpacing.lg,
+          ),
           child: Row(
             children: [
-              Icon(icon, size: 22, color: AppColors.textPrimary),
-              const SizedBox(width: 16),
+              Icon(icon,
+                  size: AppSizes.iconLarge + 2, color: AppColors.textPrimary),
+              const SizedBox(width: AppSpacing.lg),
               Expanded(
-                child: Text(
-                  label,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
+                child: Text(label, style: context.typography.bodyLarge),
               ),
               const Icon(
                 LucideIcons.chevronRight,
-                size: 20,
+                size: AppSizes.iconLarge,
                 color: AppColors.textMuted,
               ),
             ],
