@@ -142,6 +142,47 @@ void main() {
     );
   });
 
+  group('clearCanvas', () {
+    blocTest<CanvasCubit, CanvasState>(
+      'clearCanvas persists the cleared document',
+      build: () => cubit,
+      seed: () {
+        final el = RectangleElement(
+          id: 'el-to-clear',
+          x: 0,
+          y: 0,
+          width: 10,
+          height: 10,
+          strokeColor: const Color(0xff000000),
+          updatedAt: DateTime.now(),
+        );
+        return CanvasState(
+          document: initialDoc.copyWith(elements: [el]),
+        );
+      },
+      act: (cubit) => cubit.clearCanvas(),
+      wait: const Duration(milliseconds: 400),
+      expect: () => [
+        isA<CanvasState>()
+            .having((s) => s.document.elements, 'elements', isEmpty)
+            .having((s) => s.selectedElementIds, 'selection', isEmpty),
+      ],
+      verify: (_) {
+        verify(() => mockDocumentRepository.saveDocument(any())).called(1);
+      },
+    );
+
+    blocTest<CanvasCubit, CanvasState>(
+      'clearCanvas does nothing when canvas is already empty',
+      build: () => cubit,
+      act: (cubit) => cubit.clearCanvas(),
+      expect: () => [],
+      verify: (_) {
+        verifyNever(() => mockDocumentRepository.saveDocument(any()));
+      },
+    );
+  });
+
   group('updateTitle', () {
     blocTest<CanvasCubit, CanvasState>(
       'emits updated document when title is changed successfully',

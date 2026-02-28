@@ -94,6 +94,13 @@ class DocumentRepositoryImpl implements DocumentRepository {
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
 
+        // Limpar elementos antigos para evitar "fantasmas"
+        await txn.delete(
+          Queries.tableCanvasElements,
+          where: 'documentId = ?',
+          whereArgs: [document.id],
+        );
+
         // Sincronizar elementos
         for (var elementMap in elements) {
           final (cleanedMap, customDataJson) = _separateCustomData(

@@ -142,5 +142,58 @@ void main() {
       );
       expect(elementMaps, isEmpty);
     });
+
+    test(
+        'saveDocument removes ghost elements that were deleted from the document',
+        () async {
+      // Documento com 2 elementos
+      final docWith2 = DrawingDocument(
+        id: 'doc-ghost',
+        title: 'Ghost Test',
+        createdAt: now,
+        updatedAt: now,
+        elements: [
+          RectangleElement(
+            id: 'rect-keep',
+            x: 0,
+            y: 0,
+            width: 50,
+            height: 50,
+            strokeColor: const Color(0xFF00FF00),
+            updatedAt: now,
+          ),
+          RectangleElement(
+            id: 'rect-remove',
+            x: 100,
+            y: 100,
+            width: 50,
+            height: 50,
+            strokeColor: const Color(0xFFFF0000),
+            updatedAt: now,
+          ),
+        ],
+      );
+
+      // Salvar com 2 elementos
+      final save1 = await repository.saveDocument(docWith2);
+      expect(save1.isSuccess, isTrue);
+
+      // Verificar que os 2 existem
+      final load1 = await repository.getDocumentById('doc-ghost');
+      expect(load1.data!.elements.length, 2);
+
+      // Salvar novamente com apenas 1 elemento (simulando deleção do segundo)
+      final docWith1 = docWith2.copyWith(
+        elements: [docWith2.elements.first],
+      );
+      final save2 = await repository.saveDocument(docWith1);
+      expect(save2.isSuccess, isTrue);
+
+      // Recarregar e verificar que só o elemento mantido existe
+      final load2 = await repository.getDocumentById('doc-ghost');
+      expect(load2.isSuccess, isTrue);
+      expect(load2.data!.elements.length, 1);
+      expect(load2.data!.elements.first.id, 'rect-keep');
+    });
   });
 }

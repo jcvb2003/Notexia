@@ -551,6 +551,7 @@ class CanvasCubit extends Cubit<CanvasState> {
         label: 'Limpar tela',
       ),
     );
+    _scheduleSaveDocument(updatedDoc);
   }
 
   void loadDocument(DrawingDocument document) {
