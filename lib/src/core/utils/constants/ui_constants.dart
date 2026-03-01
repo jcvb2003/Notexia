@@ -216,8 +216,11 @@ class AppSizes {
   static const double buttonLarge = 44;
 
   // Toolbars
-  static const double toolbarHeight = 44.0;
-  static const double toolbarGap = 6.0;
+  // Altura visual usada no empilhamento vertical das toolbars.
+  // Inclui o conteúdo do botão de snap com indicadores para manter o
+  // espaçamento consistente entre Header -> MainToolbar -> ContextToolbar.
+  static const double toolbarHeight = 50.0;
+  static const double toolbarGap = 12.0;
 
   // Sidebar
   static const double sidebarWidth = 320.0;

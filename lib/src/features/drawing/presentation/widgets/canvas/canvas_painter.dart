@@ -18,6 +18,8 @@ class PainterCtx {
   final bool isEraserActive;
   final List<SnapGuide> snapGuides;
   final CanvasElement? activeDrawingElement;
+  final bool renderOnlySelected;
+  final bool excludeSelected;
 
   const PainterCtx({
     required this.elements,
@@ -31,17 +33,21 @@ class PainterCtx {
     required this.isEraserActive,
     required this.snapGuides,
     this.activeDrawingElement,
+    this.renderOnlySelected = false,
+    this.excludeSelected = false,
   });
 }
 
 class StaticCanvasPainter extends CustomPainter {
   final List<CanvasElement> elements;
+  final Set<String> selectedElementIds;
   final double zoomLevel;
   final Offset panOffset;
   final String? editingElementId;
 
   StaticCanvasPainter({
     required this.elements,
+    required this.selectedElementIds,
     required this.zoomLevel,
     required this.panOffset,
     this.editingElementId,
@@ -55,7 +61,7 @@ class StaticCanvasPainter extends CustomPainter {
 
     final ctx = PainterCtx(
       elements: elements,
-      selectedElementIds: const {},
+      selectedElementIds: selectedElementIds,
       zoomLevel: zoomLevel,
       panOffset: panOffset,
       selectionBox: null,
@@ -65,6 +71,7 @@ class StaticCanvasPainter extends CustomPainter {
       isEraserActive: false,
       snapGuides: const [],
       activeDrawingElement: null,
+      excludeSelected: true,
     );
 
     BackgroundGridPainter.drawBackground(ctx, canvas, size);
@@ -76,6 +83,7 @@ class StaticCanvasPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant StaticCanvasPainter oldDelegate) {
     return oldDelegate.elements != elements ||
+        oldDelegate.selectedElementIds != selectedElementIds ||
         oldDelegate.zoomLevel != zoomLevel ||
         oldDelegate.panOffset != panOffset ||
         oldDelegate.editingElementId != editingElementId;
@@ -125,7 +133,10 @@ class DynamicCanvasPainter extends CustomPainter {
       isEraserActive: isEraserActive,
       snapGuides: snapGuides,
       activeDrawingElement: activeDrawingElement,
+      renderOnlySelected: true,
     );
+
+    ElementsPainter.renderElements(ctx, canvas, size);
 
     if (ctx.activeDrawingElement != null) {
       ElementsPainter.renderSingleElement(

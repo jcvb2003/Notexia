@@ -76,8 +76,13 @@ class CanvasInputRouter {
   void handleTapDown(
       TapDownDetails details, CanvasState uiState, PointerDeviceKind kind) {
     if (uiState.hoveredElementId != null) {
-      canvasCubit.text.setEditingText(uiState.hoveredElementId!);
-      return;
+      final hoveredEl = canvasCubit.state.elements
+          .where((e) => e.id == uiState.hoveredElementId)
+          .firstOrNull;
+      if (hoveredEl?.type == CanvasElementType.text) {
+        canvasCubit.text.setEditingText(uiState.hoveredElementId!);
+        return;
+      }
     }
 
     if (canvasCubit.state.editingTextId != null) return;
@@ -152,12 +157,15 @@ class CanvasInputRouter {
     canvasCubit.drawing.stopDrawing();
   }
 
+  Offset? _lastFocalPointLocal;
+
   void handleScaleStart(
     ScaleStartDetails details,
     CanvasState uiState,
     CanvasElementType selectedTool,
     PointerDeviceKind kind,
   ) {
+    _lastFocalPointLocal = details.localFocalPoint;
     final event = ScaleStartInputEvent(
       details: details,
       kind: kind,
@@ -174,9 +182,13 @@ class CanvasInputRouter {
     CanvasElementType selectedTool,
     PointerDeviceKind kind,
   ) {
-    // Cria o evento e passa pelo pipeline
+    // Robust cross-platform delta calculation overriding buggy native focalPointDelta on desktop
+    final previousLocal = _lastFocalPointLocal ?? details.localFocalPoint;
+    final actualScreenDelta = details.localFocalPoint - previousLocal;
+    _lastFocalPointLocal = details.localFocalPoint;
+
     final worldFocal = toWorld(details.localFocalPoint, uiState);
-    final worldFocalDelta = toWorldDelta(details.focalPointDelta, uiState);
+    final worldFocalDelta = toWorldDelta(actualScreenDelta, uiState);
 
     final event = ScaleUpdateInputEvent(
       details: details,
@@ -204,6 +216,7 @@ class CanvasInputRouter {
       selectedTool: selectedTool,
     );
     _pipeline.process(event);
+    _lastFocalPointLocal = null;
   }
 
   Offset toWorld(Offset screenPoint, CanvasState uiState) {

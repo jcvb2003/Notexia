@@ -74,6 +74,11 @@ class _CanvasWidgetState extends State<CanvasWidget> {
     super.initState();
     _router = CanvasInputRouter(canvasCubit: context.read<CanvasCubit>());
     _focusNode = FocusNode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _focusNode.requestFocus();
+      }
+    });
   }
 
   @override
@@ -162,6 +167,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                           child: CustomPaint(
                             painter: StaticCanvasPainter(
                               elements: uiState.document.activeSortedElements,
+                              selectedElementIds: uiState.selectedElementIds,
                               zoomLevel: uiState.zoomLevel,
                               panOffset: uiState.panOffset,
                               editingElementId: editingTextId,

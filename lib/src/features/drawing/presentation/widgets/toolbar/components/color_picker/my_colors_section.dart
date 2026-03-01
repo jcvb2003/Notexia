@@ -25,12 +25,14 @@ class MyColorsSection extends StatelessWidget {
     final allColors = <Color>{...colorsInUse, ...userColors}.toList();
 
     if (allColors.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-        child: Text(
-          'Nenhuma cor salva ainda.\nUse a seção "Personalizado" para adicionar.',
-          textAlign: TextAlign.center,
-          style: context.caption,
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: Text(
+            'Nenhuma cor salva ainda.\nUse a seção "Personalizado" para adicionar.',
+            textAlign: TextAlign.center,
+            style: context.caption,
+          ),
         ),
       );
     }

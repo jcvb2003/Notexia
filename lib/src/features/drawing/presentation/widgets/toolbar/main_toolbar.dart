@@ -27,26 +27,33 @@ class MainToolbar extends StatelessWidget {
 
         return BaseToolbar(
           actions: [
-            AppIconButton(
-              icon: LucideIcons.mousePointer2,
-              tooltip: 'Seleção (V, 1)',
-              isActive: selectedTool == CanvasElementType.selection,
-              onTap: () => context.read<CanvasCubit>().selectTool(
-                    CanvasElementType.selection,
-                  ),
-              size: size,
-              isCompact: isCompact,
-            ),
-            AppIconButton(
-              icon: LucideIcons.compass,
-              tooltip: 'Navegação (H, 2)',
-              isActive: selectedTool == CanvasElementType.navigation,
-              onTap: () => context.read<CanvasCubit>().selectTool(
-                    CanvasElementType.navigation,
-                  ),
-              size: size,
-              isCompact: isCompact,
-            ),
+            if (isCompact)
+              _CompactSelectionNavButton(
+                selectedTool: selectedTool,
+                size: size,
+              )
+            else ...[
+              AppIconButton(
+                icon: LucideIcons.mousePointer2,
+                tooltip: 'Seleção (V, 1)',
+                isActive: selectedTool == CanvasElementType.selection,
+                onTap: () => context.read<CanvasCubit>().selectTool(
+                      CanvasElementType.selection,
+                    ),
+                size: size,
+                isCompact: isCompact,
+              ),
+              AppIconButton(
+                icon: LucideIcons.compass,
+                tooltip: 'Navegação (H, 2)',
+                isActive: selectedTool == CanvasElementType.navigation,
+                onTap: () => context.read<CanvasCubit>().selectTool(
+                      CanvasElementType.navigation,
+                    ),
+                size: size,
+                isCompact: isCompact,
+              ),
+            ],
             const AppDivider.toolbar(),
 
             // Shapes: collapsed to 1 button in compact mode
@@ -290,6 +297,62 @@ class _CompactLineButton extends StatelessWidget {
       },
       size: size,
       isCompact: true,
+    );
+  }
+}
+
+/// Compact selection/navigation button — shows one icon, active for either.
+class _CompactSelectionNavButton extends StatelessWidget {
+  final CanvasElementType selectedTool;
+  final double size;
+
+  const _CompactSelectionNavButton({
+    required this.selectedTool,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelection = selectedTool == CanvasElementType.selection;
+    final isNavigation = selectedTool == CanvasElementType.navigation;
+    final isActive = isSelection || isNavigation;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppIconButton(
+          icon: isNavigation ? LucideIcons.compass : LucideIcons.mousePointer2,
+          tooltip: 'Seleção/Navegação',
+          isActive: isActive,
+          onTap: () {
+            if (isActive) {
+              final next = isSelection
+                  ? CanvasElementType.navigation
+                  : CanvasElementType.selection;
+              context.read<CanvasCubit>().selectTool(next);
+            } else {
+              context
+                  .read<CanvasCubit>()
+                  .selectTool(CanvasElementType.selection);
+            }
+          },
+          size: size,
+          isCompact: true,
+        ),
+        const SizedBox(height: 1),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppIndicator(
+              isActive: isSelection,
+            ),
+            const SizedBox(width: 2),
+            AppIndicator(
+              isActive: isNavigation,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

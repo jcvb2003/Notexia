@@ -30,6 +30,21 @@ class _DraggableToolbarState extends State<DraggableToolbar> {
 
   @override
   Widget build(BuildContext context) {
+    // Se for mobile, fica fixa (sem deslize vertical) e o conteúdo deve manter altura estática
+    final content = Center(
+      child: widget.isMobile
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: MainToolbar(isCompact: widget.isCompact),
+            )
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              physics: const ClampingScrollPhysics(),
+              child: MainToolbar(isCompact: widget.isCompact),
+            ),
+    );
+
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 400),
       curve: Curves.elasticOut,
@@ -38,7 +53,8 @@ class _DraggableToolbarState extends State<DraggableToolbar> {
       left: 0,
       right: 0,
       child: SafeArea(
-        top: false,
+        top: widget.isToolbarAtTop,
+        bottom: !widget.isToolbarAtTop,
         child: Listener(
           onPointerDown: (details) {
             _dragStartY = details.position.dy;
@@ -63,20 +79,13 @@ class _DraggableToolbarState extends State<DraggableToolbar> {
             _isDragging = false;
             _dragStartY = null;
           },
-          onPointerCancel: (PointerCancelEvent event) {
+          onPointerCancel: (_) {
             _isDragging = false;
             _dragStartY = null;
           },
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            child: Center(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                physics: const ClampingScrollPhysics(),
-                child: MainToolbar(isCompact: widget.isCompact),
-              ),
-            ),
+            child: content,
           ),
         ),
       ),

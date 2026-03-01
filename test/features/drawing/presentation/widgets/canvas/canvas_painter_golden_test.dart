@@ -57,6 +57,7 @@ void main() {
                     size: const Size(320, 220),
                     painter: StaticCanvasPainter(
                       elements: elements,
+                      selectedElementIds: selectedIds,
                       zoomLevel: zoom,
                       panOffset: pan,
                     ),
@@ -115,7 +116,11 @@ void main() {
           SnapGuide(isVertical: true, offset: 120, min: 0, max: 220),
           SnapGuide(isVertical: false, offset: 90, min: 0, max: 320),
         ],
-        eraserTrail: const [Offset(200, 120), Offset(220, 135), Offset(240, 125)],
+        eraserTrail: const [
+          Offset(200, 120),
+          Offset(220, 135),
+          Offset(240, 125)
+        ],
         isEraserActive: true,
       ),
     );

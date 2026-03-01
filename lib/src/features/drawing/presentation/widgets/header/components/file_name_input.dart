@@ -20,10 +20,18 @@ class _FileNameInputState extends State<FileNameInput> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && _isEditing) {
+      _submit();
+    }
   }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();

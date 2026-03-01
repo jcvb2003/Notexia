@@ -146,9 +146,10 @@ class _LayoutMetrics {
     required bool isMobile,
     required bool isCompact,
   }) {
-    const double bottomMargin = 10.0;
-    const double toolbarH = AppSizes.toolbarHeight;
-    const double gap = AppSizes.toolbarGap;
+    const double gap = AppSizes.toolbarGap; // Standardized spacing
+    final double headerVisualBottom =
+        AppSpacing.sm + AppSizes.buttonSmall + (AppSpacing.xs * 2);
+    final double toolbarH = isMobile ? AppSizes.toolbarHeight : 48.0;
 
     // 1. Header: Oculto se em fullscreen
     final double headerTop = state.isFullScreen ? -100 : 0;
@@ -159,39 +160,40 @@ class _LayoutMetrics {
 
     if (!state.isToolbarAtTop) {
       toolbarTop = null;
-      toolbarBottom = bottomMargin;
+      toolbarBottom = gap;
     } else if (state.isFullScreen) {
       // Fullscreen + topo: toolbar começa abaixo do botão fechar
-      toolbarTop = isMobile ? 56.0 : 8.0;
+      toolbarTop = isMobile ? 56.0 : gap;
       toolbarBottom = null;
     } else {
-      // Normal + topo: toolbar começa abaixo do header
-      toolbarTop = AppSizes.headerHeight + gap;
+      // Normal + topo: toolbar começa exatamente abaixo do visual do header (56px) mais o gap
+      // O HeaderWidget mede 56px de conteúdo visível (8 padding + 40 btn + 8 padding).
+      // Como o DraggableToolbar tem SafeArea(top: true), o notch é automaticamente somado.
+      toolbarTop = headerVisualBottom + gap;
       toolbarBottom = null;
     }
 
-    // 3. Toolbar contextual (sempre adjacente à principal)
+    // 3. Toolbar contextual (sempre separada da principal pela mesma distância)
     final double? contextTop = (state.isToolbarAtTop && toolbarTop != null)
         ? toolbarTop + toolbarH + gap
         : null;
     final double? contextBottom =
-        state.isToolbarAtTop ? null : bottomMargin + toolbarH + gap;
+        state.isToolbarAtTop ? null : (toolbarBottom ?? 0) + toolbarH + gap;
 
     // 4. Utility Control (Zoom/History)
     double utilityBottom;
     if (state.isFullScreen && state.isToolbarAtTop) {
-      // Branch explicitamente protegido conforme solicitado
-      utilityBottom = bottomMargin;
+      utilityBottom = gap;
     } else if (isCompact && !state.isToolbarAtTop) {
-      // Evita colisão com as toolbars empilhadas no bottom
-      utilityBottom = 140;
+      // Evita colisão com as toolbars empilhadas no bottom: bottom da contextual + gap
+      utilityBottom = (contextBottom ?? gap) + toolbarH + gap;
     } else {
-      utilityBottom = bottomMargin;
+      utilityBottom = gap;
     }
 
     // 5. Botão de reduzir fullscreen
     // Mobile: -15 restaura posição rente ao topo (SafeArea ajusta o notch)
-    final double fullscreenButtonTop = isMobile ? -15.0 : 7.0;
+    final double fullscreenButtonTop = isMobile ? -15.0 : gap;
 
     return _LayoutMetrics(
       headerTop: headerTop,

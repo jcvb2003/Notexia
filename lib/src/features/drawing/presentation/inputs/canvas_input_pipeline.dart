@@ -156,7 +156,7 @@ class SnappingMiddleware implements InputMiddleware {
     if (!event.isDraggingSelection) return;
 
     final isShift = _isShiftPressed();
-    final isSnapEnabled = event.state.isAngleSnapEnabled;
+    final isSnapEnabled = event.state.interaction.snap.mode.isObjectSnapEnabled;
 
     if (isShift || isSnapEnabled) {
       final selectedIds = event.state.selectedElementIds;

@@ -19,6 +19,11 @@ class ElementsPainter {
 
     for (final element in elementsToRender) {
       if (ctx.editingElementId == element.id) continue;
+
+      final isSelected = ctx.selectedElementIds.contains(element.id);
+      if (ctx.excludeSelected && isSelected) continue;
+      if (ctx.renderOnlySelected && !isSelected) continue;
+
       final elementBounds = _getRotatedBounds(element);
       if (!cullingRect.overlaps(elementBounds)) {
         continue;
