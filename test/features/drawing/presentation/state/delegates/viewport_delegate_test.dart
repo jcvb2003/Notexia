@@ -40,6 +40,23 @@ void main() {
         final result = delegate.zoomIn(state);
         expect(result.data!.zoomLevel, AppConstants.maxZoom);
       });
+
+      test('with screenCenter keeps anchor point stable in screen space', () {
+        final state = baseState.copyWith(
+          transform: baseState.transform.copyWith(
+            zoomLevel: 1.0,
+            panOffset: const Offset(10, 20),
+          ),
+        );
+        const center = Offset(110, 220);
+
+        final result = delegate.zoomIn(state, center).data!;
+        final world = (center - state.panOffset) / state.zoomLevel;
+        final projected = result.panOffset + world * result.zoomLevel;
+
+        expect(projected.dx, closeTo(center.dx, 0.001));
+        expect(projected.dy, closeTo(center.dy, 0.001));
+      });
     });
 
     group('zoomOut', () {
@@ -59,6 +76,47 @@ void main() {
         );
         final result = delegate.zoomOut(state);
         expect(result.data!.zoomLevel, AppConstants.minZoom);
+      });
+
+      test('with screenCenter keeps anchor point stable in screen space', () {
+        final state = baseState.copyWith(
+          transform: baseState.transform.copyWith(
+            zoomLevel: 2.0,
+            panOffset: const Offset(30, 40),
+          ),
+        );
+        const center = Offset(230, 340);
+
+        final result = delegate.zoomOut(state, center).data!;
+        final world = (center - state.panOffset) / state.zoomLevel;
+        final projected = result.panOffset + world * result.zoomLevel;
+
+        expect(projected.dx, closeTo(center.dx, 0.001));
+        expect(projected.dy, closeTo(center.dy, 0.001));
+      });
+    });
+
+    group('setZoomAtPoint', () {
+      test('sets pan and zoom with clamping', () {
+        final result = delegate.setZoomAtPoint(
+          baseState,
+          999,
+          const Offset(12, 34),
+        );
+
+        expect(result.data!.zoomLevel, AppConstants.maxZoom);
+        expect(result.data!.panOffset, const Offset(12, 34));
+      });
+
+      test('clamps to min zoom', () {
+        final result = delegate.setZoomAtPoint(
+          baseState,
+          0.001,
+          const Offset(-1, -2),
+        );
+
+        expect(result.data!.zoomLevel, AppConstants.minZoom);
+        expect(result.data!.panOffset, const Offset(-1, -2));
       });
     });
 

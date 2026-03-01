@@ -38,4 +38,43 @@ class AppTheme {
       ),
     );
   }
+
+  static ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColors.primary,
+        brightness: Brightness.dark,
+        primary: AppColors.primary,
+        secondary: AppColors.primaryLight,
+        surface: const Color(0xFF1E1E1E),
+      ),
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      textTheme: AppTypography.textTheme.apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFF1E1E1E),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      dividerTheme: DividerThemeData(
+        thickness: 1,
+        color: Colors.white.withValues(alpha: 0.1),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          borderSide: const BorderSide(color: AppColors.primary),
+        ),
+      ),
+    );
+  }
 }

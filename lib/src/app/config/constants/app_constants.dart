@@ -4,10 +4,6 @@ class AppConstants {
   static const String appName = 'Notexia';
   static const String appVersion = '1.0.0';
 
-  // API & Networking
-  static const Duration connectTimeout = Duration(seconds: 30);
-  static const Duration receiveTimeout = Duration(seconds: 30);
-
   // UI - Layout
   static const double defaultPadding = 16.0;
   static const double defaultMargin = 16.0;

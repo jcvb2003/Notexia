@@ -2,10 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/asset_repository.dart';
+// REMOVED: import 'package:notexia/src/features/drawing/domain/repositories/asset_repository.dart';
 import 'package:uuid/uuid.dart';
 
-class AssetRepositoryImpl implements AssetRepository {
+class AssetRepository {
   static const String _assetsFolder = 'assets';
   final _uuid = const Uuid();
 
@@ -19,7 +19,6 @@ class AssetRepositoryImpl implements AssetRepository {
     return path;
   }
 
-  @override
   Future<String> saveAsset(Uint8List data, String extension) async {
     final assetsPath = await _getAssetsPath();
     final id = _uuid.v4();
@@ -30,7 +29,6 @@ class AssetRepositoryImpl implements AssetRepository {
     return id;
   }
 
-  @override
   Future<Uint8List?> getAsset(String id) async {
     final assetsPath = await _getAssetsPath();
 
@@ -47,7 +45,6 @@ class AssetRepositoryImpl implements AssetRepository {
     return null;
   }
 
-  @override
   Future<void> deleteAsset(String id) async {
     final assetsPath = await _getAssetsPath();
     final dir = Directory(assetsPath);

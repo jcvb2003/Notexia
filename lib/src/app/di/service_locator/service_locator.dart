@@ -14,7 +14,7 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_d
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 import 'package:notexia/src/features/drawing/data/repositories/asset_repository_impl.dart';
 import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/asset_repository.dart';
+// import 'package:notexia/src/features/drawing/domain/repositories/asset_repository.dart';
 import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
 import 'package:notexia/src/features/file_management/data/repositories/file_repository_impl.dart';
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
@@ -68,7 +68,7 @@ Future<void> initServiceLocator() async {
   sl.registerLazySingleton<PersistenceService>(
     () => PersistenceService(sl<DocumentRepository>()),
   );
-  sl.registerLazySingleton<AssetRepository>(() => AssetRepositoryImpl());
+  sl.registerLazySingleton<AssetRepository>(() => AssetRepository());
 
   // File Management Feature
   sl.registerLazySingleton<FileRepository>(() => FileRepositoryImpl());
