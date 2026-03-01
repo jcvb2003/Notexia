@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/file_management/presentation/utils/file_icon_utils.dart';
 
 class FileIconColorPicker extends StatelessWidget {
@@ -160,28 +161,27 @@ class _FileIconColorPickerContentState
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
+                  AppTextButton(
+                    label: 'Limpar',
                     onPressed: () {
                       setState(() {
                         _selectedIcon = null;
                         _selectedColor = null;
                       });
                     },
-                    child: const Text('Limpar',
-                        style: TextStyle(color: AppColors.textSecondary)),
                   ),
                   const Spacer(),
-                  TextButton(
+                  AppTextButton(
+                    label: 'Cancelar',
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancelar'),
                   ),
                   const SizedBox(width: 16),
-                  ElevatedButton(
+                  AppFilledButton(
+                    label: 'Aplicar',
                     onPressed: () {
                       widget.onApply(_selectedIcon, _selectedColor);
                       Navigator.pop(context);
                     },
-                    child: const Text('Aplicar'),
                   ),
                 ],
               ),

@@ -33,7 +33,7 @@ class SidebarWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const _SidebarHeader(),
+            _SidebarHeader(isMobile: isMobile),
             const Expanded(child: FileExplorerTree()),
             const SidebarFooter(),
           ],
@@ -45,7 +45,8 @@ class SidebarWidget extends StatelessWidget {
 
 /// Cabeçalho estruturado da sidebar com branding e espaço para ações futuras.
 class _SidebarHeader extends StatefulWidget {
-  const _SidebarHeader();
+  final bool isMobile;
+  const _SidebarHeader({required this.isMobile});
 
   @override
   State<_SidebarHeader> createState() => _SidebarHeaderState();
@@ -76,6 +77,17 @@ class _SidebarHeaderState extends State<_SidebarHeader> {
             ),
             BlocBuilder<FileExplorerCubit, FileExplorerState>(
               builder: (context, state) {
+                if (widget.isMobile) {
+                  return AppIconButton(
+                    icon: LucideIcons.arrowUpDown,
+                    tooltip: 'Ordenar',
+                    size: 32,
+                    isActive: _isSortMenuOpen,
+                    onTap: () {
+                      _showSortBottomSheet(context, state);
+                    },
+                  );
+                }
                 return PopupMenuButton<SortMode>(
                   tooltip: 'Ordenar',
                   color: AppColors.background,
@@ -144,6 +156,50 @@ class _SidebarHeaderState extends State<_SidebarHeader> {
           ],
         ],
       ),
+    );
+  }
+
+  void _showSortBottomSheet(BuildContext context, FileExplorerState state) {
+    AppBottomSheet.show(
+      context,
+      title: const Text('Ordenar por'),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildSortOption(context, SortMode.name, 'Por nome', state),
+          _buildSortOption(
+              context, SortMode.createdAt, 'Data de criação', state),
+          _buildSortOption(
+              context, SortMode.updatedAt, 'Data de alteração', state),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSortOption(
+    BuildContext context,
+    SortMode mode,
+    String label,
+    FileExplorerState state,
+  ) {
+    final isActive = state.sortMode == mode;
+    final dirIcon = state.sortDir == SortDirection.ascending
+        ? LucideIcons.chevronUp
+        : LucideIcons.chevronDown;
+
+    return ListTile(
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isActive ? AppColors.primary : AppColors.textPrimary,
+          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      trailing: isActive ? Icon(dirIcon, color: AppColors.primary) : null,
+      onTap: () {
+        context.read<FileExplorerCubit>().setSortMode(mode);
+        Navigator.pop(context);
+      },
     );
   }
 }

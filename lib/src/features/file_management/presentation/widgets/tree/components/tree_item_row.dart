@@ -108,6 +108,8 @@ class _TreeItemRowState extends State<TreeItemRow> {
   }
 
   void _showMenu(BuildContext context, FileExplorerCubit cubit) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     ExplorerContextMenu.show(
       context: context,
       position: _tapPosition,
@@ -121,6 +123,7 @@ class _TreeItemRowState extends State<TreeItemRow> {
         icon: icon,
         color: color?.toARGB32(),
       ),
+      isMobile: isMobile,
     );
   }
 

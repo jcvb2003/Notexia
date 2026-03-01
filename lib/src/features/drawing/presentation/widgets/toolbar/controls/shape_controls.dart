@@ -103,9 +103,9 @@ class ShapeToolControls extends StatelessWidget {
   }
 
   void _showStylePopover(BuildContext context, CanvasCubit cubit) {
-    showModularSheet(
+    AppBottomSheet.show(
       context,
-      title: 'Propriedades',
+      title: const Text('Configurações do Elemento'),
       child: BlocProvider.value(
         value: cubit,
         child: BlocBuilder<CanvasCubit, CanvasState>(

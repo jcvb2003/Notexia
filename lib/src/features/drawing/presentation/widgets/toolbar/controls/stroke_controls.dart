@@ -86,9 +86,9 @@ class StrokeToolControls extends StatelessWidget {
   }
 
   void _showStrokePopover(BuildContext context, CanvasCubit cubit) {
-    showModularSheet(
+    AppBottomSheet.show(
       context,
-      title: 'Propriedades',
+      title: const Text('Configurações do Traço'),
       child: BlocProvider.value(
         value: cubit,
         child: BlocBuilder<CanvasCubit, CanvasState>(
@@ -103,6 +103,7 @@ class StrokeToolControls extends StatelessWidget {
             final currentStyle = state.currentStyle;
 
             return Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 AppSectionBlock(
                   title: 'Estilo da Linha',

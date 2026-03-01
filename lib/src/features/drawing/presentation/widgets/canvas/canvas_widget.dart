@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_painter.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_shortcuts_wrapper.dart';
@@ -53,34 +53,19 @@ class _CanvasWidgetState extends State<CanvasWidget> {
       _isCheckingStylus = true;
       final cubit = context.read<CanvasCubit>();
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Caneta detectada'),
-          content: const Text(
+      AppDialog.confirm(
+        context,
+        title: 'Caneta detectada',
+        content:
             'Deseja ativar o Modo Caneta? Apenas a caneta irá desenhar, e você poderá usar os dedos para mover e dar zoom livres.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                cubit.handleStylusPromptResult(false);
-                if (mounted) setState(() => _isCheckingStylus = false);
-              },
-              child: const Text('Agora não'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-                cubit.handleStylusPromptResult(true);
-                if (mounted) setState(() => _isCheckingStylus = false);
-              },
-              child: const Text('Ativar'),
-            ),
-          ],
-        ),
-      );
+        confirmLabel: 'Ativar',
+        cancelLabel: 'Agora não',
+      ).then((result) {
+        if (result != null) {
+          cubit.handleStylusPromptResult(result);
+        }
+        if (mounted) setState(() => _isCheckingStylus = false);
+      });
     }
   }
 

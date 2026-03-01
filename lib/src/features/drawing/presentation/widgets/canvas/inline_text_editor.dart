@@ -106,22 +106,24 @@ class _InlineTextEditorState extends State<InlineTextEditor> {
           maxLines: null,
           minLines: 1,
           contentPadding: EdgeInsets.zero,
-          style: TextStyle(
-            fontSize: editingElement.fontSize * uiState.zoomLevel,
-            fontFamily: editingElement.fontFamily,
-            fontWeight:
-                editingElement.isBold ? FontWeight.bold : FontWeight.normal,
-            fontStyle:
-                editingElement.isItalic ? FontStyle.italic : FontStyle.normal,
-            decoration: TextDecoration.combine([
-              if (editingElement.isUnderlined) TextDecoration.underline,
-              if (editingElement.isStrikethrough) TextDecoration.lineThrough,
-            ]),
-            color: editingElement.strokeColor.withValues(
-              alpha: editingElement.opacity,
-            ),
-            backgroundColor: editingElement.backgroundColor,
-          ),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: editingElement.fontSize * uiState.zoomLevel,
+                fontFamily: editingElement.fontFamily,
+                fontWeight:
+                    editingElement.isBold ? FontWeight.bold : FontWeight.normal,
+                fontStyle: editingElement.isItalic
+                    ? FontStyle.italic
+                    : FontStyle.normal,
+                decoration: TextDecoration.combine([
+                  if (editingElement.isUnderlined) TextDecoration.underline,
+                  if (editingElement.isStrikethrough)
+                    TextDecoration.lineThrough,
+                ]),
+                color: editingElement.strokeColor.withValues(
+                  alpha: editingElement.opacity,
+                ),
+                backgroundColor: editingElement.backgroundColor,
+              ),
           onChanged: (value) {
             context.read<CanvasCubit>().text.updateTextElement(
                   editingElement.id,

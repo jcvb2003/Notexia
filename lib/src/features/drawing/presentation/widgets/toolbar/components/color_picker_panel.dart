@@ -84,74 +84,72 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
   Widget build(BuildContext context) {
     final tones = OpenColorPalette.getTonesForColor(_activeColor);
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ─────────────────────────────────────────────────────────────────
-          // Seção: Cor
-          // ─────────────────────────────────────────────────────────────────
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // ─────────────────────────────────────────────────────────────────
+        // Seção: Cor
+        // ─────────────────────────────────────────────────────────────────
+        AppSectionBlock(
+          title: 'Cor',
+          padding: const EdgeInsets.only(bottom: 12),
+          child: ColorSection(
+            selectedColor: _activeColor,
+            onColorSelected: _selectColor,
+            allowTransparent: widget.allowTransparent,
+          ),
+        ),
+
+        // ─────────────────────────────────────────────────────────────────
+        // Seção: Tons
+        // ─────────────────────────────────────────────────────────────────
+        if (tones != null)
           AppSectionBlock(
-            title: 'Cor',
+            title: 'Tons',
             padding: const EdgeInsets.only(bottom: 12),
-            child: ColorSection(
+            child: TonesSection(
+              tones: tones,
               selectedColor: _activeColor,
               onColorSelected: _selectColor,
-              allowTransparent: widget.allowTransparent,
             ),
           ),
 
-          // ─────────────────────────────────────────────────────────────────
-          // Seção: Tons
-          // ─────────────────────────────────────────────────────────────────
-          if (tones != null)
-            AppSectionBlock(
-              title: 'Tons',
-              padding: const EdgeInsets.only(bottom: 12),
-              child: TonesSection(
-                tones: tones,
-                selectedColor: _activeColor,
-                onColorSelected: _selectColor,
-              ),
-            ),
-
-          // ─────────────────────────────────────────────────────────────────
-          // Seção: Personalizado
-          // ─────────────────────────────────────────────────────────────────
-          AppSectionBlock(
-            title: 'Personalizado',
-            padding: const EdgeInsets.only(bottom: 12),
-            child: CustomColorSection(
-              initialColor: _activeColor,
-              onColorSelected: _selectColor,
-              onColorSaved: _saveUserColor,
-            ),
+        // ─────────────────────────────────────────────────────────────────
+        // Seção: Personalizado
+        // ─────────────────────────────────────────────────────────────────
+        AppSectionBlock(
+          title: 'Personalizado',
+          padding: const EdgeInsets.only(bottom: 12),
+          child: CustomColorSection(
+            initialColor: _activeColor,
+            onColorSelected: _selectColor,
+            onColorSaved: _saveUserColor,
           ),
+        ),
 
-          // ─────────────────────────────────────────────────────────────────
-          // Seção: Minhas Cores
-          // ─────────────────────────────────────────────────────────────────
-          AppSectionBlock(
-            title: 'Minhas Cores',
-            padding: const EdgeInsets.only(bottom: 8),
-            child: _isLoadingUserColors
-                ? const Center(
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  )
-                : MyColorsSection(
-                    userColors: _userColors,
-                    colorsInUse: widget.colorsInUse ?? [],
-                    selectedColor: _activeColor,
-                    onColorSelected: _selectColor,
-                    onColorRemoved: _removeUserColor,
+        // ─────────────────────────────────────────────────────────────────
+        // Seção: Minhas Cores
+        // ─────────────────────────────────────────────────────────────────
+        AppSectionBlock(
+          title: 'Minhas Cores',
+          padding: const EdgeInsets.only(bottom: 8),
+          child: _isLoadingUserColors
+              ? const Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-          ),
-        ],
-      ),
+                )
+              : MyColorsSection(
+                  userColors: _userColors,
+                  colorsInUse: widget.colorsInUse ?? [],
+                  selectedColor: _activeColor,
+                  onColorSelected: _selectColor,
+                  onColorRemoved: _removeUserColor,
+                ),
+        ),
+      ],
     );
   }
 }

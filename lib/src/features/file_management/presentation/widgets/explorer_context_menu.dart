@@ -17,7 +17,20 @@ class ExplorerContextMenu {
     required VoidCallback onShowInFolder,
     required VoidCallback onSearchInFolder,
     required Function(String? icon, Color? color) onApplyAppearance,
+    bool isMobile = false,
   }) async {
+    if (isMobile) {
+      return _showBottomSheet(
+        context,
+        item,
+        onRename,
+        onDelete,
+        onShowInFolder,
+        onSearchInFolder,
+        onApplyAppearance,
+      );
+    }
+
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -65,15 +78,134 @@ class ExplorerContextMenu {
       ],
     );
 
-    if (result == null) return;
+    if (result == null || !context.mounted) return;
+    _handleResult(
+      context,
+      result,
+      item,
+      onRename,
+      onDelete,
+      onShowInFolder,
+      onSearchInFolder,
+      onApplyAppearance,
+    );
+  }
+
+  static Future<void> _showBottomSheet(
+    BuildContext context,
+    FileItem item,
+    Function(String) onRename,
+    VoidCallback onDelete,
+    VoidCallback onShowInFolder,
+    VoidCallback onSearchInFolder,
+    Function(String? icon, Color? color) onApplyAppearance,
+  ) async {
+    await AppBottomSheet.show(
+      context,
+      title: Text(item.name.replaceAll('.notexia', '')),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildActionItem(
+            context,
+            icon: LucideIcons.edit3,
+            label: 'Renomear',
+            onTap: () {
+              Navigator.pop(context);
+              FileRenameDialog.show(context, item: item, onRename: onRename);
+            },
+          ),
+          _buildActionItem(
+            context,
+            icon: LucideIcons.search,
+            label: 'Pesquisar na pasta',
+            onTap: () {
+              Navigator.pop(context);
+              onSearchInFolder();
+            },
+          ),
+          _buildActionItem(
+            context,
+            icon: LucideIcons.externalLink,
+            label: 'Mostrar na pasta',
+            onTap: () {
+              Navigator.pop(context);
+              onShowInFolder();
+            },
+          ),
+          const Divider(height: 16),
+          _buildActionItem(
+            context,
+            icon: LucideIcons.palette,
+            label: 'Aparência',
+            onTap: () async {
+              Navigator.pop(context);
+              await FileIconColorPicker.show(
+                context,
+                initialIcon: item.customIcon,
+                initialColor:
+                    item.customColor != null ? Color(item.customColor!) : null,
+                onApply: onApplyAppearance,
+              );
+            },
+          ),
+          const Divider(height: 16),
+          _buildActionItem(
+            context,
+            icon: LucideIcons.trash2,
+            label: 'Apagar',
+            isDestructive: true,
+            onTap: () {
+              Navigator.pop(context);
+              FileDeleteDialog.show(context, item: item, onDelete: onDelete);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _buildActionItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isDestructive ? AppColors.danger : AppColors.textPrimary,
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isDestructive ? AppColors.danger : AppColors.textPrimary,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      onTap: onTap,
+    );
+  }
+
+  static void _handleResult(
+    BuildContext context,
+    String result,
+    FileItem item,
+    Function(String) onRename,
+    VoidCallback onDelete,
+    VoidCallback onShowInFolder,
+    VoidCallback onSearchInFolder,
+    Function(String? icon, Color? color) onApplyAppearance,
+  ) {
     if (!context.mounted) return;
 
     switch (result) {
       case 'rename':
-        await FileRenameDialog.show(context, item: item, onRename: onRename);
+        FileRenameDialog.show(context, item: item, onRename: onRename);
         break;
       case 'delete':
-        await FileDeleteDialog.show(context, item: item, onDelete: onDelete);
+        FileDeleteDialog.show(context, item: item, onDelete: onDelete);
         break;
       case 'search':
         onSearchInFolder();
@@ -82,7 +214,7 @@ class ExplorerContextMenu {
         onShowInFolder();
         break;
       case 'appearance':
-        await FileIconColorPicker.show(
+        FileIconColorPicker.show(
           context,
           initialIcon: item.customIcon,
           initialColor:
