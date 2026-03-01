@@ -35,8 +35,8 @@ class _TreeItemRowState extends State<TreeItemRow> {
 
   @override
   Widget build(BuildContext context) {
-    const selectedBg = AppColors.successBackground;
-    const selectedFg = AppColors.success;
+    const selectedBg = AppColors.selectedBackground;
+    const selectedFg = AppColors.selectedForeground;
     const defaultFg = AppColors.textPrimary;
 
     final cubit = context.read<FileExplorerCubit>();

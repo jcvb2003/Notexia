@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
-import 'package:notexia/src/core/widgets/menus/app_menu_item.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 
 class HeaderDropdownMenu extends StatelessWidget {
@@ -61,12 +61,12 @@ class HeaderDropdownMenu extends StatelessWidget {
                 label: 'Modo: Esqueleto',
                 onClose: onClose,
               ),
-              DropdownItemWithTrailing(
+              DropdownItem(
                 icon: LucideIcons.fingerprint,
                 label: 'Desenhar com dedo',
                 trailing: BlocBuilder<CanvasCubit, CanvasState>(
                   builder: (context, state) {
-                    return CompactSwitch(
+                    return AppCompactSwitch(
                       value: state.isDrawWithFingerEnabled,
                       onChanged: (_) {
                         canvasCubit.toggleDrawWithFinger();
@@ -77,41 +77,6 @@ class HeaderDropdownMenu extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class DropdownItemWithTrailing extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Widget trailing;
-  final VoidCallback? onTap;
-
-  const DropdownItemWithTrailing({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.trailing,
-    this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-        child: Row(
-          children: [
-            Icon(icon, size: 16, color: AppColors.textSecondary),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(label, style: Theme.of(context).textTheme.bodySmall),
-            ),
-            trailing,
-          ],
         ),
       ),
     );
@@ -140,37 +105,13 @@ class HeaderDropdownToggle extends StatelessWidget {
           onClose?.call();
         }
 
-        return DropdownItemWithTrailing(
+        return DropdownItem(
           icon: icon,
           label: label,
           onTap: toggle,
-          trailing: CompactSwitch(value: value, onChanged: (v) => toggle()),
+          trailing: AppCompactSwitch(value: value, onChanged: (v) => toggle()),
         );
       },
-    );
-  }
-}
-
-class CompactSwitch extends StatelessWidget {
-  final bool value;
-  final ValueChanged<bool> onChanged;
-
-  const CompactSwitch({
-    super.key,
-    required this.value,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.scale(
-      scale: 0.65,
-      child: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeTrackColor: AppColors.primary,
-        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
-import 'package:notexia/src/core/widgets/common/floating_card.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 
 class BaseToolbar extends StatelessWidget {
   final Widget? leading;
@@ -38,7 +38,7 @@ class BaseToolbar extends StatelessWidget {
             if (title != null ||
                 center != null ||
                 (actions != null && actions!.isNotEmpty))
-              const SizedBox(width: 8),
+              const AppDivider.toolbar(),
           ],
           if (title != null)
             Padding(
@@ -48,25 +48,11 @@ class BaseToolbar extends StatelessWidget {
           if (center != null) center!,
           if (actions != null && actions!.isNotEmpty) ...[
             if (leading != null || title != null || center != null)
-              const ToolbarDivider(),
+              const AppDivider.toolbar(),
             ...actions!,
           ],
         ],
       ),
-    );
-  }
-}
-
-class ToolbarDivider extends StatelessWidget {
-  final double horizontalPadding;
-
-  const ToolbarDivider({super.key, this.horizontalPadding = 8});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      child: Container(height: 24, width: 1, color: AppColors.border),
     );
   }
 }

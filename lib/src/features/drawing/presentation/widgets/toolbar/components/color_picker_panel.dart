@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notexia/src/features/settings/domain/services/user_colors_storage.dart';
 import 'package:notexia/src/app/di/service_locator/service_locator.dart';
 import 'package:notexia/src/core/utils/constants/open_color_palette.dart';
-import 'package:notexia/src/core/utils/constants/ui_constants.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/color_picker/color_section.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/color_picker/custom_color_section.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/color_picker/my_colors_section.dart';
@@ -91,9 +91,9 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
           // ─────────────────────────────────────────────────────────────────
           // Seção: Cor
           // ─────────────────────────────────────────────────────────────────
-          _SectionHeader(title: 'Cor'),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+          AppSectionBlock(
+            title: 'Cor',
+            padding: const EdgeInsets.only(bottom: 12),
             child: ColorSection(
               selectedColor: _activeColor,
               onColorSelected: _selectColor,
@@ -104,24 +104,23 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
           // ─────────────────────────────────────────────────────────────────
           // Seção: Tons
           // ─────────────────────────────────────────────────────────────────
-          if (tones != null) ...[
-            _SectionHeader(title: 'Tons'),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+          if (tones != null)
+            AppSectionBlock(
+              title: 'Tons',
+              padding: const EdgeInsets.only(bottom: 12),
               child: TonesSection(
                 tones: tones,
                 selectedColor: _activeColor,
                 onColorSelected: _selectColor,
               ),
             ),
-          ],
 
           // ─────────────────────────────────────────────────────────────────
           // Seção: Personalizado
           // ─────────────────────────────────────────────────────────────────
-          _SectionHeader(title: 'Personalizado'),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+          AppSectionBlock(
+            title: 'Personalizado',
+            padding: const EdgeInsets.only(bottom: 12),
             child: CustomColorSection(
               initialColor: _activeColor,
               onColorSelected: _selectColor,
@@ -132,8 +131,8 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
           // ─────────────────────────────────────────────────────────────────
           // Seção: Minhas Cores
           // ─────────────────────────────────────────────────────────────────
-          _SectionHeader(title: 'Minhas Cores'),
-          Padding(
+          AppSectionBlock(
+            title: 'Minhas Cores',
             padding: const EdgeInsets.only(bottom: 8),
             child: _isLoadingUserColors
                 ? const Center(
@@ -150,36 +149,6 @@ class _ColorPickerPanelState extends State<ColorPickerPanel> {
                     onColorSelected: _selectColor,
                     onColorRemoved: _removeUserColor,
                   ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Header de Seção Expansível
-// ─────────────────────────────────────────────────────────────────────────────
-class _SectionHeader extends StatelessWidget {
-  final String title;
-
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.sm,
-        horizontal: AppSpacing.xs,
-      ),
-      child: Row(
-        children: [
-          Text(
-            title,
-            style: context.typography.labelMedium?.copyWith(
-              fontSize: 13,
-              color: AppColors.textSecondary,
-            ),
           ),
         ],
       ),

@@ -39,6 +39,10 @@ class AppColors {
   static const Color warning = Color(0xFFF59E0B);
   static const Color danger = Color(0xFFEF4444);
 
+  // Tokens de Seleção Semânticos
+  static const Color selectedBackground = successBackground;
+  static const Color selectedForeground = success;
+
   // Cores de Ícones
   static const Color iconActive = Color(0xFFFFFFFF);
   static const Color iconDefault = Color(0xFF4B5563);
@@ -161,6 +165,8 @@ class AppThemeColors {
   Color get success => AppColors.success;
   Color get warning => AppColors.warning;
   Color get danger => AppColors.danger;
+  Color get selectedBackground => AppColors.selectedBackground;
+  Color get selectedForeground => AppColors.selectedForeground;
 }
 
 extension AppThemeContext on BuildContext {

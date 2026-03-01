@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 
-class SegmentedToggle<T> extends StatelessWidget {
+class AppSegmentedToggle<T> extends StatelessWidget {
   final String? label;
   final T value;
   final Map<T, dynamic> options;
   final ValueChanged<T> onChanged;
 
-  const SegmentedToggle({
+  const AppSegmentedToggle({
     super.key,
     this.label,
     required this.value,
@@ -42,13 +42,15 @@ class SegmentedToggle<T> extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color:
-                        isSelected ? AppColors.primary : AppColors.transparent,
+                    color: isSelected
+                        ? AppColors.selectedBackground
+                        : AppColors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppColors.primary.withValues(alpha: 0.3),
+                              color: AppColors.selectedBackground
+                                  .withValues(alpha: 0.3),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -66,7 +68,8 @@ class SegmentedToggle<T> extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context, dynamic content, bool isSelected) {
-    final color = isSelected ? AppColors.iconActive : AppColors.textSecondary;
+    final color =
+        isSelected ? AppColors.selectedForeground : AppColors.textSecondary;
 
     if (content is IconData) {
       return Icon(content, size: 18, color: color);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notexia/src/core/widgets/common/app_dialog.dart';
-import 'package:notexia/src/core/widgets/common/app_text_field.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 
 class FileRenameDialog extends StatelessWidget {
@@ -30,9 +29,8 @@ class FileRenameDialog extends StatelessWidget {
       text: item.name.replaceAll('.notexia', ''),
     );
 
-    final textTheme = Theme.of(context).textTheme;
     return AppDialog(
-      title: Text('Renomear', style: textTheme.titleMedium),
+      title: const Text('Renomear'),
       content: AppTextField(
         controller: controller,
         autofocus: true,
@@ -44,16 +42,16 @@ class FileRenameDialog extends StatelessWidget {
         },
       ),
       actions: [
-        TextButton(
+        AppTextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
+          label: 'Cancelar',
         ),
-        ElevatedButton(
+        AppFilledButton(
           onPressed: () {
             onRename(controller.text);
             Navigator.pop(context);
           },
-          child: const Text('Salvar'),
+          label: 'Salvar',
         ),
       ],
     );

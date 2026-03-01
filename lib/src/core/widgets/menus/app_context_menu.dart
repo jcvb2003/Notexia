@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 
-class AppMenuItem<T> extends PopupMenuItem<T> {
-  AppMenuItem({
+class AppPopupMenuItem<T> extends PopupMenuItem<T> {
+  AppPopupMenuItem({
     super.key,
     required super.value,
     required String label,

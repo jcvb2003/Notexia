@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/widgets/common/app_dialog.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 
@@ -17,43 +16,25 @@ class FileDeleteDialog extends StatelessWidget {
     BuildContext context, {
     required FileItem item,
     required VoidCallback onDelete,
-  }) {
-    return AppDialog.show(
+  }) async {
+    final confirmed = await AppDialog.confirm(
       context,
-      builder: (context) => FileDeleteDialog(item: item, onDelete: onDelete),
+      title: 'Excluir item',
+      content:
+          'Tem certeza que deseja excluir "${item.name}"? Esta ação não pode ser desfeita.',
+      confirmLabel: 'Excluir',
+      isDestructive: true,
     );
+
+    if (confirmed == true) {
+      onDelete();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return AppDialog(
-      title: Text('Excluir item', style: textTheme.titleMedium),
-      content: Text(
-        'Tem certeza que deseja excluir "${item.name}"? Esta ação não pode ser desfeita.',
-        style: textTheme.bodyMedium,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
-        ),
-        Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppColors.danger,
-                  onPrimary: AppColors.iconActive,
-                ),
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-              onDelete();
-              Navigator.pop(context);
-            },
-            child: const Text('Excluir'),
-          ),
-        ),
-      ],
-    );
+    // Este build não será mais chamado via show, mas mantemos para compatibilidade
+    // ou removemos se não houver outros usos.
+    return const SizedBox.shrink();
   }
 }

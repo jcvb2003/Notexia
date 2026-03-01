@@ -4,11 +4,10 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
-import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/base_toolbar.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/modular_sheet_helper.dart';
-import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/segmented_toggle.dart';
 
 class MainToolbar extends StatelessWidget {
   final bool isCompact;
@@ -48,7 +47,7 @@ class MainToolbar extends StatelessWidget {
               size: size,
               isCompact: isCompact,
             ),
-            const ToolbarDivider(),
+            const AppDivider.toolbar(),
 
             // Shapes: collapsed to 1 button in compact mode
             if (isCompact)
@@ -98,7 +97,7 @@ class MainToolbar extends StatelessWidget {
               ),
             ],
 
-            const ToolbarDivider(),
+            const AppDivider.toolbar(),
             AppIconButton(
               icon: LucideIcons.pencil,
               tooltip: 'Desenhar (P, 7)',
@@ -140,52 +139,70 @@ class MainToolbar extends StatelessWidget {
               size: size,
               isCompact: isCompact,
             ),
-            const ToolbarDivider(),
-            AppIconButton(
-              icon: switch (uiState.snapMode) {
-                SnapMode.none => LucideIcons.magnet,
-                SnapMode.angle => LucideIcons.magnet,
-                SnapMode.object => LucideIcons.layoutGrid,
-                SnapMode.both => LucideIcons.sparkles,
-              },
-              tooltip:
-                  '${uiState.snapMode.tooltip} (Toque duplo para configurar)',
-              isActive: uiState.snapMode != SnapMode.none,
-              onTap: () => context.read<CanvasCubit>().cycleSnapMode(),
-              onDoubleTap: () {
-                const pi = 3.141592653589793;
-                final currentValue = uiState.snapMode.isAngleSnapEnabled
-                    ? uiState.angleSnapStep
-                    : 0.0;
+            const AppDivider.toolbar(),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppIconButton(
+                  icon: switch (uiState.snapMode) {
+                    SnapMode.none => LucideIcons.magnet,
+                    SnapMode.angle => LucideIcons.magnet,
+                    SnapMode.object => LucideIcons.layoutGrid,
+                    SnapMode.both => LucideIcons.sparkles,
+                  },
+                  tooltip:
+                      '${uiState.snapMode.tooltip} (Toque duplo para configurar)',
+                  isActive: uiState.snapMode != SnapMode.none,
+                  onTap: () => context.read<CanvasCubit>().cycleSnapMode(),
+                  onDoubleTap: () {
+                    const pi = 3.141592653589793;
+                    final currentValue = uiState.snapMode.isAngleSnapEnabled
+                        ? uiState.angleSnapStep
+                        : 0.0;
 
-                showModularSheet(
-                  context,
-                  title: 'Passo do Snap de Ângulo',
-                  child: SegmentedToggle<double>(
-                    label: 'Ângulo',
-                    value: currentValue,
-                    options: {
-                      0.0: 'Off',
-                      pi / 24: '7.5°',
-                      pi / 12: '15°',
-                      pi / 8: '22.5°',
-                      pi / 6: '30°',
-                    },
-                    onChanged: (val) {
-                      final cubit = context.read<CanvasCubit>();
-                      if (val == 0.0) {
-                        cubit.setAngleSnapEnabled(false);
-                      } else {
-                        cubit.setAngleSnapStep(val);
-                        cubit.setAngleSnapEnabled(true);
-                      }
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                );
-              },
-              size: size,
-              isCompact: isCompact,
+                    showModularSheet(
+                      context,
+                      title: 'Passo do Snap de Ângulo',
+                      child: AppSegmentedToggle<double>(
+                        label: 'Ângulo',
+                        value: currentValue,
+                        options: {
+                          0.0: 'Off',
+                          pi / 24: '7.5°',
+                          pi / 12: '15°',
+                          pi / 8: '22.5°',
+                          pi / 6: '30°',
+                        },
+                        onChanged: (val) {
+                          final cubit = context.read<CanvasCubit>();
+                          if (val == 0.0) {
+                            cubit.setAngleSnapEnabled(false);
+                          } else {
+                            cubit.setAngleSnapStep(val);
+                            cubit.setAngleSnapEnabled(true);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    );
+                  },
+                  size: size,
+                  isCompact: isCompact,
+                ),
+                const SizedBox(height: 1),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppIndicator(
+                      isActive: uiState.snapMode.isAngleSnapEnabled,
+                    ),
+                    const SizedBox(width: 2),
+                    AppIndicator(
+                      isActive: uiState.snapMode.isObjectSnapEnabled,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         );

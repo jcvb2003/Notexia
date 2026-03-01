@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
-import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 
 /// Item de menu reutilizável para sidebars, dropdowns e menus contextuais.
 class AppMenuItem extends StatelessWidget {
@@ -69,6 +69,7 @@ class DropdownItem extends StatelessWidget {
   final IconData? icon;
   final String label;
   final VoidCallback? onTap;
+  final Widget? trailing;
   final bool showDivider;
 
   const DropdownItem({
@@ -76,6 +77,7 @@ class DropdownItem extends StatelessWidget {
     this.icon,
     required this.label,
     this.onTap,
+    this.trailing,
     this.showDivider = false,
   });
 
@@ -107,6 +109,10 @@ class DropdownItem extends StatelessWidget {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
+                  if (trailing != null) ...[
+                    const SizedBox(width: 8),
+                    trailing!,
+                  ],
                 ],
               ),
             );

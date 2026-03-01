@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_icon_color_picker.dart';
 import 'package:notexia/src/features/file_management/presentation/widgets/dialogs/file_delete_dialog.dart';
@@ -33,38 +34,33 @@ class ExplorerContextMenu {
       color: AppColors.background,
       elevation: 8,
       items: <PopupMenuEntry<String>>[
-        _buildItem(
-          context: context,
+        AppPopupMenuItem(
           value: 'rename',
           icon: LucideIcons.edit3,
           label: 'Renomear',
         ),
-        _buildItem(
-          context: context,
+        AppPopupMenuItem(
           value: 'search',
           icon: LucideIcons.search,
           label: 'Pesquisar na pasta',
         ),
-        _buildItem(
-          context: context,
+        AppPopupMenuItem(
           value: 'show',
           icon: LucideIcons.externalLink,
           label: 'Mostrar na pasta',
         ),
         const PopupMenuDivider(),
-        _buildItem(
-          context: context,
+        AppPopupMenuItem(
           value: 'appearance',
           icon: LucideIcons.palette,
           label: 'Aparência',
         ),
         const PopupMenuDivider(),
-        _buildItem(
-          context: context,
+        AppPopupMenuItem(
           value: 'delete',
           icon: LucideIcons.trash2,
           label: 'Apagar',
-          color: AppColors.danger,
+          isDestructive: true,
         ),
       ],
     );
@@ -95,30 +91,5 @@ class ExplorerContextMenu {
         );
         break;
     }
-  }
-
-  static PopupMenuItem<String> _buildItem({
-    required BuildContext context,
-    required String value,
-    required IconData icon,
-    required String label,
-    Color? color,
-  }) {
-    return PopupMenuItem<String>(
-      value: value,
-      height: 36,
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: color ?? AppColors.textSecondary),
-          const SizedBox(width: 12),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: color ?? AppColors.textPrimary,
-                ),
-          ),
-        ],
-      ),
-    );
   }
 }

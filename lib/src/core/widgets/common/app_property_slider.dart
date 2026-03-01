@@ -1,39 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 
-class PropertySlider extends StatelessWidget {
-  final String label;
+class AppPropertySlider extends StatelessWidget {
+  final String? label;
   final double value;
   final double min;
   final double max;
   final ValueChanged<double> onChanged;
 
-  const PropertySlider({
+  const AppPropertySlider({
     super.key,
-    required this.label,
+    this.label,
     required this.value,
     required this.min,
     required this.max,
     required this.onChanged,
   });
 
+  static String formatValue(double value) {
+    if (value == value.toInt()) {
+      return value.toInt().toString();
+    }
+    return value.toStringAsFixed(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label, style: Theme.of(context).textTheme.bodyMedium),
-            Text(
-              (value >= 1)
-                  ? value.toStringAsFixed(1)
-                  : '${(value * 100).toInt()}%',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-          ],
-        ),
+        if (label != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label!, style: Theme.of(context).textTheme.bodyMedium),
+              Text(
+                formatValue(value),
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ],
+          ),
         Slider(
           value: value,
           min: min,

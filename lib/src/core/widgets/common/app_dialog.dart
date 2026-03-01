@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
+import 'package:notexia/src/core/widgets/buttons/app_filled_button.dart';
+import 'package:notexia/src/core/widgets/buttons/app_text_button.dart';
 
 class AppDialog extends StatelessWidget {
   final Widget? title;
@@ -24,6 +26,34 @@ class AppDialog extends StatelessWidget {
     this.backgroundColor,
     this.shape,
   });
+
+  static Future<bool?> confirm(
+    BuildContext context, {
+    required String title,
+    required String content,
+    String confirmLabel = 'Confirmar',
+    String cancelLabel = 'Cancelar',
+    bool isDestructive = false,
+  }) {
+    return show<bool>(
+      context,
+      builder: (context) => AppDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          AppTextButton(
+            label: cancelLabel,
+            onPressed: () => Navigator.pop(context, false),
+          ),
+          AppFilledButton(
+            label: confirmLabel,
+            isDestructive: isDestructive,
+            onPressed: () => Navigator.pop(context, true),
+          ),
+        ],
+      ),
+    );
+  }
 
   static Future<T?> show<T>(
     BuildContext context, {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/base_toolbar.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import '../../../../../helpers/pump_app.dart';
 
 void main() {
@@ -48,7 +49,7 @@ void main() {
           actions: [Icon(Icons.save)],
         ),
       );
-      expect(find.byType(ToolbarDivider), findsOneWidget);
+      expect(find.byType(AppDivider), findsNWidgets(2));
     });
 
     testWidgets(

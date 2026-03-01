@@ -5,9 +5,9 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
-import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
-import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/base_toolbar.dart';
+import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/components/color_picker_panel.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/controls/common_controls.dart';
 
 class StrokeToolControls extends StatelessWidget {
@@ -39,7 +39,7 @@ class StrokeToolControls extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Tooltip(
-          message: 'Cor do traÃ§o',
+          message: 'Propriedades',
           child: GestureDetector(
             onTap: () => _showStrokePopover(context, cubit),
             child: ColorSwatchChip(
@@ -47,7 +47,7 @@ class StrokeToolControls extends StatelessWidget {
             ),
           ),
         ),
-        const ToolbarDivider(horizontalPadding: 10),
+        const AppDivider.toolbar(horizontalPadding: 10),
         if (tool == CanvasElementType.freeDraw) ...[
           AppIconButton(
             size: 36,
@@ -69,27 +69,7 @@ class StrokeToolControls extends StatelessWidget {
             isCompact: isCompact,
           ),
         ],
-        if (tool == CanvasElementType.line ||
-            tool == CanvasElementType.arrow) ...[
-          SegmentedToggle<StrokeStyle>(
-            value: selectedElement?.strokeStyle ?? currentStyle.strokeStyle,
-            options: const {
-              StrokeStyle.solid: LucideIcons.minus,
-              StrokeStyle.dashed: LucideIcons.moreHorizontal,
-            },
-            onChanged: (s) =>
-                cubit.updateSelectedElementsProperties(strokeStyle: s),
-          ),
-        ],
-        const ToolbarDivider(horizontalPadding: 10),
-        AppIconButton(
-          size: 36,
-          icon: LucideIcons.layers,
-          tooltip:
-              'Opacidade: ${((selectedElement?.opacity ?? currentStyle.opacity) * 100).toInt()}%',
-          onTap: () => _showOpacityPopover(context, cubit),
-          isCompact: isCompact,
-        ),
+        const AppDivider.toolbar(horizontalPadding: 10),
         if (selectedElement != null) ...[
           const SizedBox(width: 4),
           AppIconButton(
@@ -108,7 +88,7 @@ class StrokeToolControls extends StatelessWidget {
   void _showStrokePopover(BuildContext context, CanvasCubit cubit) {
     showModularSheet(
       context,
-      title: 'Configurações de Traço',
+      title: 'Propriedades',
       child: BlocProvider.value(
         value: cubit,
         child: BlocBuilder<CanvasCubit, CanvasState>(
@@ -124,62 +104,78 @@ class StrokeToolControls extends StatelessWidget {
 
             return Column(
               children: [
-                ColorGrid(
+                AppSectionBlock(
+                  title: 'Estilo da Linha',
+                  padding: EdgeInsets.zero,
+                  child: AppSegmentedToggle<StrokeStyle>(
+                    value: element?.strokeStyle ?? currentStyle.strokeStyle,
+                    options: const {
+                      StrokeStyle.solid: LineStyleIcon.solid(),
+                      StrokeStyle.dashed: LineStyleIcon.dashed(),
+                      StrokeStyle.dotted: LineStyleIcon.dotted(),
+                    },
+                    onChanged: (s) =>
+                        cubit.updateSelectedElementsProperties(strokeStyle: s),
+                  ),
+                ),
+                const Divider(height: 24),
+                ColorPickerPanel(
                   selectedColor:
                       element?.strokeColor ?? currentStyle.strokeColor,
-                  onSelected: (c) =>
+                  onColorSelected: (c) =>
                       cubit.updateSelectedElementsProperties(strokeColor: c),
                 ),
-                const Divider(height: 32),
-                PropertySlider(
-                  label: 'Grossura',
-                  value: element?.strokeWidth ?? currentStyle.strokeWidth,
-                  min: 1,
-                  max: 10,
-                  onChanged: (v) =>
-                      cubit.updateSelectedElementsProperties(strokeWidth: v),
+                const Divider(height: 24),
+                AppSectionBlock(
+                  title: 'Grossura',
+                  padding: EdgeInsets.zero,
+                  headerTrailing: Text(
+                    AppPropertySlider.formatValue(
+                        element?.strokeWidth ?? currentStyle.strokeWidth),
+                    style: context.typography.labelLarge,
+                  ),
+                  child: AppPropertySlider(
+                    value: element?.strokeWidth ?? currentStyle.strokeWidth,
+                    min: 1,
+                    max: 10,
+                    onChanged: (v) =>
+                        cubit.updateSelectedElementsProperties(strokeWidth: v),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                PropertySlider(
-                  label: 'Precisão',
-                  value: element?.roughness ?? currentStyle.roughness,
-                  min: 0,
-                  max: 5,
-                  onChanged: (v) =>
-                      cubit.updateSelectedElementsProperties(roughness: v),
+                const Divider(height: 24),
+                AppSectionBlock(
+                  title: 'Precisão',
+                  padding: EdgeInsets.zero,
+                  headerTrailing: Text(
+                    AppPropertySlider.formatValue(
+                        element?.roughness ?? currentStyle.roughness),
+                    style: context.typography.labelLarge,
+                  ),
+                  child: AppPropertySlider(
+                    value: element?.roughness ?? currentStyle.roughness,
+                    min: 0,
+                    max: 5,
+                    onChanged: (v) =>
+                        cubit.updateSelectedElementsProperties(roughness: v),
+                  ),
+                ),
+                const Divider(height: 24),
+                AppSectionBlock(
+                  title: 'Opacidade',
+                  padding: EdgeInsets.zero,
+                  headerTrailing: Text(
+                    '${((element?.opacity ?? currentStyle.opacity) * 100).toInt()}%',
+                    style: context.typography.labelLarge,
+                  ),
+                  child: AppPropertySlider(
+                    value: element?.opacity ?? currentStyle.opacity,
+                    min: 0,
+                    max: 1,
+                    onChanged: (v) =>
+                        cubit.updateSelectedElementsProperties(opacity: v),
+                  ),
                 ),
               ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  void _showOpacityPopover(BuildContext context, CanvasCubit cubit) {
-    showModularSheet(
-      context,
-      title: 'Opacidade',
-      child: BlocProvider.value(
-        value: cubit,
-        child: BlocBuilder<CanvasCubit, CanvasState>(
-          builder: (context, state) {
-            final selectedIds = state.selectedElementIds;
-            CanvasElement? element;
-            if (selectedIds.isNotEmpty) {
-              final selectedId = selectedIds.first;
-              element =
-                  state.elements.where((e) => e.id == selectedId).firstOrNull;
-            }
-            final currentStyle = state.currentStyle;
-
-            return PropertySlider(
-              label: 'Nível de Transparência',
-              value: element?.opacity ?? currentStyle.opacity,
-              min: 0,
-              max: 1,
-              onChanged: (v) =>
-                  cubit.updateSelectedElementsProperties(opacity: v),
             );
           },
         ),
