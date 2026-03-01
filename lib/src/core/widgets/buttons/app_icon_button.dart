@@ -126,15 +126,15 @@ class AppIconButton extends StatelessWidget {
         hoverScale: 1.05,
         activeScale: 1.05,
         builder: (context, isHovering) {
-          final bgColor = !isEnabled
-              ? disabledBg
-              : (isActive
-                  ? activeBg
+          final bgColor = isActive
+              ? activeBg
+              : (!isEnabled
+                  ? disabledBg
                   : (isHovering ? hoverBg : AppColors.transparent));
 
-          final iconColor = !isEnabled
-              ? disabledColor
-              : (isActive ? activeColor : inactiveColor);
+          final iconColor = isActive
+              ? activeColor
+              : (!isEnabled ? disabledColor : inactiveColor);
 
           final resolvedSize = isCompact ? 40.0 : size;
           final iconRatio = isCompact ? 0.5 : 0.5625;

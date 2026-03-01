@@ -131,13 +131,14 @@ class StrokeToolControls extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   headerTrailing: Text(
                     AppPropertySlider.formatValue(
-                        element?.strokeWidth ?? currentStyle.strokeWidth),
+                        element?.strokeWidth ?? currentStyle.strokeWidth, 1),
                     style: context.typography.labelLarge,
                   ),
                   child: AppPropertySlider(
                     value: element?.strokeWidth ?? currentStyle.strokeWidth,
                     min: 1,
                     max: 10,
+                    fractionDigits: 1,
                     onChanged: (v) =>
                         cubit.updateSelectedElementsProperties(strokeWidth: v),
                   ),
@@ -148,13 +149,14 @@ class StrokeToolControls extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   headerTrailing: Text(
                     AppPropertySlider.formatValue(
-                        element?.roughness ?? currentStyle.roughness),
+                        element?.roughness ?? currentStyle.roughness, 1),
                     style: context.typography.labelLarge,
                   ),
                   child: AppPropertySlider(
                     value: element?.roughness ?? currentStyle.roughness,
                     min: 0,
                     max: 5,
+                    fractionDigits: 1,
                     onChanged: (v) =>
                         cubit.updateSelectedElementsProperties(roughness: v),
                   ),

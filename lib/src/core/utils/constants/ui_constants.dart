@@ -40,8 +40,8 @@ class AppColors {
   static const Color danger = Color(0xFFEF4444);
 
   // Tokens de Seleção Semânticos
-  static const Color selectedBackground = successBackground;
-  static const Color selectedForeground = success;
+  static const Color selectedBackground = primary;
+  static const Color selectedForeground = iconActive;
 
   // Cores de Ícones
   static const Color iconActive = Color(0xFFFFFFFF);
@@ -249,4 +249,14 @@ class AppShadows {
           offset: const Offset(0, 4),
         ),
       ];
+}
+
+/// Tempos e durações padrão do design system.
+class AppDurations {
+  AppDurations._();
+
+  static const Duration menuTransition = Duration(milliseconds: 150);
+  static const Duration quick = Duration(milliseconds: 200);
+  static const Duration medium = Duration(milliseconds: 300);
+  static const Duration slow = Duration(milliseconds: 500);
 }

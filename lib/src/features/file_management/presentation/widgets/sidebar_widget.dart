@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
+import 'package:notexia/src/core/widgets/widgets.dart';
 import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
 
 class SidebarWidget extends StatelessWidget {
@@ -43,8 +44,15 @@ class SidebarWidget extends StatelessWidget {
 }
 
 /// Cabeçalho estruturado da sidebar com branding e espaço para ações futuras.
-class _SidebarHeader extends StatelessWidget {
+class _SidebarHeader extends StatefulWidget {
   const _SidebarHeader();
+
+  @override
+  State<_SidebarHeader> createState() => _SidebarHeaderState();
+}
+
+class _SidebarHeaderState extends State<_SidebarHeader> {
+  bool _isSortMenuOpen = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +77,17 @@ class _SidebarHeader extends StatelessWidget {
             BlocBuilder<FileExplorerCubit, FileExplorerState>(
               builder: (context, state) {
                 return PopupMenuButton<SortMode>(
-                  icon: const Icon(LucideIcons.arrowUpDown, size: 18),
                   tooltip: 'Ordenar',
                   color: AppColors.background,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
                     side: const BorderSide(color: AppColors.border),
                   ),
-                  offset: const Offset(0, 40),
+                  offset: const Offset(0, 44),
+                  onOpened: () => setState(() => _isSortMenuOpen = true),
+                  onCanceled: () => setState(() => _isSortMenuOpen = false),
                   onSelected: (mode) {
+                    setState(() => _isSortMenuOpen = false);
                     context.read<FileExplorerCubit>().setSortMode(mode);
                   },
                   itemBuilder: (context) => [
@@ -87,6 +97,12 @@ class _SidebarHeader extends StatelessWidget {
                     _buildSortItem(context, SortMode.updatedAt,
                         'Data de alteração', state),
                   ],
+                  child: AppIconButton(
+                    icon: LucideIcons.arrowUpDown,
+                    tooltip: 'Ordenar',
+                    size: 32,
+                    isActive: _isSortMenuOpen,
+                  ),
                 );
               },
             ),

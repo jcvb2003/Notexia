@@ -6,6 +6,7 @@ class AppPropertySlider extends StatelessWidget {
   final double value;
   final double min;
   final double max;
+  final int? fractionDigits;
   final ValueChanged<double> onChanged;
 
   const AppPropertySlider({
@@ -15,9 +16,13 @@ class AppPropertySlider extends StatelessWidget {
     required this.min,
     required this.max,
     required this.onChanged,
+    this.fractionDigits,
   });
 
-  static String formatValue(double value) {
+  static String formatValue(double value, [int? fractionDigits]) {
+    if (fractionDigits != null) {
+      return value.toStringAsFixed(fractionDigits);
+    }
     if (value == value.toInt()) {
       return value.toInt().toString();
     }
@@ -35,7 +40,7 @@ class AppPropertySlider extends StatelessWidget {
             children: [
               Text(label!, style: Theme.of(context).textTheme.bodyMedium),
               Text(
-                formatValue(value),
+                formatValue(value, fractionDigits),
                 style: Theme.of(context).textTheme.labelLarge,
               ),
             ],

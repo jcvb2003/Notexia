@@ -8,74 +8,84 @@ import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dar
 class HeaderDropdownMenu extends StatelessWidget {
   final VoidCallback onClose;
   final CanvasCubit canvasCubit;
+  final Animation<double> animation;
 
   const HeaderDropdownMenu({
     super.key,
     required this.onClose,
     required this.canvasCubit,
+    required this.animation,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: canvasCubit,
-      child: Material(
-        color: AppColors.transparent,
-        child: Container(
-          width: 240,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: AppColors.background,
-            border: Border.all(color: AppColors.border, width: 1),
-            borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-            boxShadow: AppShadows.elevated,
-          ),
-          clipBehavior: Clip.hardEdge,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownItem(
-                icon: LucideIcons.x,
-                label: 'Fechar',
-                onTap: onClose,
+      child: FadeTransition(
+        opacity: animation,
+        child: ScaleTransition(
+          scale: animation,
+          alignment: Alignment.topRight,
+          child: Material(
+            color: AppColors.transparent,
+            child: Container(
+              width: 240,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                border: Border.all(color: AppColors.border, width: 1),
+                borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+                boxShadow: AppShadows.elevated,
               ),
-              DropdownItem(
-                icon: LucideIcons.save,
-                label: 'Salvar',
-                onTap: () {
-                  onClose();
-                },
-              ),
-              const DropdownItem(icon: LucideIcons.search, label: 'Pesquisar'),
-              DropdownItem(
-                icon: LucideIcons.maximize2,
-                label: 'Tela cheia',
-                showDivider: true,
-                onTap: () {
-                  canvasCubit.toggleFullScreen();
-                  onClose();
-                },
-              ),
-              HeaderDropdownToggle(
-                icon: LucideIcons.code,
-                label: 'Modo: Esqueleto',
-                onClose: onClose,
-              ),
-              DropdownItem(
-                icon: LucideIcons.fingerprint,
-                label: 'Desenhar com dedo',
-                trailing: BlocBuilder<CanvasCubit, CanvasState>(
-                  builder: (context, state) {
-                    return AppCompactSwitch(
-                      value: state.isDrawWithFingerEnabled,
-                      onChanged: (_) {
-                        canvasCubit.toggleDrawWithFinger();
+              clipBehavior: Clip.hardEdge,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DropdownItem(
+                    icon: LucideIcons.x,
+                    label: 'Fechar',
+                    onTap: onClose,
+                  ),
+                  DropdownItem(
+                    icon: LucideIcons.save,
+                    label: 'Salvar',
+                    onTap: () {
+                      onClose();
+                    },
+                  ),
+                  const DropdownItem(
+                      icon: LucideIcons.search, label: 'Pesquisar'),
+                  DropdownItem(
+                    icon: LucideIcons.maximize2,
+                    label: 'Tela cheia',
+                    showDivider: true,
+                    onTap: () {
+                      canvasCubit.toggleFullScreen();
+                      onClose();
+                    },
+                  ),
+                  HeaderDropdownToggle(
+                    icon: LucideIcons.code,
+                    label: 'Modo: Esqueleto',
+                    onClose: onClose,
+                  ),
+                  DropdownItem(
+                    icon: LucideIcons.fingerprint,
+                    label: 'Desenhar com dedo',
+                    trailing: BlocBuilder<CanvasCubit, CanvasState>(
+                      builder: (context, state) {
+                        return AppCompactSwitch(
+                          value: state.isDrawWithFingerEnabled,
+                          onChanged: (_) {
+                            canvasCubit.toggleDrawWithFinger();
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

@@ -24,13 +24,31 @@ class HeaderWidget extends StatefulWidget {
   State<HeaderWidget> createState() => _HeaderWidgetState();
 }
 
-class _HeaderWidgetState extends State<HeaderWidget> {
+class _HeaderWidgetState extends State<HeaderWidget>
+    with SingleTickerProviderStateMixin {
   bool _isMenuOpen = false;
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: AppDurations.menuTransition,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+      reverseCurve: Curves.easeIn,
+    );
+  }
 
   @override
   void dispose() {
+    _animationController.dispose();
     _removeOverlay();
     super.dispose();
   }
@@ -47,11 +65,15 @@ class _HeaderWidgetState extends State<HeaderWidget> {
     setState(() => _isMenuOpen = true);
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
+    _animationController.forward();
   }
 
-  void _closeMenu() {
+  Future<void> _closeMenu() async {
+    await _animationController.reverse();
     _removeOverlay();
-    setState(() => _isMenuOpen = false);
+    if (mounted) {
+      setState(() => _isMenuOpen = false);
+    }
   }
 
   void _removeOverlay() {
@@ -83,6 +105,7 @@ class _HeaderWidgetState extends State<HeaderWidget> {
               child: HeaderDropdownMenu(
                 onClose: _closeMenu,
                 canvasCubit: canvasCubit,
+                animation: _animation,
               ),
             ),
           ),
