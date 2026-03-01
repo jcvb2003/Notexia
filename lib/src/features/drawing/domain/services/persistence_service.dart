@@ -3,7 +3,7 @@ import 'package:notexia/src/core/errors/failure.dart';
 import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
 
 class PersistenceService {
   final DocumentRepository _repository;

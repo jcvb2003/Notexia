@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
-import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/core/storage/queries.dart';
 
@@ -12,14 +12,14 @@ class MockDatabaseService extends Mock implements DatabaseService {}
 class MockDatabase extends Mock implements Database {}
 
 void main() {
-  late DocumentRepositoryImpl repository;
+  late DocumentRepository repository;
   late MockDatabaseService mockDatabaseService;
   late MockDatabase mockDatabase;
 
   setUp(() {
     mockDatabaseService = MockDatabaseService();
     mockDatabase = MockDatabase();
-    repository = DocumentRepositoryImpl(mockDatabaseService);
+    repository = DocumentRepository(mockDatabaseService);
 
     when(() => mockDatabaseService.database)
         .thenAnswer((_) async => mockDatabase);

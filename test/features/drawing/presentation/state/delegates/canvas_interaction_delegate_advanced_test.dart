@@ -6,7 +6,7 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
@@ -90,10 +90,11 @@ void main() {
 
   group('CanvasInteractionDelegate advanced manipulation', () {
     test('moveSelectedElements no-op when nothing selected', () {
-      final state = _state(elements: [_rectangle(id: 'a', x: 0, y: 0, w: 10, h: 10)]);
+      final state =
+          _state(elements: [_rectangle(id: 'a', x: 0, y: 0, w: 10, h: 10)]);
 
-      final result =
-          delegate.moveSelectedElements(state: state, delta: const Offset(5, 5));
+      final result = delegate.moveSelectedElements(
+          state: state, delta: const Offset(5, 5));
 
       expect(result.data, same(state));
     });
@@ -102,7 +103,8 @@ void main() {
       final a = _rectangle(id: 'a', x: 0, y: 0, w: 20, h: 20);
       final b = _rectangle(id: 'b', x: 100, y: 100, w: 30, h: 30);
 
-      final oneSelected = _state(elements: [a, b], selectedElementIds: const {'a'});
+      final oneSelected =
+          _state(elements: [a, b], selectedElementIds: const {'a'});
       final resized = delegate.resizeSelectedElement(
         state: oneSelected,
         rect: const Rect.fromLTWH(10, 11, 40, 50),
@@ -136,8 +138,10 @@ void main() {
         angle: 1.25,
       );
 
-      final rotatedA = result.data!.document.elements.firstWhere((e) => e.id == 'a');
-      final untouchedB = result.data!.document.elements.firstWhere((e) => e.id == 'b');
+      final rotatedA =
+          result.data!.document.elements.firstWhere((e) => e.id == 'a');
+      final untouchedB =
+          result.data!.document.elements.firstWhere((e) => e.id == 'b');
       expect(rotatedA.angle, 1.25);
       expect(untouchedB.angle, 0);
     });
@@ -174,7 +178,8 @@ void main() {
       when(() => repository.saveDocument(any()))
           .thenAnswer((_) async => Result.success(null));
 
-      final state = _state(elements: [_rectangle(id: 'a', x: 0, y: 0, w: 10, h: 10)]);
+      final state =
+          _state(elements: [_rectangle(id: 'a', x: 0, y: 0, w: 10, h: 10)]);
       final result = await delegate.finalizeManipulation(
         state: state,
         documentRepository: repository,
@@ -184,8 +189,10 @@ void main() {
       verify(() => repository.saveDocument(state.document)).called(1);
     });
 
-    test('finalizeManipulation returns failure when repository throws', () async {
-      when(() => repository.saveDocument(any())).thenThrow(Exception('db down'));
+    test('finalizeManipulation returns failure when repository throws',
+        () async {
+      when(() => repository.saveDocument(any()))
+          .thenThrow(Exception('db down'));
 
       final result = await delegate.finalizeManipulation(
         state: _state(),
@@ -196,7 +203,8 @@ void main() {
       expect(result.failure!.message, contains('Erro ao salvar'));
     });
 
-    test('deleteSelectedElements clears selection, pushes command and schedules save',
+    test(
+        'deleteSelectedElements clears selection, pushes command and schedules save',
         () {
       final a = _rectangle(id: 'a', x: 0, y: 0, w: 10, h: 10);
       final b = _rectangle(id: 'b', x: 20, y: 20, w: 10, h: 10);
@@ -254,7 +262,9 @@ void main() {
       expect(scheduled, isNotNull);
     });
 
-    test('updateSelectedElementsProperties updates style only when no selection', () {
+    test(
+        'updateSelectedElementsProperties updates style only when no selection',
+        () {
       final state = _state();
       DrawingDocument? scheduled;
       final patch = const ElementStylePatch(strokeColor: Colors.red);
@@ -272,7 +282,9 @@ void main() {
       expect(scheduled, isNull);
     });
 
-    test('updateSelectedElementsProperties updates elements and records command', () {
+    test(
+        'updateSelectedElementsProperties updates elements and records command',
+        () {
       final a = _rectangle(id: 'a', x: 0, y: 0, w: 10, h: 10);
       final state = _state(elements: [a], selectedElementIds: const {'a'});
       DrawingDocument? scheduled;
@@ -282,7 +294,8 @@ void main() {
         commandStack: commandStack,
         applyCallback: (_) {},
         scheduleSave: (doc) => scheduled = doc,
-        patch: const ElementStylePatch(strokeColor: Colors.blue, strokeWidth: 4),
+        patch:
+            const ElementStylePatch(strokeColor: Colors.blue, strokeWidth: 4),
       );
 
       final updated = result.data!.document.elements.single;

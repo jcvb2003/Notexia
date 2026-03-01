@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 import 'package:notexia/src/core/errors/result.dart';
 
 class MockFileRepository extends Mock implements FileRepository {}

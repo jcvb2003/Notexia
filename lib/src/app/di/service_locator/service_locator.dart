@@ -12,14 +12,10 @@ import 'package:notexia/src/features/drawing/presentation/state/delegates/drawin
 import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
-import 'package:notexia/src/features/drawing/data/repositories/asset_repository_impl.dart';
-import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
-// import 'package:notexia/src/features/drawing/domain/repositories/asset_repository.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
-import 'package:notexia/src/features/file_management/data/repositories/file_repository_impl.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
-import 'package:notexia/src/features/settings/data/repositories/app_settings_repository_impl.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/asset_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 import 'package:notexia/src/features/settings/domain/services/user_colors_storage.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';
@@ -63,7 +59,7 @@ Future<void> initServiceLocator() async {
 
   // Drawing Feature
   sl.registerLazySingleton<DocumentRepository>(
-    () => DocumentRepositoryImpl(sl<DatabaseService>()),
+    () => DocumentRepository(sl<DatabaseService>()),
   );
   sl.registerLazySingleton<PersistenceService>(
     () => PersistenceService(sl<DocumentRepository>()),
@@ -71,11 +67,11 @@ Future<void> initServiceLocator() async {
   sl.registerLazySingleton<AssetRepository>(() => AssetRepository());
 
   // File Management Feature
-  sl.registerLazySingleton<FileRepository>(() => FileRepositoryImpl());
+  sl.registerLazySingleton<FileRepository>(() => FileRepository());
 
   // Settings Feature
   sl.registerLazySingleton<AppSettingsRepository>(
-    () => AppSettingsRepositoryImpl(sl<DatabaseService>()),
+    () => AppSettingsRepository(sl<DatabaseService>()),
   );
   sl.registerLazySingleton<UserColorsStorage>(() => UserColorsStorage());
 

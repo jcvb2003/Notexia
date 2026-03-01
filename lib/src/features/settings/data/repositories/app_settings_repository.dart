@@ -1,13 +1,12 @@
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+
 import 'package:sqflite/sqflite.dart';
 
-class AppSettingsRepositoryImpl implements AppSettingsRepository {
+class AppSettingsRepository {
   final DatabaseService _databaseService;
 
-  AppSettingsRepositoryImpl(this._databaseService);
+  AppSettingsRepository(this._databaseService);
 
-  @override
   Future<void> saveSetting(String key, String value) async {
     final db = await _databaseService.database;
     await db.insert(
@@ -19,7 +18,6 @@ class AppSettingsRepositoryImpl implements AppSettingsRepository {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  @override
   Future<String?> getSetting(String key) async {
     final db = await _databaseService.database;
     final maps = await db.query(

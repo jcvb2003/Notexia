@@ -5,9 +5,9 @@ import 'package:window_manager/window_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:notexia/src/app/app.dart';
 import 'package:notexia/src/app/di/service_locator/service_locator.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {

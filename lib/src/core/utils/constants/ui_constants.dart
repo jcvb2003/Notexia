@@ -39,6 +39,13 @@ class AppColors {
   static const Color warning = Color(0xFFF59E0B);
   static const Color danger = Color(0xFFEF4444);
 
+  // Cores Tema Escuro
+  static const Color darkBackground = Color(0xFF121212);
+  static const Color darkSurface = Color(0xFF1E1E1E);
+  static const Color darkBorder = Color(0x1AFFFFFF); // Branco com 10% de alfa
+  static const Color darkTextPrimary = Color(0xFFF3F4F6);
+  static const Color darkTextSecondary = Color(0xFF9CA3AF);
+
   // Tokens de Seleção Semânticos
   static const Color selectedBackground = primary;
   static const Color selectedForeground = iconActive;
@@ -152,14 +159,20 @@ class AppTypography {
 }
 
 class AppThemeColors {
-  const AppThemeColors();
+  final Brightness brightness;
+  const AppThemeColors(this.brightness);
 
-  Color get textPrimary => AppColors.textPrimary;
-  Color get textSecondary => AppColors.textSecondary;
-  Color get textMuted => AppColors.textMuted;
-  Color get surface => AppColors.surface;
-  Color get background => AppColors.background;
-  Color get border => AppColors.border;
+  bool get isDark => brightness == Brightness.dark;
+
+  Color get textPrimary =>
+      isDark ? AppColors.darkTextPrimary : AppColors.textPrimary;
+  Color get textSecondary =>
+      isDark ? AppColors.darkTextSecondary : AppColors.textSecondary;
+  Color get textMuted => isDark ? AppColors.gray500 : AppColors.textMuted;
+  Color get surface => isDark ? AppColors.darkSurface : AppColors.surface;
+  Color get background =>
+      isDark ? AppColors.darkBackground : AppColors.background;
+  Color get border => isDark ? AppColors.darkBorder : AppColors.border;
   Color get primary => AppColors.primary;
   Color get primaryAccent => AppColors.primaryAccent;
   Color get success => AppColors.success;
@@ -170,7 +183,7 @@ class AppThemeColors {
 }
 
 extension AppThemeContext on BuildContext {
-  AppThemeColors get colors => const AppThemeColors();
+  AppThemeColors get colors => AppThemeColors(Theme.of(this).brightness);
   TextTheme get typography => Theme.of(this).textTheme;
 
   // Atalhos para presets adicionais

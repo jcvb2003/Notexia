@@ -5,7 +5,7 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 
 class MockAppSettingsRepository extends Mock implements AppSettingsRepository {}
 
@@ -24,7 +24,8 @@ void main() {
       when(() => settingsRepo.getSetting(AppConstants.prefsAngleSnapStepKey))
           .thenAnswer((_) async => '0.5');
 
-      final result = await delegate.loadAngleSnapSettings(_state(), settingsRepo);
+      final result =
+          await delegate.loadAngleSnapSettings(_state(), settingsRepo);
 
       expect(result.snapMode, SnapMode.angle);
       expect(result.angleSnapStep, 0.5);
@@ -36,7 +37,8 @@ void main() {
       when(() => settingsRepo.getSetting(AppConstants.prefsAngleSnapStepKey))
           .thenAnswer((_) async => 'invalid');
 
-      final result = await delegate.loadAngleSnapSettings(_state(), settingsRepo);
+      final result =
+          await delegate.loadAngleSnapSettings(_state(), settingsRepo);
 
       expect(result.snapMode, SnapMode.none);
       expect(result.angleSnapStep, AppConstants.angleSnapStep);
@@ -48,7 +50,8 @@ void main() {
       when(() => settingsRepo.saveSetting(any(), any()))
           .thenAnswer((_) async {});
 
-      final result = await delegate.setSnapMode(_state(), SnapMode.both, settingsRepo);
+      final result =
+          await delegate.setSnapMode(_state(), SnapMode.both, settingsRepo);
 
       expect(result.snapMode, SnapMode.both);
       verify(() => settingsRepo.saveSetting(
@@ -57,7 +60,8 @@ void main() {
           )).called(1);
     });
 
-    test('cycleSnapMode follows none -> angle -> object -> both -> none', () async {
+    test('cycleSnapMode follows none -> angle -> object -> both -> none',
+        () async {
       when(() => settingsRepo.saveSetting(any(), any()))
           .thenAnswer((_) async {});
 
@@ -79,7 +83,8 @@ void main() {
           .thenAnswer((_) async {});
 
       final start = _state(mode: SnapMode.object);
-      final result = await delegate.setAngleSnapEnabled(start, true, settingsRepo);
+      final result =
+          await delegate.setAngleSnapEnabled(start, true, settingsRepo);
 
       expect(result.snapMode, SnapMode.both);
     });
@@ -89,7 +94,8 @@ void main() {
           .thenAnswer((_) async {});
 
       final start = _state(mode: SnapMode.both);
-      final result = await delegate.setAngleSnapEnabled(start, false, settingsRepo);
+      final result =
+          await delegate.setAngleSnapEnabled(start, false, settingsRepo);
 
       expect(result.snapMode, SnapMode.object);
     });
@@ -98,7 +104,8 @@ void main() {
       when(() => settingsRepo.saveSetting(any(), any()))
           .thenAnswer((_) async {});
 
-      final result = await delegate.setAngleSnapStep(_state(), 0.75, settingsRepo);
+      final result =
+          await delegate.setAngleSnapStep(_state(), 0.75, settingsRepo);
 
       expect(result.angleSnapStep, 0.75);
       verify(() => settingsRepo.saveSetting(

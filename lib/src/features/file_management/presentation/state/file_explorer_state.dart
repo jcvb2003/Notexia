@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 
 enum SortMode { name, createdAt, updatedAt }
 

@@ -4,11 +4,11 @@ import 'package:notexia/src/features/file_management/presentation/widgets/sideba
 import 'package:notexia/src/features/file_management/presentation/widgets/file_explorer_tree.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_cubit.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
 import 'package:notexia/src/core/widgets/widgets.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 
 class SidebarWidget extends StatelessWidget {
   final bool isMobile;

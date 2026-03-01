@@ -7,16 +7,15 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document_mapp
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+
 import 'package:notexia/src/core/storage/queries.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 
-class DocumentRepositoryImpl implements DocumentRepository {
+class DocumentRepository {
   final DatabaseService _dbService;
 
-  DocumentRepositoryImpl(this._dbService);
+  DocumentRepository(this._dbService);
 
-  @override
   Future<Result<List<DrawingDocument>>> getDocuments() async {
     try {
       final db = await _dbService.database;
@@ -35,7 +34,6 @@ class DocumentRepositoryImpl implements DocumentRepository {
     }
   }
 
-  @override
   Future<Result<DrawingDocument?>> getDocumentById(String id) async {
     try {
       final db = await _dbService.database;
@@ -75,7 +73,6 @@ class DocumentRepositoryImpl implements DocumentRepository {
     }
   }
 
-  @override
   Future<Result<void>> saveDocument(DrawingDocument document) async {
     try {
       final db = await _dbService.database;
@@ -123,7 +120,6 @@ class DocumentRepositoryImpl implements DocumentRepository {
     }
   }
 
-  @override
   Future<Result<void>> deleteDocument(String id) async {
     try {
       final db = await _dbService.database;
@@ -134,7 +130,6 @@ class DocumentRepositoryImpl implements DocumentRepository {
     }
   }
 
-  @override
   Future<Result<void>> saveElement(
       String drawingId, CanvasElement element) async {
     try {
@@ -185,7 +180,6 @@ class DocumentRepositoryImpl implements DocumentRepository {
     return (sourceMap, jsonEncode(customData));
   }
 
-  @override
   Future<Result<void>> deleteElement(String drawingId, String elementId) async {
     try {
       final db = await _dbService.database;

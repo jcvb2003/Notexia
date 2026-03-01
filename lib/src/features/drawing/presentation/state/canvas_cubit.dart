@@ -13,8 +13,8 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart
 import 'package:notexia/src/features/drawing/presentation/rendering/renderers/free_draw_renderer.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 
 import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
 import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';

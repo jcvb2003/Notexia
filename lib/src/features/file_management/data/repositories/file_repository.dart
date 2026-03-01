@@ -5,13 +5,11 @@ import 'package:uuid/uuid.dart';
 import 'package:notexia/src/core/errors/failure.dart';
 import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
 
 /// Implementação concreta do FileRepository usando I/O de sistema de arquivos.
-class FileRepositoryImpl implements FileRepository {
+class FileRepository {
   final Uuid _uuid = const Uuid();
 
-  @override
   Future<Result<List<FileItem>>> listItems(String directoryPath) async {
     final dir = Directory(directoryPath);
     if (!await dir.exists()) {
@@ -60,7 +58,6 @@ class FileRepositoryImpl implements FileRepository {
     return Result.success(items);
   }
 
-  @override
   Future<Result<FileItem?>> getItem(String path) async {
     try {
       final entity = FileSystemEntity.typeSync(path);
@@ -104,7 +101,6 @@ class FileRepositoryImpl implements FileRepository {
     return candidate;
   }
 
-  @override
   Future<Result<FileItem>> createItem({
     required String name,
     required String parentPath,
@@ -137,7 +133,6 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  @override
   Future<Result<FileItem>> renameItem(String path, String newName) async {
     try {
       final entity = _getEntity(path);
@@ -156,7 +151,6 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  @override
   Future<Result<FileItem>> moveItem(
       String sourcePath, String destinationPath) async {
     try {
@@ -176,7 +170,6 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  @override
   Future<Result<void>> deleteItem(String path) async {
     try {
       final entity = _getEntity(path);
@@ -191,7 +184,6 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  @override
   Future<Result<bool>> exists(String path) async {
     try {
       final result =
@@ -203,7 +195,6 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  @override
   Future<Result<VaultStats>> getVaultStats(String vaultPath) async {
     final rootDir = Directory(vaultPath);
     if (!await rootDir.exists()) {
@@ -240,7 +231,6 @@ class FileRepositoryImpl implements FileRepository {
     }
   }
 
-  @override
   Future<Result<String?>> readFile(String path) async {
     try {
       final file = File(path);

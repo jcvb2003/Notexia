@@ -72,3 +72,20 @@ class FileItem extends Equatable {
 
 /// Tipos de itens no sistema de arquivos.
 enum FileItemType { file, folder, drawing }
+
+/// Estatísticas de um cofre (vault) de arquivos.
+class VaultStats {
+  final int fileCount;
+  final int folderCount;
+  final int totalSizeBytes;
+
+  const VaultStats({
+    required this.fileCount,
+    required this.folderCount,
+    required this.totalSizeBytes,
+  });
+
+  String get formattedFileCount => '$fileCount arquivos';
+  String get formattedFolderCount => '$folderCount pastas';
+  String get summary => '$fileCount arquivos, $folderCount pastas';
+}

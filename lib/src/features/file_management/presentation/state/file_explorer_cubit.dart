@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notexia/src/features/file_management/domain/entities/file_item.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
 import 'package:notexia/src/features/file_management/presentation/state/file_explorer_state.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 import 'package:path/path.dart' as p;
 import 'package:url_launcher/url_launcher.dart';
 

@@ -9,7 +9,7 @@ import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/core/errors/result.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_input_router.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';

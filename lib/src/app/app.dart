@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notexia/src/app/config/themes/app_theme.dart';
 import 'package:notexia/src/app/config/routes/app_router.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 
 class NotexiaApp extends StatelessWidget {
   final DocumentRepository documentRepository;

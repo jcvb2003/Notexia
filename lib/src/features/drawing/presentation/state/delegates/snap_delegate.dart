@@ -1,7 +1,7 @@
 import 'package:notexia/src/app/config/constants/app_constants.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 
 class SnapDelegate {
   const SnapDelegate();

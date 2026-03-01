@@ -10,7 +10,7 @@ import 'package:notexia/src/features/drawing/domain/services/transformation_serv
 import 'package:notexia/src/features/drawing/domain/services/canvas_manipulation_service.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
 import 'package:notexia/src/core/errors/result.dart';
 import 'package:notexia/src/core/errors/failure.dart';
 

@@ -7,9 +7,9 @@ import 'package:notexia/src/features/drawing/presentation/pages/drawing_page.dar
 import 'package:notexia/src/features/file_management/presentation/widgets/sidebar_widget.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
-import 'package:notexia/src/features/drawing/domain/repositories/document_repository.dart';
-import 'package:notexia/src/features/file_management/domain/repositories/file_repository.dart';
-import 'package:notexia/src/features/settings/domain/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
+import 'package:notexia/src/features/file_management/data/repositories/file_repository.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/features/undo_redo/presentation/state/undo_redo_cubit.dart';
 import 'package:notexia/src/features/drawing/domain/services/transformation_service.dart';

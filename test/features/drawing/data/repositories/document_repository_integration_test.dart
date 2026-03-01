@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:notexia/src/core/storage/local_database/database_service.dart';
 import 'package:notexia/src/core/storage/queries.dart';
-import 'package:notexia/src/features/drawing/data/repositories/document_repository_impl.dart';
+import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -12,7 +12,7 @@ class MockDatabaseService extends Mock implements DatabaseService {}
 
 void main() {
   late Database db;
-  late DocumentRepositoryImpl repository;
+  late DocumentRepository repository;
   late MockDatabaseService mockDbService;
 
   setUpAll(() async {
@@ -29,14 +29,14 @@ void main() {
     mockDbService = MockDatabaseService();
     when(() => mockDbService.database).thenAnswer((_) async => db);
 
-    repository = DocumentRepositoryImpl(mockDbService);
+    repository = DocumentRepository(mockDbService);
   });
 
   tearDown(() async {
     await db.close();
   });
 
-  group('DocumentRepositoryImpl Integration', () {
+  group('DocumentRepository Integration', () {
     final now = DateTime(2026, 1, 1);
     final testDoc = DrawingDocument(
       id: 'doc-1',

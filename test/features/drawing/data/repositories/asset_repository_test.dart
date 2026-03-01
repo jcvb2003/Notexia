@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:notexia/src/features/drawing/data/repositories/asset_repository_impl.dart';
+import 'package:notexia/src/features/drawing/data/repositories/asset_repository.dart';
 import 'package:path/path.dart' as p;
 
 void main() {
