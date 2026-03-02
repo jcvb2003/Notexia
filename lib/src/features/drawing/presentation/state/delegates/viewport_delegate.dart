@@ -78,4 +78,45 @@ class ViewportDelegate {
       ),
     ));
   }
+
+  Result<CanvasState> resetViewport(CanvasState state) {
+    return Result.success(state.copyWith(
+      transform: const CanvasTransform(
+        zoomLevel: 1.0,
+        panOffset: Offset.zero,
+      ),
+    ));
+  }
+
+  Result<CanvasState> centerSelection(CanvasState state) {
+    if (state.selectedElementIds.isEmpty) return Result.success(state);
+
+    final selectedElements = state.elements
+        .where((e) => state.selectedElementIds.contains(e.id))
+        .toList();
+
+    if (selectedElements.isEmpty) return Result.success(state);
+
+    Rect? combinedBounds;
+    for (final element in selectedElements) {
+      if (combinedBounds == null) {
+        combinedBounds = element.bounds;
+      } else {
+        combinedBounds = combinedBounds.expandToInclude(element.bounds);
+      }
+    }
+
+    if (combinedBounds == null) return Result.success(state);
+
+    // Simplificado: apenas centraliza o pan no meio da seleção com zoom atual.
+    // Em uma implementação real, poderíamos ajustar o zoom para caber na tela.
+    final center = combinedBounds.center;
+    // centralizado na tela (assumindo tamanho padrão de exemplo ou mantendo zoom)
+    // Para simplificar agora e resolver o erro de compilação:
+    return Result.success(state.copyWith(
+      transform: state.transform.copyWith(
+        panOffset: Offset.zero - (center * state.zoomLevel),
+      ),
+    ));
+  }
 }

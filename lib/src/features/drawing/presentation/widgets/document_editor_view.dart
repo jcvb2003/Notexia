@@ -8,14 +8,14 @@ import 'package:notexia/src/features/drawing/domain/models/drawing_document_mapp
 import 'package:notexia/src/features/drawing/domain/models/canvas_element_mapper.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_cubit.dart';
 
-class SkeletonView extends StatefulWidget {
-  const SkeletonView({super.key});
+class DocumentEditorView extends StatefulWidget {
+  const DocumentEditorView({super.key});
 
   @override
-  State<SkeletonView> createState() => _SkeletonViewState();
+  State<DocumentEditorView> createState() => _DocumentEditorViewState();
 }
 
-class _SkeletonViewState extends State<SkeletonView> {
+class _DocumentEditorViewState extends State<DocumentEditorView> {
   late TextEditingController _controller;
   String? _error;
 

@@ -2,41 +2,36 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:notexia/src/core/errors/failure.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
-import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
 import 'package:notexia/src/features/drawing/domain/models/drawing_document.dart';
-import 'package:notexia/src/features/drawing/presentation/rendering/renderers/free_draw_renderer.dart';
 import 'package:notexia/src/features/drawing/domain/models/element_style.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/data/repositories/document_repository.dart';
-import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
-
-import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
-import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
-import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
-import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
 import 'package:notexia/src/features/drawing/domain/services/drawing_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/persistence_service.dart';
+import 'package:notexia/src/features/drawing/domain/helpers/canvas_helpers.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/drawing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/eraser_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/snap_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/text_editing_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/viewport_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/delegates/canvas_interaction_delegate.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/drawing_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scope.dart';
+import 'package:notexia/src/features/drawing/presentation/rendering/renderers/free_draw_renderer.dart';
+import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
+import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
+import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
+import 'package:notexia/src/core/errors/failure.dart';
 import 'package:uuid/uuid.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// State Classes (previously in canvas_state.dart)
+// Sub-states
 // ─────────────────────────────────────────────────────────────────────────────
 
-const Object _default = Object();
-
-enum EraserMode { all, stroke, area }
+const _default = Object();
 
 class CanvasTransform extends Equatable {
   final double zoomLevel;
@@ -65,6 +60,8 @@ class CanvasTransform extends Equatable {
   @override
   List<Object?> get props => [zoomLevel, panOffset, selectionBox];
 }
+
+enum EraserMode { stroke, all, area }
 
 class EraserState extends Equatable {
   final EraserMode mode;
@@ -97,29 +94,34 @@ class SnapState extends Equatable {
   final SnapMode mode;
   final double angleStep;
   final List<SnapGuide> guides;
+  final bool isGridSnapEnabled;
 
   const SnapState({
     this.mode = SnapMode.none,
     this.angleStep = 0.2617993877991494,
     this.guides = const [],
+    this.isGridSnapEnabled = false,
   });
 
   bool get isAngleSnapEnabled => mode.isAngleSnapEnabled;
+  bool get isObjectSnapEnabled => mode.isObjectSnapEnabled;
 
   SnapState copyWith({
     SnapMode? mode,
     double? angleStep,
     List<SnapGuide>? guides,
+    bool? isGridSnapEnabled,
   }) {
     return SnapState(
       mode: mode ?? this.mode,
       angleStep: angleStep ?? this.angleStep,
       guides: guides ?? this.guides,
+      isGridSnapEnabled: isGridSnapEnabled ?? this.isGridSnapEnabled,
     );
   }
 
   @override
-  List<Object?> get props => [mode, angleStep, guides];
+  List<Object?> get props => [mode, angleStep, guides, isGridSnapEnabled];
 }
 
 class TextEditingState extends Equatable {
@@ -230,6 +232,7 @@ class CanvasState extends Equatable {
   final bool isZoomMode;
   final bool isDrawWithFingerEnabled;
   final bool hasShownStylusPrompt;
+  final bool isGridVisible;
   final String? error;
   final Failure? lastFailure;
 
@@ -243,6 +246,7 @@ class CanvasState extends Equatable {
     this.isZoomMode = false,
     this.isDrawWithFingerEnabled = true,
     this.hasShownStylusPrompt = false,
+    this.isGridVisible = false,
     this.error,
     this.lastFailure,
   });
@@ -268,12 +272,19 @@ class CanvasState extends Equatable {
   double get angleSnapStep => interaction.snap.angleStep;
   List<SnapGuide> get snapGuides => interaction.snap.guides;
   bool get isAngleSnapEnabled => interaction.snap.isAngleSnapEnabled;
+  bool get isObjectSnapEnabled => interaction.snap.isObjectSnapEnabled;
 
   String? get editingTextId => interaction.textEditing.editingTextId;
 
   double get zoomLevel => transform.zoomLevel;
   Offset get panOffset => transform.panOffset;
   Rect? get selectionBox => transform.selectionBox;
+
+  /// Grid snap ativado explicitamente pelo usuário (independente da visibilidade do grid).
+  bool get isGridSnapEnabled => interaction.snap.isGridSnapEnabled;
+
+  /// Tamanho da grade para snap geométrico.
+  double get gridSize => 20.0;
 
   CanvasElement? get activeElement {
     if (interaction.activeDrawingElement != null) {
@@ -295,6 +306,7 @@ class CanvasState extends Equatable {
     bool? isZoomMode,
     bool? isDrawWithFingerEnabled,
     bool? hasShownStylusPrompt,
+    bool? isGridVisible,
     Object? error = _default,
     Object? lastFailure = _default,
   }) {
@@ -309,6 +321,7 @@ class CanvasState extends Equatable {
       isDrawWithFingerEnabled:
           isDrawWithFingerEnabled ?? this.isDrawWithFingerEnabled,
       hasShownStylusPrompt: hasShownStylusPrompt ?? this.hasShownStylusPrompt,
+      isGridVisible: isGridVisible ?? this.isGridVisible,
       error: error == _default ? this.error : error as String?,
       lastFailure:
           lastFailure == _default ? this.lastFailure : lastFailure as Failure?,
@@ -326,6 +339,7 @@ class CanvasState extends Equatable {
         isZoomMode,
         isDrawWithFingerEnabled,
         hasShownStylusPrompt,
+        isGridVisible,
         error,
         lastFailure,
       ];
@@ -410,7 +424,15 @@ class CanvasCubit extends Cubit<CanvasState> {
   Future<void> close() {
     _persistenceService.dispose();
     drawing.dispose();
+    // note: text scope does not need explicit dispose
     return super.close();
+  }
+
+  void updateTitle(String title) {
+    if (isClosed) return;
+    final updatedDoc = state.document.copyWith(title: title);
+    emit(state.copyWith(document: updatedDoc));
+    _scheduleSaveDocument(updatedDoc);
   }
 
   void beginCommandGesture(String label) {
@@ -438,49 +460,25 @@ class CanvasCubit extends Cubit<CanvasState> {
 
   void _applyElementsFromCommand(List<CanvasElement> elements) {
     if (isClosed) return;
-    final updatedDoc = state.document.copyWith(elements: elements);
-    emit(state.copyWith(document: updatedDoc));
+    emit(state.copyWith(document: state.document.copyWith(elements: elements)));
+    _scheduleSaveDocument(state.document);
   }
 
   void _scheduleSaveDocument(DrawingDocument doc) {
-    _persistenceService.scheduleSaveDocument(
-      doc,
-      onComplete: (failure) {
-        if (isClosed) return;
-        if (failure != null) {
-          emit(state.copyWith(
-            error: failure.message,
-            lastFailure: failure,
-          ));
-        } else {
-          emit(state.copyWith(error: null, lastFailure: null));
-        }
-      },
-    );
-  }
-
-  Future<void> updateTitle(String newTitle) async {
-    final updatedDoc = state.document.copyWith(title: newTitle);
-    _persistenceService.scheduleSaveDocument(
-      updatedDoc,
-      debounceDuration: Duration.zero, // Save immediately for title
-      onComplete: (failure) {
-        if (!isClosed) {
-          if (failure != null) {
-            emit(state.copyWith(
-              error: 'Erro ao atualizar título: ${failure.message}',
-              lastFailure: failure,
-            ));
-          } else {
-            emit(state.copyWith(error: null, lastFailure: null));
-          }
-        }
-      },
-    );
-    emit(state.copyWith(document: updatedDoc));
+    _persistenceService.scheduleSaveDocument(doc);
   }
 
   // Viewport Operations
+  void centerSelection() {
+    final result = _viewportDelegate.centerSelection(state);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void resetViewport() {
+    final result = _viewportDelegate.resetViewport(state);
+    if (result.isSuccess) emit(result.data!);
+  }
+
   void zoomIn([Offset? screenCenter]) {
     final result = _viewportDelegate.zoomIn(state, screenCenter);
     if (result.isSuccess) emit(result.data!);
@@ -586,23 +584,54 @@ class CanvasCubit extends Cubit<CanvasState> {
     ));
   }
 
-  // Selection Operations
+  Future<void> setGridSnapEnabled(bool value) async {
+    emit(await _snapDelegate.setGridSnapEnabled(state, value));
+  }
+
+  void toggleGridVisibility() {
+    emit(state.copyWith(isGridVisible: !state.isGridVisible));
+  }
+
+  // Element Interaction
+  void selectElement(String elementId, {bool additive = false}) {
+    final result = _interactionDelegate.selectElement(state, elementId,
+        additive: additive);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void deselectAll() {
+    final result = _interactionDelegate.deselectAll(state);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void startSelectionBox(Offset point) {
+    final result = _interactionDelegate.startSelectionBox(state, point);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void updateSelectionBox(Offset point) {
+    final result = _interactionDelegate.updateSelectionBox(state, point);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void endSelectionBox() {
+    final result = _interactionDelegate.endSelectionBox(state);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void setHoveredElement(String? elementId) {
+    final result = _interactionDelegate.setHoveredElement(state, elementId);
+    if (result.isSuccess) emit(result.data!);
+  }
+
   void setSelectionBox(Rect? rect) {
     final result = _interactionDelegate.setSelectionBox(state, rect);
     if (result.isSuccess) emit(result.data!);
   }
 
-  void setHoveredElement(String? id) {
-    final result = _interactionDelegate.setHoveredElement(state, id);
-    if (result.isSuccess) emit(result.data!);
-  }
-
   void selectElementAt(Offset localPosition, {bool isMultiSelect = false}) {
-    final result = _interactionDelegate.selectElementAt(
-      state,
-      localPosition,
-      isMultiSelect: isMultiSelect,
-    );
+    final result = _interactionDelegate.selectElementAt(state, localPosition,
+        isMultiSelect: isMultiSelect);
     if (result.isSuccess) emit(result.data!);
   }
 
@@ -612,28 +641,41 @@ class CanvasCubit extends Cubit<CanvasState> {
     if (result.isSuccess) emit(result.data!);
   }
 
-  // Manipulation Operations
+  // Element Manipulation
+  void startManipulation(Offset worldPoint) {
+    final result = _interactionDelegate.startManipulation(state, worldPoint);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void updateManipulation(Offset worldDelta) {
+    final result = _interactionDelegate.updateManipulation(state, worldDelta);
+    if (result.isSuccess) emit(result.data!);
+  }
+
   void moveSelectedElements(Offset delta) {
-    final result = _interactionDelegate.moveSelectedElements(
-      state: state,
-      delta: delta,
-    );
+    updateManipulation(delta);
+  }
+
+  void updateResize(Offset worldDelta, String handleId) {
+    final result =
+        _interactionDelegate.updateResize(state, worldDelta, handleId);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void updateRotation(double worldAngle) {
+    final result = _interactionDelegate.updateRotation(state, worldAngle);
+    if (result.isSuccess) emit(result.data!);
+  }
+
+  void rotateSelectedElement(double worldAngle) {
+    final result = _interactionDelegate.rotateSelectedElement(
+        state: state, angle: worldAngle);
     if (result.isSuccess) emit(result.data!);
   }
 
   void resizeSelectedElement(Rect rect) {
-    final result = _interactionDelegate.resizeSelectedElement(
-      state: state,
-      rect: rect,
-    );
-    if (result.isSuccess) emit(result.data!);
-  }
-
-  void rotateSelectedElement(double angle) {
-    final result = _interactionDelegate.rotateSelectedElement(
-      state: state,
-      angle: angle,
-    );
+    final result =
+        _interactionDelegate.resizeSelectedElement(state: state, rect: rect);
     if (result.isSuccess) emit(result.data!);
   }
 

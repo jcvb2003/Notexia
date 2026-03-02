@@ -1,5 +1,17 @@
 import 'package:flutter/foundation.dart';
 
+/// Tipo visual da guia de snap.
+enum SnapGuideType {
+  /// Alinhamento de bordas/centros entre objetos.
+  alignment,
+
+  /// Espaçamento igual entre objetos.
+  gap,
+
+  /// Alinhamento ao grid.
+  grid,
+}
+
 /// Resultado de uma operação de snap.
 @immutable
 class SnapResult {
@@ -26,6 +38,8 @@ class SnapGuide {
     required this.offset,
     required this.min,
     required this.max,
+    this.type = SnapGuideType.alignment,
+    this.gapValue,
   });
 
   /// Se a guia é vertical (x constante) ou horizontal (y constante).
@@ -39,6 +53,12 @@ class SnapGuide {
 
   /// O fim do segmento da linha.
   final double max;
+
+  /// Tipo visual da guia.
+  final SnapGuideType type;
+
+  /// Valor do gap (só para tipo [SnapGuideType.gap]).
+  final double? gapValue;
 }
 
 enum SnapMode {

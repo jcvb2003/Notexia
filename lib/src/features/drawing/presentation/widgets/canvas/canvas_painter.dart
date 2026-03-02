@@ -18,6 +18,7 @@ class PainterCtx {
   final bool isEraserActive;
   final List<SnapGuide> snapGuides;
   final CanvasElement? activeDrawingElement;
+  final bool isGridVisible;
   final bool renderOnlySelected;
   final bool excludeSelected;
 
@@ -32,6 +33,7 @@ class PainterCtx {
     required this.eraserTrail,
     required this.isEraserActive,
     required this.snapGuides,
+    required this.isGridVisible,
     this.activeDrawingElement,
     this.renderOnlySelected = false,
     this.excludeSelected = false,
@@ -44,12 +46,14 @@ class StaticCanvasPainter extends CustomPainter {
   final double zoomLevel;
   final Offset panOffset;
   final String? editingElementId;
+  final bool isGridVisible;
 
   StaticCanvasPainter({
     required this.elements,
     required this.selectedElementIds,
     required this.zoomLevel,
     required this.panOffset,
+    required this.isGridVisible,
     this.editingElementId,
   });
 
@@ -70,12 +74,15 @@ class StaticCanvasPainter extends CustomPainter {
       eraserTrail: const [],
       isEraserActive: false,
       snapGuides: const [],
+      isGridVisible: isGridVisible,
       activeDrawingElement: null,
       excludeSelected: true,
     );
 
     BackgroundGridPainter.drawBackground(ctx, canvas, size);
-    BackgroundGridPainter.drawGrid(ctx, canvas, size);
+    if (isGridVisible) {
+      BackgroundGridPainter.drawGrid(ctx, canvas, size);
+    }
     ElementsPainter.renderElements(ctx, canvas, size);
     canvas.restore();
   }
@@ -101,6 +108,7 @@ class DynamicCanvasPainter extends CustomPainter {
   final bool isEraserActive;
   final List<SnapGuide> snapGuides;
   final CanvasElement? activeDrawingElement;
+  final bool isGridVisible;
 
   DynamicCanvasPainter({
     required this.elements,
@@ -112,6 +120,7 @@ class DynamicCanvasPainter extends CustomPainter {
     required this.eraserTrail,
     required this.isEraserActive,
     required this.snapGuides,
+    required this.isGridVisible,
     this.activeDrawingElement,
   });
 
@@ -133,6 +142,7 @@ class DynamicCanvasPainter extends CustomPainter {
       isEraserActive: isEraserActive,
       snapGuides: snapGuides,
       activeDrawingElement: activeDrawingElement,
+      isGridVisible: isGridVisible,
       renderOnlySelected: true,
     );
 

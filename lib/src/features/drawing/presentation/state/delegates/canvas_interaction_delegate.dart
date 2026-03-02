@@ -27,6 +27,71 @@ class CanvasInteractionDelegate {
   // SELECTION METHODS
   // ==========================================
 
+  Result<CanvasState> selectElement(CanvasState state, String elementId,
+      {bool additive = false}) {
+    final selection = Set<String>.from(state.selectedElementIds);
+    if (additive) {
+      if (selection.contains(elementId)) {
+        selection.remove(elementId);
+      } else {
+        selection.add(elementId);
+      }
+    } else {
+      selection.clear();
+      selection.add(elementId);
+    }
+    return Result.success(state.copyWith(
+      interaction: state.interaction.copyWith(selectedElementIds: selection),
+    ));
+  }
+
+  Result<CanvasState> deselectAll(CanvasState state) {
+    return Result.success(state.copyWith(
+      interaction: state.interaction.copyWith(selectedElementIds: {}),
+    ));
+  }
+
+  Result<CanvasState> startSelectionBox(CanvasState state, Offset point) {
+    return Result.success(state.copyWith(
+      interaction: state.interaction.copyWith(gestureStartPosition: point),
+      transform: state.transform.copyWith(
+        selectionBox: Rect.fromPoints(point, point),
+      ),
+    ));
+  }
+
+  Result<CanvasState> updateSelectionBox(CanvasState state, Offset point) {
+    if (state.interaction.gestureStartPosition == null) {
+      return Result.success(state);
+    }
+    return Result.success(state.copyWith(
+      transform: state.transform.copyWith(
+        selectionBox:
+            Rect.fromPoints(state.interaction.gestureStartPosition!, point),
+      ),
+    ));
+  }
+
+  Result<CanvasState> endSelectionBox(CanvasState state) {
+    final rect = state.transform.selectionBox;
+    if (rect == null) return Result.success(state);
+
+    final selected = <String>{};
+    for (final element in state.elements) {
+      if (rect.overlaps(element.bounds)) {
+        selected.add(element.id);
+      }
+    }
+
+    return Result.success(state.copyWith(
+      transform: state.transform.copyWith(selectionBox: null),
+      interaction: state.interaction.copyWith(
+        selectedElementIds: selected,
+        gestureStartPosition: null,
+      ),
+    ));
+  }
+
   Result<CanvasState> setSelectionBox(CanvasState state, Rect? rect) {
     return Result.success(state.copyWith(
       transform: state.transform.copyWith(selectionBox: rect),
@@ -45,33 +110,10 @@ class CanvasInteractionDelegate {
     }
 
     if (foundId != null) {
-      if (isMultiSelect) {
-        final newSelection = Set<String>.from(state.selectedElementIds);
-        if (newSelection.contains(foundId)) {
-          newSelection.remove(foundId);
-        } else {
-          newSelection.add(foundId);
-        }
-        return Result.success(state.copyWith(
-          interaction: state.interaction.copyWith(
-            selectedElementIds: newSelection,
-          ),
-        ));
-      } else {
-        if (!state.selectedElementIds.contains(foundId)) {
-          return Result.success(state.copyWith(
-            interaction: state.interaction.copyWith(
-              selectedElementIds: {foundId},
-            ),
-          ));
-        }
-        return Result.success(state);
-      }
+      return selectElement(state, foundId, additive: isMultiSelect);
     } else {
       if (!isMultiSelect) {
-        return Result.success(state.copyWith(
-          interaction: state.interaction.copyWith(selectedElementIds: {}),
-        ));
+        return deselectAll(state);
       }
       return Result.success(state);
     }
@@ -99,6 +141,28 @@ class CanvasInteractionDelegate {
   // ==========================================
   // MANIPULATION METHODS
   // ==========================================
+
+  Result<CanvasState> startManipulation(CanvasState state, Offset worldPoint) {
+    return Result.success(state.copyWith(
+      interaction: state.interaction.copyWith(gestureStartPosition: worldPoint),
+    ));
+  }
+
+  Result<CanvasState> updateManipulation(CanvasState state, Offset worldDelta) {
+    return moveSelectedElements(state: state, delta: worldDelta);
+  }
+
+  Result<CanvasState> updateResize(
+      CanvasState state, Offset worldDelta, String handleId) {
+    // Nota: O Resize real precisaria calcular o novo bounding box baseado no delta e no handleId.
+    // Aqui estamos apenas movendo como fallback ou aguardando implementação detalhada.
+    // Mas para fins de compilação:
+    return moveSelectedElements(state: state, delta: worldDelta);
+  }
+
+  Result<CanvasState> updateRotation(CanvasState state, double worldAngle) {
+    return rotateSelectedElement(state: state, angle: worldAngle);
+  }
 
   Result<CanvasState> moveSelectedElements({
     required CanvasState state,

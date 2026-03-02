@@ -170,6 +170,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                               selectedElementIds: uiState.selectedElementIds,
                               zoomLevel: uiState.zoomLevel,
                               panOffset: uiState.panOffset,
+                              isGridVisible: uiState.isGridVisible,
                               editingElementId: editingTextId,
                             ),
                             size: Size.infinite,
@@ -189,6 +190,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
                               snapGuides: uiState.snapGuides,
                               activeDrawingElement:
                                   uiState.activeDrawingElement,
+                              isGridVisible: uiState.isGridVisible,
                             ),
                             size: Size.infinite,
                           ),

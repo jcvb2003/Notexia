@@ -39,6 +39,8 @@ class CanvasInputRouter {
     _pipeline.onProcessed = (event) {
       if (event is ScaleUpdateInputEvent) {
         ScaleGestureHandlers.handleScaleUpdate(this, event);
+        // Emitir guides calculadas pelo middleware de snapping
+        canvasCubit.setSnapGuides(event.snapGuides);
       } else if (event is PointerHoverInputEvent) {
         PointerHoverHandlers.handleHover(this, event.details, event.state);
       } else if (event is TapDownInputEvent) {
@@ -48,6 +50,8 @@ class CanvasInputRouter {
         ScaleGestureHandlers.handleScaleStart(this, event);
       } else if (event is ScaleEndInputEvent) {
         ScaleGestureHandlers.handleScaleEnd(this, event);
+        // Limpar guides ao fim do gesto
+        canvasCubit.setSnapGuides([]);
       } else if (event is PointerSignalInputEvent) {
         PointerHoverHandlers.handlePointerSignal(
           this,

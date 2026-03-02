@@ -1,6 +1,7 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/canvas/rendering/painters/dashed_painter.dart';
+import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
 import 'package:notexia/src/features/drawing/domain/utils/selection_utils.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_painter.dart';
 
@@ -183,26 +184,79 @@ class OverlaysPainter {
   static void drawSnapGuides(PainterCtx ctx, Canvas canvas) {
     if (ctx.snapGuides.isEmpty) return;
 
-    final paint = Paint()
-      ..color = AppColors.danger
-      ..strokeWidth = 1.0 / ctx.zoomLevel
-      ..style = PaintingStyle.stroke;
-
     for (final guide in ctx.snapGuides) {
-      if (guide.isVertical) {
-        canvas.drawLine(
-          Offset(guide.offset, guide.min),
-          Offset(guide.offset, guide.max),
-          paint,
-        );
-      } else {
-        canvas.drawLine(
-          Offset(guide.min, guide.offset),
-          Offset(guide.max, guide.offset),
-          paint,
-        );
+      final Color color;
+      switch (guide.type) {
+        case SnapGuideType.alignment:
+          color = AppColors.danger;
+          break;
+        case SnapGuideType.gap:
+          color = AppColors.paletteTeal;
+          break;
+        case SnapGuideType.grid:
+          color = AppColors.gray400;
+          break;
+      }
+
+      final paint = Paint()
+        ..color = color
+        ..strokeWidth = 1.0 / ctx.zoomLevel
+        ..style = PaintingStyle.stroke;
+
+      final p1 = guide.isVertical
+          ? Offset(guide.offset, guide.min)
+          : Offset(guide.min, guide.offset);
+      final p2 = guide.isVertical
+          ? Offset(guide.offset, guide.max)
+          : Offset(guide.max, guide.offset);
+
+      // Renderização por tipo
+      switch (guide.type) {
+        case SnapGuideType.alignment:
+          DashedPainter.drawDashedLine(canvas, p1, p2, paint);
+          break;
+        case SnapGuideType.grid:
+          DashedPainter.drawDottedLine(canvas, p1, p2, paint);
+          break;
+        case SnapGuideType.gap:
+          canvas.drawLine(p1, p2, paint);
+          if (guide.gapValue != null) {
+            _drawGapLabel(
+                canvas, p1, p2, guide.gapValue!, color, ctx.zoomLevel);
+          }
+          break;
       }
     }
+  }
+
+  static void _drawGapLabel(
+    Canvas canvas,
+    Offset p1,
+    Offset p2,
+    double value,
+    Color color,
+    double zoomLevel,
+  ) {
+    final center = Offset((p1.dx + p2.dx) / 2, (p1.dy + p2.dy) / 2);
+    final text = value.toStringAsFixed(1);
+
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: color,
+          fontSize: 10 / zoomLevel,
+          fontWeight: FontWeight.bold,
+          backgroundColor: AppColors.background.withValues(alpha: 0.8),
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    textPainter.paint(
+      canvas,
+      center - Offset(textPainter.width / 2, textPainter.height / 2),
+    );
   }
 
   static void _drawHandle(

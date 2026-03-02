@@ -107,4 +107,15 @@ class SnapDelegate {
       ),
     );
   }
+
+  Future<CanvasState> setGridSnapEnabled(
+    CanvasState state,
+    bool value,
+  ) async {
+    return state.copyWith(
+      interaction: state.interaction.copyWith(
+        snap: state.interaction.snap.copyWith(isGridSnapEnabled: value),
+      ),
+    );
+  }
 }

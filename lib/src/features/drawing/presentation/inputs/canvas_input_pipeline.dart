@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_enums.dart';
+import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
+import 'package:notexia/src/features/drawing/domain/services/grid_snap_service.dart';
 import 'package:notexia/src/features/drawing/domain/services/object_snap_service.dart';
 import 'package:notexia/src/features/drawing/presentation/state/canvas_state.dart';
 
@@ -67,6 +69,9 @@ class ScaleUpdateInputEvent extends InputEvent {
   Offset worldFocal;
   Offset worldFocalDelta;
   final bool isDraggingSelection;
+
+  /// Guides visuais calculadas pelo middleware de snapping.
+  List<SnapGuide> snapGuides = [];
 
   ScaleUpdateInputEvent({
     required this.details,
@@ -155,48 +160,70 @@ class SnappingMiddleware implements InputMiddleware {
   void _handleScaleUpdate(ScaleUpdateInputEvent event) {
     if (!event.isDraggingSelection) return;
 
-    final isShift = _isShiftPressed();
-    final isSnapEnabled = event.state.interaction.snap.mode.isObjectSnapEnabled;
+    // Ctrl/Cmd desabilita todo snap temporariamente
+    if (_isCtrlOrMetaPressed()) return;
 
-    if (isShift || isSnapEnabled) {
-      final selectedIds = event.state.selectedElementIds;
-      final elements = event.state.elements;
-      final selectedElements =
-          elements.where((e) => selectedIds.contains(e.id)).toList();
+    final isGridSnapEnabled = event.state.isGridSnapEnabled;
+    final isObjectSnapEnabled =
+        event.state.interaction.snap.mode.isObjectSnapEnabled;
 
-      if (selectedElements.isNotEmpty) {
-        double minX = double.infinity, minY = double.infinity;
-        double maxX = double.negativeInfinity, maxY = double.negativeInfinity;
+    if (!isGridSnapEnabled && !isObjectSnapEnabled) return;
 
-        for (final el in selectedElements) {
-          minX = math.min(minX, el.x);
-          minY = math.min(minY, el.y);
-          maxX = math.max(maxX, el.x + el.width);
-          maxY = math.max(maxY, el.y + el.height);
-        }
+    final selectedIds = event.state.selectedElementIds;
+    final elements = event.state.elements;
+    final selectedElements =
+        elements.where((e) => selectedIds.contains(e.id)).toList();
 
-        final currentRect = Rect.fromLTRB(minX, minY, maxX, maxY);
-        final targetRect = currentRect.shift(event.worldFocalDelta);
+    if (selectedElements.isEmpty) return;
 
-        final snapResult = ObjectSnapService.snapMove(
-          targetRect: targetRect,
-          referenceElements: elements,
-          excludedElementIds: selectedIds,
-        );
+    double minX = double.infinity, minY = double.infinity;
+    double maxX = double.negativeInfinity, maxY = double.negativeInfinity;
 
-        if (snapResult.hasSnap) {
-          event.worldFocalDelta += Offset(snapResult.dx, snapResult.dy);
-        }
+    for (final el in selectedElements) {
+      minX = math.min(minX, el.x);
+      minY = math.min(minY, el.y);
+      maxX = math.max(maxX, el.x + el.width);
+      maxY = math.max(maxY, el.y + el.height);
+    }
+
+    final currentRect = Rect.fromLTRB(minX, minY, maxX, maxY);
+    final targetRect = currentRect.shift(event.worldFocalDelta);
+
+    // Lógica ou-ou: grid snap tem prioridade. Se grid encontrou,
+    // não roda object snap (evita posição híbrida confusa).
+    if (isGridSnapEnabled) {
+      final gridResult = GridSnapService.snapRectToGrid(
+        rect: targetRect,
+        gridSize: event.state.gridSize,
+      );
+      if (gridResult.hasSnap) {
+        event.worldFocalDelta += Offset(gridResult.dx, gridResult.dy);
+        event.snapGuides = gridResult.guides;
+        return;
+      }
+    }
+
+    if (isObjectSnapEnabled) {
+      final zoomLevel = event.state.zoomLevel;
+      final snapResult = ObjectSnapService.snapMove(
+        targetRect: targetRect,
+        referenceElements: elements,
+        excludedElementIds: selectedIds,
+        zoomLevel: zoomLevel,
+      );
+
+      if (snapResult.hasSnap) {
+        event.worldFocalDelta += Offset(snapResult.dx, snapResult.dy);
+        event.snapGuides = snapResult.guides;
       }
     }
   }
 
-  bool _isShiftPressed() {
-    return HardwareKeyboard.instance.logicalKeysPressed.contains(
-          LogicalKeyboardKey.shiftLeft,
-        ) ||
-        HardwareKeyboard.instance.logicalKeysPressed.contains(
-          LogicalKeyboardKey.shiftRight,
-        );
+  bool _isCtrlOrMetaPressed() {
+    final keys = HardwareKeyboard.instance.logicalKeysPressed;
+    return keys.contains(LogicalKeyboardKey.controlLeft) ||
+        keys.contains(LogicalKeyboardKey.controlRight) ||
+        keys.contains(LogicalKeyboardKey.metaLeft) ||
+        keys.contains(LogicalKeyboardKey.metaRight);
   }
 }

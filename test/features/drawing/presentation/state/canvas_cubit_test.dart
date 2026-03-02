@@ -187,6 +187,7 @@ void main() {
         return cubit;
       },
       act: (cubit) => cubit.updateTitle('New Title'),
+      wait: const Duration(milliseconds: 400),
       expect: () => [
         isA<CanvasState>().having(
           (s) => s.document.title,

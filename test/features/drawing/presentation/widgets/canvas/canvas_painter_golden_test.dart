@@ -60,6 +60,7 @@ void main() {
                       selectedElementIds: selectedIds,
                       zoomLevel: zoom,
                       panOffset: pan,
+                      isGridVisible: false,
                     ),
                   ),
                   CustomPaint(
@@ -75,6 +76,7 @@ void main() {
                       isEraserActive: isEraserActive,
                       snapGuides: snapGuides,
                       activeDrawingElement: activeDrawingElement,
+                      isGridVisible: false,
                     ),
                   ),
                 ],

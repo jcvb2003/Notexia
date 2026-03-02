@@ -5,7 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:notexia/src/core/widgets/buttons/app_icon_button.dart';
 import 'package:notexia/src/core/widgets/common/floating_card.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/canvas/canvas_widget.dart';
-import 'package:notexia/src/features/drawing/presentation/widgets/debug/skeleton_view.dart';
+import 'package:notexia/src/features/drawing/presentation/widgets/document_editor_view.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/header/header_widget.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/context_toolbar.dart';
 import 'package:notexia/src/features/drawing/presentation/widgets/toolbar/draggable_toolbar.dart';
@@ -41,7 +41,9 @@ class DrawingPage extends StatelessWidget {
         return Stack(
           children: [
             Positioned.fill(
-              child: isSkeleton ? const SkeletonView() : const CanvasWidget(),
+              child: isSkeleton
+                  ? const DocumentEditorView()
+                  : const CanvasWidget(),
             ),
             HeaderWidget(
               onOpenMenu: onOpenMenu,
