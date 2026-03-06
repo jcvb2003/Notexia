@@ -24,7 +24,7 @@ class DrawingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CanvasCubit, CanvasState>(
       builder: (context, uiState) {
-        final isSkeleton = uiState.isSkeletonMode;
+        final isSkeleton = uiState.isDocumentEditorMode;
         final isFullScreen = uiState.isFullScreen;
         final screenWidth = MediaQuery.of(context).size.width;
         final isMobile = screenWidth < 640;

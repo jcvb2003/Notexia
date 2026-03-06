@@ -83,6 +83,20 @@ class HeaderDropdownMenu extends StatelessWidget {
                       },
                     ),
                   ),
+                  DropdownItem(
+                    icon: LucideIcons.grid,
+                    label: 'Grade de alinhamento',
+                    trailing: BlocBuilder<CanvasCubit, CanvasState>(
+                      builder: (context, state) {
+                        return AppCompactSwitch(
+                          value: state.isGridVisible,
+                          onChanged: (_) {
+                            canvasCubit.toggleGridVisibility();
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -109,9 +123,10 @@ class HeaderDropdownToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CanvasCubit, CanvasState>(
       builder: (context, state) {
-        final value = state.isSkeletonMode;
+        final value = state.isDocumentEditorMode;
         void toggle() {
-          context.read<CanvasCubit>().toggleSkeletonMode();
+          // Toggle do DocumentEditor no Dropdown
+          context.read<CanvasCubit>().toggleDocumentEditorMode();
           onClose?.call();
         }
 

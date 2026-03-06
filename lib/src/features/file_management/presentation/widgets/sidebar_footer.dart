@@ -99,7 +99,9 @@ class SidebarFooter extends StatelessWidget {
                   name: state.vaultName.isEmpty
                       ? 'VAULT'
                       : state.vaultName.toUpperCase(),
-                  summary: state.stats?.summary ?? 'Carregando...',
+                  summary: state.vaultPath.isEmpty 
+                      ? 'Nenhuma pasta selecionada' 
+                      : (state.stats?.summary ?? 'Carregando...'),
                   onTap: () =>
                       context.read<FileExplorerCubit>().pickVaultDirectory(),
                 ),

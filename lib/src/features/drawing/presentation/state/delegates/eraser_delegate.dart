@@ -5,6 +5,7 @@ import 'package:notexia/src/core/errors/result.dart';
 
 class EraserDelegate {
   const EraserDelegate();
+  static const int _maxTrailPoints = 40;
 
   Result<InteractionState> setEraserMode(
       InteractionState state, EraserMode mode) {
@@ -25,8 +26,8 @@ class EraserDelegate {
   Result<InteractionState> updateEraserTrail(
       InteractionState state, Offset point) {
     final updated = List<Offset>.from(state.eraser.trail)..add(point);
-    if (updated.length > 24) {
-      updated.removeRange(0, updated.length - 24);
+    if (updated.length > _maxTrailPoints) {
+      updated.removeRange(0, updated.length - _maxTrailPoints);
     }
     return Result.success(state.copyWith(
       eraser: state.eraser.copyWith(

@@ -26,18 +26,17 @@ void main() {
       expect(result.data!.eraser.trail, const [Offset(1, 2)]);
     });
 
-    test('updateEraserTrail appends points and caps to last 24 entries', () {
+    test('updateEraserTrail appends points and caps to last 40 entries', () {
       InteractionState state = const InteractionState();
-      for (int i = 0; i < 30; i++) {
-        state = delegate
-            .updateEraserTrail(state, Offset(i.toDouble(), 0))
-            .data!;
+      for (int i = 0; i < 50; i++) {
+        state =
+            delegate.updateEraserTrail(state, Offset(i.toDouble(), 0)).data!;
       }
 
       expect(state.eraser.isActive, isTrue);
-      expect(state.eraser.trail.length, 24);
-      expect(state.eraser.trail.first, const Offset(6, 0));
-      expect(state.eraser.trail.last, const Offset(29, 0));
+      expect(state.eraser.trail.length, 40);
+      expect(state.eraser.trail.first, const Offset(10, 0));
+      expect(state.eraser.trail.last, const Offset(49, 0));
     });
 
     test('endEraser clears active flag and trail', () {

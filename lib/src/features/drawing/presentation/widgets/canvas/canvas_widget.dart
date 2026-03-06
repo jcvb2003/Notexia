@@ -95,7 +95,7 @@ class _CanvasWidgetState extends State<CanvasWidget> {
             previous.interaction != current.interaction ||
             previous.transform != current.transform ||
             previous.snapGuides != current.snapGuides ||
-            previous.isSkeletonMode != current.isSkeletonMode ||
+            previous.isDocumentEditorMode != current.isDocumentEditorMode ||
             previous.interaction.selectedTool !=
                 current.interaction.selectedTool;
       },

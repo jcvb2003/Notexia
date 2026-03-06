@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' show lerpDouble;
 import 'package:notexia/src/core/utils/constants/ui_constants.dart';
 import 'package:notexia/src/core/canvas/rendering/painters/dashed_painter.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
@@ -149,36 +150,89 @@ class OverlaysPainter {
   static void drawEraserTrail(PainterCtx ctx, Canvas canvas) {
     if (!ctx.isEraserActive || ctx.eraserTrail.isEmpty) return;
     final points = ctx.eraserTrail;
+    final baseWidth = 12.0 / ctx.zoomLevel;
+    final tailWidth = baseWidth * 0.38;
+    final headAlpha = 0.24;
+    final tailAlpha = 0.05;
+
     if (points.length == 1) {
-      final radius = 6.0 / ctx.zoomLevel;
+      final radius = baseWidth / 2;
       final paint = Paint()
-        ..color = AppColors.textPrimary.withValues(alpha: 0.6)
+        ..color = AppColors.textPrimary.withValues(alpha: headAlpha)
         ..style = PaintingStyle.fill;
       canvas.drawCircle(points.first, radius, paint);
       return;
     }
 
-    final path = Path()..moveTo(points.first.dx, points.first.dy);
-    for (var i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx, points[i].dy);
+    // Passada suave por fora para aproximar o "scribble trail" do tldraw/excalidraw.
+    final glowPath = _buildSmoothPath(points);
+    if (glowPath != null) {
+      final glowPaint = Paint()
+        ..color = AppColors.textPrimary.withValues(alpha: 0.06)
+        ..strokeWidth = baseWidth * 1.35
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+      canvas.drawPath(glowPath, glowPaint);
     }
 
-    final outerPaint = Paint()
-      ..color = AppColors.textPrimary.withValues(alpha: 0.12)
-      ..strokeWidth = 10.0 / ctx.zoomLevel
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+    if (points.length == 2) {
+      final paint = Paint()
+        ..color = AppColors.textPrimary.withValues(alpha: headAlpha)
+        ..strokeWidth = baseWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+      canvas.drawLine(points.first, points.last, paint);
+      return;
+    }
 
-    final innerPaint = Paint()
-      ..color = AppColors.textPrimary.withValues(alpha: 0.45)
-      ..strokeWidth = 4.0 / ctx.zoomLevel
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+    // Desenha cada trecho com fade e espessura progressiva para deixar a ponta mais viva.
+    final maxStep = points.length - 2;
+    for (var i = 1; i < points.length - 1; i++) {
+      final start = Offset.lerp(points[i - 1], points[i], 0.5)!;
+      final control = points[i];
+      final end = Offset.lerp(points[i], points[i + 1], 0.5)!;
+      final progress = (i / maxStep).clamp(0.0, 1.0);
+      final eased = Curves.easeOut.transform(progress);
+      final strokeWidth = lerpDouble(tailWidth, baseWidth, eased)!;
+      final alpha = lerpDouble(tailAlpha, headAlpha, eased)!;
 
-    canvas.drawPath(path, outerPaint);
-    canvas.drawPath(path, innerPaint);
+      final paint = Paint()
+        ..color = AppColors.textPrimary.withValues(alpha: alpha)
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+
+      final segment = Path()
+        ..moveTo(start.dx, start.dy)
+        ..quadraticBezierTo(control.dx, control.dy, end.dx, end.dy);
+      canvas.drawPath(segment, paint);
+    }
+
+    final headPaint = Paint()
+      ..color = AppColors.textPrimary.withValues(alpha: headAlpha)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(points.last, baseWidth / 2, headPaint);
+  }
+
+  static Path? _buildSmoothPath(List<Offset> points) {
+    if (points.length < 2) return null;
+    if (points.length == 2) {
+      return Path()
+        ..moveTo(points.first.dx, points.first.dy)
+        ..lineTo(points.last.dx, points.last.dy);
+    }
+
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var i = 1; i < points.length - 1; i++) {
+      final nextMid = Offset.lerp(points[i], points[i + 1], 0.5)!;
+      path.quadraticBezierTo(
+          points[i].dx, points[i].dy, nextMid.dx, nextMid.dy);
+    }
+    path.lineTo(points.last.dx, points.last.dy);
+    return path;
   }
 
   static void drawSnapGuides(PainterCtx ctx, Canvas canvas) {

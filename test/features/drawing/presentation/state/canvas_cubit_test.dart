@@ -600,11 +600,12 @@ void main() {
   });
   group('CanvasCubit UI', () {
     blocTest<CanvasCubit, CanvasState>(
-      'toggleSkeletonMode changes state',
+      'toggleDocumentEditorMode changes state',
       build: () => cubit,
-      act: (cubit) => cubit.toggleSkeletonMode(),
+      act: (cubit) => cubit.toggleDocumentEditorMode(),
       expect: () => [
-        isA<CanvasState>().having((s) => s.isSkeletonMode, 'skeleton', true),
+        isA<CanvasState>()
+            .having((s) => s.isDocumentEditorMode, 'documentEditor', true),
       ],
     );
 

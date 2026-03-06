@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:notexia/src/app/config/constants/app_constants.dart';
@@ -127,7 +127,7 @@ class ScaleGestureHandlers {
         : SelectionHandles.hitTestSelectionHandle(worldPoint, uiState, element);
     if (handle != null) {
       router.activeHandle = handle;
-      router.resizeStartRect = router.selectedElement?.bounds;
+      router.resizeStartElement = router.selectedElement;
       if (handle == SelectionHandle.rotate && router.selectedElement != null) {
         final element = router.selectedElement!;
         final center = element.bounds.center;
@@ -256,7 +256,7 @@ class ScaleGestureHandlers {
     }
     if (router.activeHandle != null) {
       router.activeHandle = null;
-      router.resizeStartRect = null;
+      router.resizeStartElement = null;
       router.rotateStartAngle = null;
       router.rotateStartPointerAngle = null;
       await router.canvasCubit.finalizeManipulation();

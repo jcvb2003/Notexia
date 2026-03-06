@@ -24,7 +24,7 @@ class CanvasInputRouter {
   Offset? selectionStart;
   bool isDraggingSelection = false;
   SelectionHandle? activeHandle;
-  Rect? resizeStartRect;
+  CanvasElement? resizeStartElement;
   double? rotateStartAngle;
   double? rotateStartPointerAngle;
 
@@ -269,17 +269,25 @@ class CanvasInputRouter {
 
     if (handle == SelectionHandle.rotate) {
       final center = element.bounds.center;
-      final localPoint = CanvasGestureMath.toLocalForElement(
-        worldPoint,
-        element,
+      final startAngle = rotateStartAngle;
+      final startPointerAngle = rotateStartPointerAngle;
+      if (startAngle == null || startPointerAngle == null) return;
+
+      // Use the ORIGINAL element angle (startAngle) to compute the local point,
+      // ensuring consistency with the coordinate space used for startPointerAngle.
+      final dx = worldPoint.dx - center.dx;
+      final dy = worldPoint.dy - center.dy;
+      final cos = math.cos(-startAngle);
+      final sin = math.sin(-startAngle);
+      final localPoint = Offset(
+        center.dx + dx * cos - dy * sin,
+        center.dy + dx * sin + dy * cos,
       );
+
       final currentPointerAngle = math.atan2(
         localPoint.dy - center.dy,
         localPoint.dx - center.dx,
       );
-      final startPointerAngle = rotateStartPointerAngle;
-      final startAngle = rotateStartAngle;
-      if (startPointerAngle == null || startAngle == null) return;
       final nextAngle = startAngle + (currentPointerAngle - startPointerAngle);
       final snapEnabled =
           _isShiftPressed || canvasCubit.state.isAngleSnapEnabled;
@@ -302,16 +310,47 @@ class CanvasInputRouter {
       return;
     }
 
-    final startRect = resizeStartRect;
-    if (startRect == null) return;
-    final localPoint = CanvasGestureMath.toLocalForElement(worldPoint, element);
+    final startElement = resizeStartElement;
+    if (startElement == null) return;
+    final localPoint = CanvasGestureMath.toLocalForElement(worldPoint, startElement);
     final newRect = CanvasGestureMath.resizeFromHandle(
       handle,
-      startRect,
+      startElement.bounds,
       localPoint,
       keepAspect: _isShiftPressed,
     );
-    canvasCubit.resizeSelectedElement(newRect);
+
+    if (startElement.angle == 0) {
+      canvasCubit.resizeSelectedElement(newRect);
+      return;
+    }
+
+    // For rotated elements, unrotated bounds have a new center in the local space.
+    // We must rotate this new center back into world space around the original center.
+    final oldCenter = startElement.bounds.center;
+    final newCenter = newRect.center;
+
+    final dx = newCenter.dx - oldCenter.dx;
+    final dy = newCenter.dy - oldCenter.dy;
+
+    final cos = math.cos(startElement.angle);
+    final sin = math.sin(startElement.angle);
+
+    final rotatedDx = dx * cos - dy * sin;
+    final rotatedDy = dx * sin + dy * cos;
+
+    final newWorldCenter = Offset(
+      oldCenter.dx + rotatedDx,
+      oldCenter.dy + rotatedDy,
+    );
+
+    final finalRect = Rect.fromCenter(
+      center: newWorldCenter,
+      width: newRect.width,
+      height: newRect.height,
+    );
+
+    canvasCubit.resizeSelectedElement(finalRect);
   }
 
   bool get _isShiftPressed {

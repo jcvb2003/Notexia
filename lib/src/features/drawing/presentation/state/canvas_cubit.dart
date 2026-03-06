@@ -23,6 +23,7 @@ import 'package:notexia/src/features/drawing/presentation/state/scopes/text_scop
 import 'package:notexia/src/features/drawing/presentation/rendering/renderers/free_draw_renderer.dart';
 import 'package:notexia/src/features/settings/data/repositories/app_settings_repository.dart';
 import 'package:notexia/src/features/drawing/domain/commands/elements_command.dart';
+import 'package:notexia/src/features/drawing/domain/commands/document_command.dart';
 import 'package:notexia/src/features/undo_redo/domain/services/command_stack_service.dart';
 import 'package:notexia/src/core/errors/failure.dart';
 import 'package:uuid/uuid.dart';
@@ -226,7 +227,7 @@ class CanvasState extends Equatable {
   final DrawingDocument document;
   final CanvasTransform transform;
   final InteractionState interaction;
-  final bool isSkeletonMode;
+  final bool isDocumentEditorMode;
   final bool isFullScreen;
   final bool isToolbarAtTop;
   final bool isZoomMode;
@@ -240,7 +241,7 @@ class CanvasState extends Equatable {
     required this.document,
     this.transform = const CanvasTransform(),
     this.interaction = const InteractionState(),
-    this.isSkeletonMode = false,
+    this.isDocumentEditorMode = false,
     this.isFullScreen = false,
     this.isToolbarAtTop = false,
     this.isZoomMode = false,
@@ -300,7 +301,7 @@ class CanvasState extends Equatable {
     DrawingDocument? document,
     CanvasTransform? transform,
     InteractionState? interaction,
-    bool? isSkeletonMode,
+    bool? isDocumentEditorMode,
     bool? isFullScreen,
     bool? isToolbarAtTop,
     bool? isZoomMode,
@@ -314,7 +315,7 @@ class CanvasState extends Equatable {
       document: document ?? this.document,
       transform: transform ?? this.transform,
       interaction: interaction ?? this.interaction,
-      isSkeletonMode: isSkeletonMode ?? this.isSkeletonMode,
+      isDocumentEditorMode: isDocumentEditorMode ?? this.isDocumentEditorMode,
       isFullScreen: isFullScreen ?? this.isFullScreen,
       isToolbarAtTop: isToolbarAtTop ?? this.isToolbarAtTop,
       isZoomMode: isZoomMode ?? this.isZoomMode,
@@ -333,7 +334,7 @@ class CanvasState extends Equatable {
         document,
         transform,
         interaction,
-        isSkeletonMode,
+        isDocumentEditorMode,
         isFullScreen,
         isToolbarAtTop,
         isZoomMode,
@@ -509,8 +510,8 @@ class CanvasCubit extends Cubit<CanvasState> {
     if (result.isSuccess) emit(result.data!);
   }
 
-  void toggleSkeletonMode() {
-    emit(state.copyWith(isSkeletonMode: !state.isSkeletonMode));
+  void toggleDocumentEditorMode() {
+    emit(state.copyWith(isDocumentEditorMode: !state.isDocumentEditorMode));
   }
 
   void toggleFullScreen() {
@@ -588,8 +589,13 @@ class CanvasCubit extends Cubit<CanvasState> {
     emit(await _snapDelegate.setGridSnapEnabled(state, value));
   }
 
-  void toggleGridVisibility() {
-    emit(state.copyWith(isGridVisible: !state.isGridVisible));
+  Future<void> toggleGridVisibility() async {
+    final newVisible = !state.isGridVisible;
+    final updated = await _snapDelegate.setGridSnapEnabled(
+      state.copyWith(isGridVisible: newVisible),
+      newVisible,
+    );
+    emit(updated);
   }
 
   // Element Interaction
@@ -892,7 +898,9 @@ class CanvasCubit extends Cubit<CanvasState> {
     _scheduleSaveDocument(updatedDoc);
   }
 
-  void loadDocument(DrawingDocument document) {
+  void loadDocument(DrawingDocument document,
+      {bool recordCommand = false,
+      String commandLabel = 'Modificar Documento'}) {
     if (isClosed) return;
     FreeDrawRenderer.clearCache();
     emit(
@@ -904,5 +912,22 @@ class CanvasCubit extends Cubit<CanvasState> {
         ),
       ),
     );
+
+    if (recordCommand) {
+      final before = state.document;
+      final command = DocumentCommand(
+        before: before,
+        after: document,
+        label: commandLabel,
+        applyCallback: _applyDocumentFromCommand,
+      );
+      _commandStack.add(command);
+    }
+  }
+
+  void _applyDocumentFromCommand(DrawingDocument doc) {
+    if (isClosed) return;
+    loadDocument(doc, recordCommand: false);
+    _scheduleSaveDocument(doc);
   }
 }

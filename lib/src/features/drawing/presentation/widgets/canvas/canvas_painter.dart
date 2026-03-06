@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
@@ -93,7 +93,8 @@ class StaticCanvasPainter extends CustomPainter {
         oldDelegate.selectedElementIds != selectedElementIds ||
         oldDelegate.zoomLevel != zoomLevel ||
         oldDelegate.panOffset != panOffset ||
-        oldDelegate.editingElementId != editingElementId;
+        oldDelegate.editingElementId != editingElementId ||
+        oldDelegate.isGridVisible != isGridVisible;
   }
 }
 
