@@ -254,7 +254,9 @@ class OverlaysPainter {
 
       final paint = Paint()
         ..color = color
-        ..strokeWidth = 1.0 / ctx.zoomLevel
+        ..strokeWidth = guide.type == SnapGuideType.gap 
+            ? 1.2 / ctx.zoomLevel 
+            : 1.0 / ctx.zoomLevel
         ..style = PaintingStyle.stroke;
 
       final p1 = guide.isVertical
@@ -299,9 +301,9 @@ class OverlaysPainter {
         text: text,
         style: TextStyle(
           color: color,
-          fontSize: 10 / zoomLevel,
+          fontSize: 11 / zoomLevel,
           fontWeight: FontWeight.bold,
-          backgroundColor: AppColors.background.withValues(alpha: 0.8),
+          backgroundColor: AppColors.background.withValues(alpha: 0.9),
         ),
       ),
       textDirection: TextDirection.ltr,

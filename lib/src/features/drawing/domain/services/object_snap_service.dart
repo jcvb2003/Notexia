@@ -1,4 +1,4 @@
-﻿import 'dart:math' as math;
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:notexia/src/features/drawing/domain/models/canvas_element.dart';
 import 'package:notexia/src/features/drawing/domain/models/snap_models.dart';
@@ -61,16 +61,22 @@ class ObjectSnapService {
       snapDistance: adaptiveSnapDistance,
     );
 
-    // Gap snap substitui alignment snap no eixo correspondente
-    // se não houve alignment snap nesse eixo
+    // Gap snap substitui alignment snap se for mais próximo (menor distância de snap)
     if (gapResult != null) {
-      if (gapResult.isHorizontal && snapDx == 0) {
-        snapDx = gapResult.dx;
-        guides.addAll(gapResult.guides);
+      if (gapResult.isHorizontal) {
+        if (snapDx == 0 || gapResult.dx.abs() < snapDx.abs()) {
+          // Se estamos substituindo um snap de alinhamento já existente, removemos a guia anterior
+          if (snapDx != 0) guides.removeWhere((g) => g.type == SnapGuideType.alignment && !g.isVertical);
+          snapDx = gapResult.dx;
+          guides.addAll(gapResult.guides);
+        }
       }
-      if (gapResult.isVertical && snapDy == 0) {
-        snapDy = gapResult.dy;
-        guides.addAll(gapResult.guides);
+      if (gapResult.isVertical) {
+        if (snapDy == 0 || gapResult.dy.abs() < snapDy.abs()) {
+          if (snapDy != 0) guides.removeWhere((g) => g.type == SnapGuideType.alignment && g.isVertical);
+          snapDy = gapResult.dy;
+          guides.addAll(gapResult.guides);
+        }
       }
     }
 
@@ -146,6 +152,16 @@ class ObjectSnapService {
       final gapAB = isHorizontal ? b.left - a.right : b.top - a.bottom;
 
       if (gapAB <= 0) continue; // Elementos sobrepostos
+
+      // Filtro de Eixo Cruzado: o target e as referências devem ter alguma sobreposição
+      // no eixo oposto para que o gap faça sentido visualmente.
+      final hasOverlap = isHorizontal
+          ? (math.max(targetRect.top, math.max(a.top, b.top)) <
+              math.min(targetRect.bottom, math.min(a.bottom, b.bottom)))
+          : (math.max(targetRect.left, math.max(a.left, b.left)) <
+              math.min(targetRect.right, math.min(a.right, b.right)));
+
+      if (!hasOverlap) continue;
 
       // Posição ideal para gap igual antes de A
       final snapBeforeA = isHorizontal
